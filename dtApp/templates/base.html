@@ -1,0 +1,178 @@
+<DOCTYPE html>
+<html lang="en">
+
+<head>
+    {% block head %}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" integrity="sha512-iBBXm8fW90+nuLcSKlbmrPcLa0OT92xO1BIsZ+ywDWZCvqsWgccV3gFoRBv0z+8dLJgyAHIhR35VZc2oM/gI1w==" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/brands.min.css" integrity="sha512-apX8rFN/KxJW8rniQbkvzrshQ3KvyEH+4szT3Sno5svdr6E/CP0QE862yEeLBMUnCqLko8QaugGkzvWS7uNfFQ==" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/fontawesome.min.css" integrity="sha512-OdEXQYCOldjqUEsuMKsZRj93Ht23QRlhIb8E/X0sbwZhme8eUw6g8q7AdxGJKakcBbv7+/PX0Gc2btf7Ru8cZA==" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/regular.min.css" integrity="sha512-Nqct4Jg8iYwFRs/C34hjAF5og5HONE2mrrUV1JZUswB+YU7vYSPyIjGMq+EAQYDmOsMuO9VIhKpRUa7GjRKVlg==" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/solid.min.css" integrity="sha512-jQqzj2vHVxA/yCojT8pVZjKGOe9UmoYvnOuM/2sQ110vxiajBU+4WkyRs1ODMmd4AfntwUEV4J+VfM6DkfjLRg==" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/svg-with-js.min.css" integrity="sha512-W3ZfgmZ5g1rCPFiCbOb+tn7g7sQWOQCB1AkDqrBG1Yp3iDjY9KYFh/k1AWxrt85LX5BRazEAuv+5DV2YZwghag==" crossorigin="anonymous" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/slider.css') }}" />
+    
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.min.js"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/popups.js') }}"></script>
+    <title>{% block title %}{% endblock %} - DTOP - Cristallo </title>
+    <!-- <meta name="viewport" content="width=device-width, initial-scale=1"> -->
+    {% endblock %}
+</head>
+
+<body>
+
+    <div class = "sidehoverbar">
+
+        <a href="home" class="Home">
+            Home page
+            <span class="fonticon" style="font-size: 25px;"><i class="fas fa-home"></i></span>
+        </a>
+
+        <a href="docs" class="Documentation">
+            Documentation
+            <span class="fonticon" style="font-size: 25px;"><i class="fas fa-book"></i></span>
+        </a>
+
+        <!-- <span style="font-size:30px;cursor:pointer">&#128203;</span> -->
+        
+        <a href="https://soton243.autodesk360.com/shares/public/SH919a0QTf3c32634dcf95b180cdf3576ad4" class="CAD">
+            CAD model
+            <span class="fonticon" style="font-size: 25px;"><i class="fas fa-shapes"></i></span>
+        </a>
+
+        <a href="Design_under_uncertainty" class="Design">
+            Design under uncertainty
+            <span class="fonticon" style="font-size: 25px;"><i class="fas fa-cubes"></i></span>
+        </a>
+
+        <a href="control" class="Control">
+            Vibration control
+            <span class="fonticon" style="font-size: 25px;"><i class="fas fa-wave-square"></i></span>
+        </a>
+
+        <a href="unquant" class="Uncertainty">
+            Uncertainty propagation 
+            <span class="fonticon" style="font-size: 25px;"><i class="fas fa-dice"></i></span>
+        </a>
+
+        <a href="FEA" class="FEA">
+            Finite element analysis
+            <span class="fonticon" style="font-size: 25px;"><i class="fas fa-th"></i></span>
+        </a>
+
+        <a href="nonlinearcbc" class="NCBC">
+            Nonlinear continuation
+            <span class="fonticon" style="font-size: 25px;"><i class="fas fa-project-diagram"></i></span>
+        </a>
+
+        <a href="crossval" class="Crossval">
+            Cross validation
+            <span class="fonticon" style="font-size: 25px;"><i class="fas fa-retweet"></i></span>
+        </a>
+
+    </div>
+
+    <!--
+    <div class="leftsidebar">-->
+
+        <!-- <div class="tooltip" style="font-size:30px;cursor:pointer;color: gray;">&#9776;
+        <a href="home"><span class="tooltiptext" style="background-color: gray; border-color: honeydew; color: white;">Menu</span></a>
+        </div>
+        
+        <div  style="padding-bottom: 5px;padding-top: 5px;"></div>
+
+        <div class="popup" onclick="myFunction1()"> <span class="fonticon" style="font-size: 25px;"><i class="fas fa-home"></i></span>
+        <a href="home"><span class="popuptext" id="pop1">Home</span></a>
+        </div>
+
+        <div  style="padding-bottom: 5px;padding-top: 5px;"></div>
+
+        <div class="popup" onclick="myFunction2()"> <span class="fonticon" style="font-size: 25px;"><i class="fas fa-book"></i></span>
+        <a href="docs"><span class="popuptext" id="pop2">Documentation</span></a>
+        </div>  -->
+        <!-- <span style="font-size:30px;cursor:pointer">&#128203;</span> -->
+        <!--
+        <div style="padding-bottom: 5px;padding-top: 5px;"></div>
+
+        <div style="width:30px"><hr></div>
+
+        <div style="padding-bottom: 5px;padding-top: 5px;"></div>
+
+        <div class="popup" onclick="myFunction3()"> <span class="fonticon" style="font-size: 30px;"><i class="fas fa-shapes"></i></span>
+            <a href="https://soton243.autodesk360.com/shares/public/SH919a0QTf3c32634dcf95b180cdf3576ad4"><span class="popuptext" id="pop3">CAD model</span></a>
+        </div> 
+
+        <div  style="padding-bottom: 5px;padding-top: 5px;"></div>
+
+        <div class="popup" onclick="myFunction4()"> <span class="fonticon" style="font-size: 30px;"><i class="fas fa-cubes"></i></span>
+            <a href="Design_under_uncertainty"><span class="popuptext" id="pop4">Design under uncertainty</span></a>
+        </div>  
+
+        <div  style="padding-bottom: 5px;padding-top: 5px;"></div>
+
+        <div class="popup" onclick="myFunction5()"><span class="fonticon" style="font-size: 30px;"><i class="fas fa-wave-square"></i></span>
+            <a href="control"><span class="popuptext" id="pop5">Structural vibration control</span></a>
+        </div>  
+
+        <div  style="padding-bottom: 5px;padding-top: 5px;"></div>
+
+        <div class="popup" onclick="myFunction6()"><span class="fonticon" style="font-size: 30px;"><i class="fas fa-dice"></i></span>
+            <a href="unquant"><span class="popuptext" id="pop6">Uncertainty propagation</span></a>
+        </div> 
+
+        <div  style="padding-bottom: 5px;padding-top: 5px;"></div>
+
+        <div class="popup" onclick="myFunction7()"><span class="fonticon" style="font-size: 30px;"><i class="fas fa-th"></i></span>
+            <a href="FEA"><span class="popuptext" id="pop7">Finite element analysis</span></a>
+        </div> 
+
+        <div  style="padding-bottom: 5px;padding-top: 5px;"></div>
+
+        <div class="popup" onclick="myFunction8()"><span class="fonticon" style="font-size: 30px;"><i class="fas fa-project-diagram"></i></span>
+            <a href="nonlinearcbc"><span class="popuptext" id="pop8">Control-based continuation</span></a>
+        </div> 
+
+        <div  style="padding-bottom: 5px;padding-top: 5px;"></div>
+
+        <div class="popup" onclick="myFunction9()"><span class="fonticon" style="font-size: 30px;"><i class="fas fa-retweet"></i></span>
+            <a href="crossval"><span class="popuptext" id="pop9">Experimental cross-validation</span></a>
+        </div>  
+    </div>-->
+
+    <div class="body">
+    <div style="color: dimgrey;">
+    </div>
+    <h1>Digital Twin Operational Platform (DTOP) - Cristallo</h1>
+
+    <div id="content">{% block content %}{% endblock %}</div>
+    <div class="footer">
+        {% block footer %}
+        <address>
+            <div style="float:left; width:49%;">
+                <font>&copy; Copyright 2020 <a href="contrib">DTOP-Cristallo contributors.</a></font> &nbsp; &nbsp; | &nbsp; &nbsp; <a href="https://github.com/Digital-Twin-Operational-Platform/cristallo"><i class="fas fa-code-branch"></i> <u>GitHub</u> </a>  
+                </div>
+                <div style="float:right; width:auto;">
+                 <p style="font-size: 11px">Last update: :: {{ date }} ::</p> 
+                </div>
+                <div style="clear: both;">
+                <br>
+                </div>
+        </address>
+        {% endblock %}
+    </div>
+</div>
+
+
+<!--{% block javascript %}
+<script>
+    // Write here function to fully open and close side menu
+    function openNav() {
+      document.getElementById("mySidenav").style.width = "9em";
+    }
+    function closeNav() {
+      document.getElementById("mySidenav").style.width = "0";
+    }
+    </script>
+{% endblock %}-->
+</body>
+</html>

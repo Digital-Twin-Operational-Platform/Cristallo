@@ -1,0 +1,192 @@
+{% extends "base.html" %}
+{% block title %}{% endblock %}
+{% block head %}
+{{ super() }}
+{% endblock %}
+{% block content %}
+<!--<h1>Digital Twin Operational Platform (DTOP) for a three-storey structure</h1>-->
+<p>
+    Welcome to the sensitivity analysis page.
+</p>
+<h2>Case study: three-storey structure</h2>
+
+<p>
+    This page displays the projection of the Fisher eigenvectors onto the sensitivity vectors for a given target. 
+    It is found that the resulting projections are proportional to the contribution of each eigenvector to the total 
+    change in the probability of failure due to variations of the parameters of the distribution.
+
+    <br>
+    <div>
+        <a href="Design_under_uncertainty_fisher">Back to Fisher Information Matrix</a>
+    </div>
+
+
+
+</p>
+
+
+<!-- Site navigation menu -->
+
+<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+<script id="MathJax-script" async
+          src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+</script>
+
+
+
+<hr>
+
+<div class="div3">
+    <h2 id="a">Probability of the output being less or equal than a target:</h2>
+
+<p>
+    The reliability of the system is given as the probability that the output is less or equal to a given target.
+    <br>
+    Select the target as the percentage of the maximum magnitude of the output from the Monte Carlo simulations.
+    <br>
+    Notes:
+    <br>
+     - Make sure to set a percentage value using the sliders before pressing "Enter". If the bar diagram is not shown then press "Enter" again.
+    <br>
+    - Do not set the output to 0.0%, otherwise such variable will be eliminated as it would represent failure. (Notice that 100% represents no failure, i.e. full reliability).
+    <br>
+     &nbsp;&nbsp; In order to recover such output, click "Back to Fisher Information Matrix" and then return to this page.
+
+</p>
+    <div class="div1">
+    <form action="" method="POST" oninput="VFCgain1.value=(parseFloat(gain1.value)).toFixed(1);
+                                           VFCgain2.value=(parseFloat(gain2.value)).toFixed(1);
+                                           VFCgain3.value=(parseFloat(gain3.value)).toFixed(1);
+                                           VFCgain4.value=(parseFloat(gain4.value)).toFixed(1);
+                                           VFCgain5.value=(parseFloat(gain5.value)).toFixed(1);
+                                           VFCgain6.value=(parseFloat(gain6.value)).toFixed(1)">
+
+
+            <legend>Outputs:</legend>
+            <br>
+            <table>
+                {% if h1==0 %}
+                <td hidden><input type="hidden" id="gain1" name="gain1" min="0" max="100" step={{Stp}} value="{{h1}}"></td>
+                <td hidden><output name="VFCgain1" for="gain1">{{h1}}</output></td>
+                {% else %}
+                <tr>
+                    <td>Displacement</td>
+                    <td>x1</td>
+                    <td><input type="range" id="gain1" name="gain1" min="0" max="100" step={{Stp}} value="{{h1}}"></td>
+                    <td><output name="VFCgain1" for="gain1">{{h1}}</output></td>
+                    <td>[%]</td>
+                </tr>
+                {% endif %}
+
+                {% if h2==0 %}
+                <td hidden><input type="hidden" id="gain2" name="gain2" min="0" max="100" step={{Stp}} value="{{h2}}"></td>
+                <td hidden><output name="VFCgain2" for="gain2">{{h2}}</output></td>
+                {% else %}
+                <tr>
+                    <td>Displacement</td>
+                    <td>x2</td>
+                    <td><input type="range" id="gain2" name="gain2" min="0" max="100" step={{Stp}} value="{{h2}}"></td>
+                    <td><output name="VFCgain2" for="gain2">{{h2}}</output></td>
+                    <td>[%]</td>
+                </tr>
+                {% endif %}
+
+                {% if h3==0 %}
+                <td hidden><input type="hidden" id="gain3" name="gain3" min="0" max="100" step={{Stp}} value="{{h3}}"></td>
+                <td hidden><output name="VFCgain3" for="gain3">{{h3}}</output></td>
+                {% else %}
+                <tr>
+                    <td>Displacement</td>
+                    <td>x3</td>
+                    <td><input type="range" id="gain3" name="gain3" min="0" max="100" step={{Stp}} value="{{h3}}"></td>
+                    <td><output name="VFCgain3" for="gain3">{{h3}}</output></td>
+                    <td>[%]</td>
+                </tr>
+                {% endif %}
+
+                {% if h4==0 %}
+                <td hidden><input type="hidden" id="gain4" name="gain4" min="0" max="100" step={{Stp}} value="{{h4}}"></td>
+                <td hidden><output name="VFCgain4" for="gain4">{{h4}}</output></td>
+                {% else %}
+                <tr>
+                    <td>Shear force</td>
+                    <td>s1</td>
+                    <td><input type="range" id="gain4" name="gain4" min="0" max="100" step={{Stp}} value="{{h4}}"></td>
+                    <td><output name="VFCgain4" for="gain4">{{h4}}</output></td>
+                    <td>[%]</td>
+                </tr>
+                {% endif %}
+
+                {% if h5==0 %}
+                <td hidden><input type="hidden" id="gain5" name="gain5" min="0" max="100" step={{Stp}} value="{{h5}}"></td>
+                <td hidden><output name="VFCgain5" for="gain5">{{h5}}</output></td>
+                {% else %}
+                <tr>
+                    <td>Shear force</td>
+                    <td>s2</td>
+                    <td><input type="range" id="gain5" name="gain5" min="0" max="100" step={{Stp}} value="{{h5}}"></td>
+                    <td><output name="VFCgain5" for="gain5">{{h5}}</output></td>
+                    <td>[%]</td>
+                </tr>
+                {% endif %}
+
+                {% if h6==0 %}
+                <td hidden><input type="hidden" id="gain6" name="gain6" min="0" max="100" step={{Stp}} value="{{h6}}"></td>
+                <td hidden><output name="VFCgain6" for="gain6">{{h6}}</output></td>
+                {% else %}
+                <tr>
+                    <td>Shear force</td>
+                    <td>s3</td>
+                    <td><input type="range" id="gain6" name="gain6" min="0" max="100" step={{Stp}} value="{{h6}}"></td>
+                    <td><output name="VFCgain6" for="gain6">{{h6}}</output></td>
+                    <td>[%]</td>
+                </tr>
+                {% endif %}
+
+
+
+
+
+
+
+            </table>
+
+        <br>
+        <input type="submit" value="Enter">
+    </form>
+    </div>
+
+
+
+    {% if plot==null or plot=='' %}
+    <div class="row">
+
+    </div>
+    {% else %}
+
+<div class="div3">
+<hr>
+<p>
+    <h2>Projection of the n-th eigenvector onto the sensitivity vectors</h2>
+</p>
+</div>
+
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="chart" id="bar">
+            <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.6/d3.min.js"></script>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+                <script>
+                    var graphs = {{plot | safe}};
+                    Plotly.plot('bar',graphs,{});
+                </script>
+            </div>
+
+        </div>
+    </div>
+    {% endif %}
+<div class="Clear" style="clear:both"></div>
+
+{% endblock %}

@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block title %}{% endblock %}
+{% block head %}
+{{ super() }}
+{% endblock %}
+{% block content %}
+<style>
+    .div1 {
+      float: left;
+      width: 50%;
+      clear: both;
+    }
+    
+    .div2 {
+      float: right;
+      width: 50%;
+    }
+
+    .div3 {
+      clear: both;
+    }
+    
+</style>
+
+<!-- Site navigation menu -->
+
+<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+<script id="MathJax-script" async
+          src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+</script>
+
+<h1>Job # {{ ID }} is Completed</h1>
+
+<p>Check dtData/ABAQUS_Scratch for .odb file</p>
+
+
+{% endblock %}
+

@@ -1,0 +1,212 @@
+{% extends "base.html" %}
+{% block title %}{% endblock %}
+{% block head %}
+{{ super() }}
+{% endblock %}
+{% block content %}
+
+<!--<h1>Digital Twin Operational Platform (DTOP) for a three-storey structure</h1>-->
+<p>
+    Welcome to the design under uncertainty page.
+</p>
+<h2>Case study: three-storey structure</h2>
+
+<p>
+    This page allows to set the parameters of the distribution of the mass, stiffness, damping and
+    input force, of each floor in the structure.
+<br>
+    For Gaussian distributions &mu; is the mean value and
+    &sigma; the standard deviation; wheras for gamma distributions &kappa; is the shape and &theta; the scale.
+<br>
+    If a parameter is deterministic, a Gaussian distribution must be selected with zero standard deviation.
+</p>
+<p>
+    The frequency response function is computed with the mean values of each parameter.
+    The defalut values are provided by Paul Gardner (The University of Sheffield)
+</p>
+<p>
+    <b>IMPORTANT:</b> Before moving to the output distribution page and the subsequent pages,
+    at least one output must be selected (checkboxes at the bottom of the page).
+<br>
+    Press "Enter input data" button at the end of the page then press "Go to output distribution page"
+</p>
+<div>
+    <a href="Design_under_uncertainty_output"> Go to output distribution page</a>
+</div>
+
+<form method=post action="" >
+    <div id="left" style="float:left; width:50%;">
+    <h3>First floor:</h3>
+    <table>
+      <tr>
+        <th></th>
+        <th>&mu; / &kappa;</th>
+        <th>&sigma; / &theta;</th>
+        <th>Type</th>
+      </tr>
+      <tr>
+        <td>Mass [kg]</td>
+        <td>{{ form.m1_mean }}</td>
+        <td>{{ form.m1_sigma }}</td>
+        <td>{{ form.M1_type }}</td>
+      </tr>
+      <tr>
+        <td>Stiffness [N/m]</td>
+        <td>{{ form.k1_mean }}</td>
+        <td>{{ form.k1_sigma }}</td>
+        <td>{{ form.K1_type }}</td>
+      </tr>
+      <tr>
+        <td>Damping [N-s/m]</td>
+        <td>{{ form.c1_mean }}</td>
+        <td>{{ form.c1_sigma }}</td>
+        <td>{{ form.C1_type }}</td>
+      </tr>
+      <tr>
+        <td>Force [N]</td>
+        <td>{{ form.f1_mean }}</td>
+        <td>{{ form.f1_sigma }}</td>
+        <td>{{ form.F1_type }}</td>
+      </tr>
+      </table>
+<br>
+      <h3>Second floor:</h3>
+      <table>
+        <tr>
+          <th></th>
+          <th>&mu; / &kappa;</th>
+          <th>&sigma; / &theta;</th>
+          <th>Type</th>
+        </tr>
+        <tr>
+          <td>Mass [kg]</td>
+          <td>{{ form.m2_mean }}</td>
+          <td>{{ form.m2_sigma }}</td>
+          <td>{{ form.M2_type }}</td>
+        </tr>
+        <tr>
+          <td>Stiffness [N/m]</td>
+          <td>{{ form.k2_mean }}</td>
+          <td>{{ form.k2_sigma }}</td>
+          <td>{{ form.K2_type }}</td>
+        </tr>
+        <tr>
+          <td>Damping [N-s/m]</td>
+          <td>{{ form.c2_mean }}</td>
+          <td>{{ form.c2_sigma }}</td>
+          <td>{{ form.C2_type }}</td>
+        </tr>
+        <tr>
+          <td>Force [N]</td>
+          <td>{{ form.f2_mean }}</td>
+          <td>{{ form.f2_sigma }}</td>
+          <td>{{ form.F2_type }}</td>
+        </tr>
+        </table>
+<br>
+        <h3>Third floor:</h3>
+        <table>
+          <tr>
+            <th></th>
+            <th>&mu; / &kappa;</th>
+            <th>&sigma; / &theta;</th>
+            <th>Type</th>
+          </tr>
+          <tr>
+            <td>Mass [kg]</td>
+            <td>{{ form.m3_mean }}</td>
+            <td>{{ form.m3_sigma }}</td>
+            <td>{{ form.M3_type }}</td>
+          </tr>
+          <tr>
+            <td>Stiffness [N/m]</td>
+            <td>{{ form.k3_mean }}</td>
+            <td>{{ form.k3_sigma }}</td>
+            <td>{{ form.K3_type }}</td>
+          </tr>
+          <tr>
+            <td>Damping [N-s/m]</td>
+            <td>{{ form.c3_mean }}</td>
+            <td>{{ form.c3_sigma }}</td>
+            <td>{{ form.C3_type }}</td>
+          </tr>
+          <tr>
+            <td>Force [N]</td>
+            <td>{{ form.f3_mean }}</td>
+            <td>{{ form.f3_sigma }}</td>
+            <td>{{ form.F3_type }}</td>
+          </tr>
+      </table>
+</div>
+<div class="container" id="right" style="float:right; width:50%;">
+    <div class="row">
+        <div class="col-md-6">
+            <div class="chart" id="scatter">
+            <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.6/d3.min.js"></script>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+                <script>
+                    var graphs = {{plot | safe}};
+                    Plotly.plot('scatter',graphs,{});
+                </script>
+            </div>
+
+        </div>
+    </div>
+</div>
+    <h3>____________________________________________</h3>
+<br>
+    <h3>Parameters for the analysis</h3>
+
+    <p>
+
+    </p>
+
+
+    <table>
+      <tr>
+        <td>Frequency of analysis [Hz]</td>
+        <td>{{ form.freq_analysis }}</td>
+      </tr>
+      <tr>
+        <td>Number of Monte Carlo realisations</td>
+        <td>{{ form.n_realisations }}</td>
+      </tr>
+      </table>
+<br>
+    <h3>Outputs requested</h3>
+    <table>
+      <tr>
+        <td>{{ form.check_x1 }}</td>
+        <td>{{ form.check_x1.label }}</td>
+        <td>{{ form.check_s1 }}</td>
+        <td>{{ form.check_s1.label }}</td>
+      </tr>
+
+      <tr>
+        <td>{{ form.check_x2 }}</td>
+        <td>{{ form.check_x2.label }}</td>
+        <td>{{ form.check_s2 }}</td>
+        <td>{{ form.check_s2.label }}</td>
+      </tr>
+
+      <tr>
+        <td>{{ form.check_x3 }}</td>
+        <td>{{ form.check_x3.label }}</td>
+        <td>{{ form.check_s3 }}</td>
+        <td>{{ form.check_s3.label }}</td>
+      </tr>
+      </table>
+<p><input type=submit value='Enter input data'>
+
+</form>
+
+<br>
+
+
+<div>
+    <a href="Design_under_uncertainty_output"> Go to output distribution page</a>
+</div>
+
+
+{% endblock %}

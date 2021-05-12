@@ -1,0 +1,423 @@
+{% extends "base.html" %}
+{% block title %}{% endblock %}
+{% block head %}
+{{ super() }}
+{% endblock %}
+{% block content %}
+<!-- Site navigation menu -->
+
+<!--<h1>Digital Twin Operational Platform (DTOP) for a 3-storey structure</h1>-->
+<!--
+<p>
+    Welcome to the <i>Uncertainty Propagation</i> page.
+</p>
+-->
+
+<!-- <p>This page was designed by Marco.</p> -->
+
+<!-- &nbsp; -->
+
+<h2><button onclick="myFunction()">+</button> Uncertainty propagation </h2>
+
+<!--
+{{M_val}} central value
+{{M_e}}   relative uncertainty
+{{UNC}}   maximum uncertainty in %
+{{M_lo}}  left value
+{{M_hi}}  right value
+-->
+<form action="/unquant" method="POST" id="form">
+    <div class="onepagecontainer">
+    <div id="hideshow" style="display: none">
+        <p> This page demonstrates the deployment of forward uncertainty propagation methods using the three-degree-of-freedom model of the mass-spring-damper system. </p>
+        <p>On the left panel, controls are provided to input the central values and the uncertainty for each parameter, from the mass of the top floor to the damping parameter of the bottom floor.
+        On the right panel, the frequency response function (FRF) of the displacement is plotted for each floor of the three-storey structure. 
+        The plot shows the FRF obtained in the ideal case without uncertainty 'Nominal' against two bounds:  
+        (1) inner bounds obtained via Monte Carlo sampling; 
+        (2) inner bounds obtained via cartesian product of equi-spaced samples.
+        
+        The user can choose how many Monte Carlo samples are wanted in order to compute the inner bounds. 
+
+        <br>
+        
+        <u>Warning</u>: Selecting more than 200 MC samples can lead to significant downtime.
+        <!-- <u>Disclaimer</u>: this page is created for illustration purposes. The use of inner bounds may not provide enough coverage thus it is discouraged for the validation step.</p> -->
+    </div>
+        <table>
+        <tr>
+            <td>
+                <font>Max uncertainty: </font>
+            </td>
+            <td>
+                <input type="number" class="input" id="maxU" name="maxU" value="{{UNC}}" min="1" max="99" step="1">
+<!--                style="border: none; border-bottom: 2px solid blue;"-->
+            </td>
+            <td>
+                <font>%</font>
+            </td>
+            <td style="width: 400px;">  </td>
+            <td style="padding:15px;">MC Samples</td>
+            <td style="padding:15px;"><label for="MC_50">50</label><br><input type="radio" value="50" id="MC_50" name="MC_samples"></td>
+            <td style="padding:15px;"><label for="MC_100">100</label><br><input type="radio" value="100" id="MC_100" name="MC_samples"></td>
+            <td style="padding:15px;"><label for="MC_200">200</label><br><input type="radio" value="200" id="MC_200" name="MC_samples"></td>
+            <td style="padding:15px;"><label for="MC_500">500</label><br><input type="radio" value="500" id="MC_500" name="MC_samples"></td>
+            <td style="padding:15px;"><label for="MC_1000">1000</label><br><input type="radio" value="1000" id="MC_1000" name="MC_samples"></td>
+            <td><input style="font-size:14pt;" type="submit" value="Compute" /></td>
+        </tr>
+        </table>
+        <p> Excitation: &nbsp; 
+            <input type="radio" value='1' id="exci_1" name="exci"> <label for="exci_1"> 1st Floor </label> &nbsp;&nbsp; 
+            <input type="radio" value='2' id="exci_2" name="exci"> <label for="exci_2"> 2nd Floor </label> &nbsp;&nbsp; 
+            <input type="radio" value='3' id="exci_3" name="exci"> <label for="exci_3"> 3rd Floor </label> </p>
+    </div>
+    
+    <br>
+
+    <div id="left" style="float:left; width:39%;">
+        <div class="slidecontainer">
+            <table style="font-size:14pt" id="Mass_table_header">
+                <tr> 
+                    <th style="padding:15px;"> Mass </th>
+                    <th style="padding:15px;"> (1e4 &#8231; kg) </th>
+<!--                    <th style="padding:15px"> </th>-->
+                </tr>
+           </table>
+           <table style="font-size:13pt" id="Mass_table_values"> 
+                <tr> 
+<!--                    <td>3rd floor</td>-->
+                    <td style="padding:15px"> &nbsp; &nbsp; 
+                        <input type="number" class="input" id="M_centre_3" name="M_centre_3" value="{{M_val[2]}}" min="1" max="99" step=".01"> 
+                        &plusmn; <font id="M_pm_3"> </font>  &nbsp; &nbsp; &nbsp; 
+                        [<font id="M_inf_3">{{M_lo[2]}}</font>, <font id="M_sup_3">{{M_hi[2]}}</font>]
+                    </td>
+                    <td style="text-align:center"><font id="M_e_min">0.</font></td>
+                    <td>
+                        <input type="range" min="0" max="100" value="{{M_slider[2]}}" class="slider" id="eM_slider_3" name="eM_slider_3">
+                    </td>
+                    <td style="text-align:center"><font id="M_percent_3"></font>%</td>
+                </tr>
+               <tr> 
+<!--                   <td>2nd floor</td>-->
+                    <td style="padding:15px"> &nbsp; &nbsp; 
+                        <input type="number" class="input" id="M_centre_2" name="M_centre_2" value="{{M_val[1]}}" min="1" max="99" step=".01"> 
+                        &plusmn; <font id="M_pm_2"> </font>  &nbsp; &nbsp; &nbsp; 
+                        [<font id="M_inf_2">{{M_lo[1]}}</font>, <font id="M_sup_2">{{M_hi[1]}}</font>]
+                    </td>
+                   <td style="text-align:center"><font id="M_e_min">0.</font></td>
+                   <td>
+                       <input type="range" min="0" max="100" value="{{M_slider[1]}}" class="slider" id="eM_slider_2" name="eM_slider_2">
+                   </td>
+                   <td style="text-align:center"><font id="M_percent_2"></font>%</td>
+                </tr>
+               <tr> 
+<!--                   <td>1st floor</td>-->
+                    <td style="padding:15px"> &nbsp; &nbsp; 
+                        <input type="number" class="input" id="M_centre_1" name="M_centre_1" value="{{M_val[0]}}" min="1" max="99" step=".01"> 
+                        &plusmn; <font id="M_pm_1"> </font>  &nbsp; &nbsp; &nbsp; 
+                        [<font id="M_inf_1">{{M_lo[0]}}</font>, <font id="M_sup_1">{{M_hi[0]}}</font>]
+                    </td>
+                   <td style="text-align:center"><font id="M_e_min">0.</font></td>
+                   <td>
+                       <input type="range" min="0" max="100" value="{{M_slider[0]}}" class="slider" id="eM_slider_1" name="eM_slider_1">
+                   </td>
+                   <td style="text-align:center"><font id="M_percent_1"></font>%</td>
+                </tr>
+            </table>
+        </div>
+
+        <br>
+<!--Stiffness -->
+        <div class="slidecontainer">
+            <table style="font-size:14pt" id="Stiffness_table_header">
+                <tr> 
+                    <th style="padding:15px;"> Stiffness </th>
+                    <th style="padding:15px"> (1e8 &#8231; N/m) </th>
+                </tr>
+            </table>
+            <table style="font-size:14pt" id="Stiffness_table_values">
+                <tr> 
+                    <td style="padding:15px"> &nbsp; &nbsp; 
+                        <input type="number" class="input" id="K_centre_3" name="K_centre_3"  value="{{K_val[2]}}" min="1" max="99" step=".01"> 
+                        &plusmn; <font id="K_pm_3"></font>&nbsp; &nbsp; &nbsp; 
+                        [<font id="K_inf_3">{{K_lo[2]}}</font>, <font id="K_sup_3">{{K_hi[2]}}</font>]</td>
+                    <td style="text-align:center"><font id="K_e_min">0.</font></td>
+                    <td><input type="range" min="0" max="100" value="{{K_slider[2]}}" class="slider" id="eK_slider_3" name="eK_slider_3"></td>
+                    <td style="text-align:center"><font id="K_percent_3"></font>%</td>
+                </tr>
+                <tr> 
+                    <td style="padding:15px"> &nbsp; &nbsp; 
+                        <input type="number" class="input" id="K_centre_2" name="K_centre_2" value="{{K_val[1]}}" min="1" max="99" step=".01"> 
+                        &plusmn; <font id="K_pm_2"></font>&nbsp; &nbsp; &nbsp; 
+                        [<font id="K_inf_2">{{K_lo[1]}}</font>, <font id="K_sup_2">{{K_hi[1]}}</font>]</td>
+                    <td style="text-align:center"><font id="K_e_min">0.</font></td>
+                    <td><input type="range" min="0" max="100" value="{{K_slider[1]}}" class="slider" id="eK_slider_2" name="eK_slider_2"></td>
+                    <td style="text-align:center"><font id="K_percent_2"></font>%</td>
+                </tr>
+                <tr> 
+                    <td style="padding:15px"> &nbsp; &nbsp; 
+                        <input type="number" class="input" id="K_centre_1" name="K_centre_1" value="{{K_val[0]}}" min="1" max="99" step=".01"> 
+                        &plusmn; <font id="K_pm_1"></font>&nbsp; &nbsp; &nbsp; 
+                        [<font id="K_inf_1">{{K_lo[0]}}</font>, <font id="K_sup_1">{{K_hi[0]}}</font>]</td>
+                    <td style="text-align:center"><font id="K_e_min">0.</font></td>
+                    <td><input type="range" min="0" max="100" value="{{K_slider[0]}}" class="slider" id="eK_slider_1" name="eK_slider_1"></td>
+                    <td style="text-align:center"><font id="K_percent_1"></font>%</td>
+                </tr>
+                
+            </table>
+        </div>
+        
+        <br>
+        
+        <div class="slidecontainer">
+            <table style="font-size:14pt;" id="Damping_table_header">
+                <tr> 
+                    <th style="padding:15px; text-align: left;"> Damping </th>
+                    <th style="padding:15px"> (1e4 &#8231; kg/s) </th>
+                </tr>
+            </table>
+            <table style="font-size:14pt;" id="Damping_table_values">
+                <tr> 
+                    <td style="padding:15px"> &nbsp; &nbsp; 
+                        <input type="number" class="input" id="C_centre_3" name="C_centre_3" value="{{C_val[2]}}" min="1" max="99" step=".01"> 
+                        &plusmn; <font id="C_pm_3"></font>&nbsp; &nbsp; &nbsp; 
+                        [<font id="C_inf_3">{{C_lo[2]}}</font>, <font id="C_sup_3">{{C_hi[2]}}</font>]</td>
+                    <td style="text-align:center"><font id="C_e_min">0.</font></td>
+                    <td><input type="range" min="0" max="100" value="{{C_slider[2]}}" class="slider" id="eC_slider_3" name="eC_slider_3"></td>
+                    <td style="text-align:center"><font id="C_percent_3"></font>%</td>
+                </tr>
+                <tr> 
+                    <td style="padding:15px"> &nbsp; &nbsp; 
+                        <input type="number" class="input" id="C_centre_2" name="C_centre_2" value="{{C_val[1]}}" min="1" max="99" step=".01"> 
+                        &plusmn; <font id="C_pm_2"></font>&nbsp; &nbsp; &nbsp; 
+                        [<font id="C_inf_2">{{C_lo[1]}}</font>, <font id="C_sup_2">{{C_hi[1]}}</font>]</td>
+                    <td style="text-align:center"><font id="C_e_min">0.</font></td>
+                    <td><input type="range" min="0" max="100" value="{{C_slider[1]}}" class="slider" id="eC_slider_2" name="eC_slider_2"></td>
+                    <td style="text-align:center"><font id="C_percent_2"></font>%</td>
+                </tr>
+                <tr> 
+                    <td style="padding:15px"> &nbsp; &nbsp; 
+                        <input type="number" class="input" id="C_centre_1" name="C_centre_1" value="{{C_val[0]}}" min="1" max="99" step=".01"> 
+                        &plusmn; <font id="C_pm_1"></font>&nbsp; &nbsp; &nbsp; 
+                        [<font id="C_inf_1">{{C_lo[0]}}</font>, <font id="C_sup_1">{{C_hi[0]}}</font>]</td>
+                    <td style="text-align:center"><font id="C_e_min">0.</font></td>
+                    <td><input type="range" min="0" max="100" value="{{C_slider[0]}}" class="slider" id="eC_slider_1" name="eC_slider_1"></td>
+                    <td style="text-align:center"><font id="C_percent_1"></font>%</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+<div id="right" style="float:right; width:60%;">
+    <div class="row">
+        <div class="col-md-6">
+            <div class="chart" id="areaplot">
+            <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.6/d3.min.js"></script>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+                <script>
+                    var graphs = {{plot | safe}};
+                    Plotly.plot('areaplot', graphs, {});
+                </script>
+            </div>
+
+        </div>
+    </div>
+<!--    <canvas id="myChart" width="650" height="500"></canvas>-->
+</div>
+
+<div class="Clear" style="clear:both"></div>
+
+</form>
+{% block javascript %}
+<script type="text/javascript" charset="utf-8">
+
+    function myFunction() {
+    var x = document.getElementById("hideshow");
+    if (x.style.display === "none") {
+        x.style.display = "block";
+    } else {
+        x.style.display = "none";
+    }
+    }
+    
+    manicure = function(u_,c_,pm_,ej_,loj_,hij_){
+        let e = (c_.value * ej_).toString();
+        let pm_value = 0
+        if(e.length>4){pm_value = Number(e).toFixed(3);}else{pm_value = Number(e);};
+        if(loj_.length>4){var inf_value = Number(loj_).toFixed(3);}else{var inf_value = loj_;};
+        if(hij_.length>4){var sup_value = Number(hij_).toFixed(3);}else{var sup_value = hij_;};
+        return {pm_value,inf_value,sup_value};
+    };
+    
+    percentage = function(u_,s_){
+        let p_value = s_.value * u_.value / 100;
+        return{p_value};
+    }
+    
+    slider = function(u_,s_,c_,pm_){
+        let pm_value = c_.value * s_.value * u_.value / 10000;
+        let pm_string = pm_value.toString();
+        if(pm_string.length>4){pm_value = Number(pm_string).toFixed(3);}else{pm_value = Number(pm_string);};
+        let pm_r = pm_value;
+        let p_value = s_.value * u_.value / 100;
+        let p_r = p_value;
+        let infval = c_.value * (1 - s_.value * u_.value / 10000);
+        let supval = c_.value * (1 + s_.value * u_.value / 10000);
+        if(infval.toString().length>4){var inf_r = infval.toFixed(3);}else{var inf_r = infval};
+        if(supval.toString().length>4){var sup_r = supval.toFixed(3);}else{var sup_r = supval};
+        return{p_r,pm_r,inf_r,sup_r}
+    }
+
+    var u = document.getElementById("maxU");
+    
+    //    // Processing the mass
+    var p_M = [document.getElementById('M_percent_1'),document.getElementById('M_percent_2'),document.getElementById('M_percent_3')];
+    var s_M = [document.getElementById('eM_slider_1'),document.getElementById('eM_slider_2'),document.getElementById('eM_slider_3')];
+    
+    var ej_M =  ["{{M_e[0]}}","{{M_e[1]}}","{{M_e[2]}}"];
+    var loj_M= ["{{M_lo[0]}}","{{M_lo[1]}}","{{M_lo[2]}}"];
+    var hij_M= ["{{M_hi[0]}}","{{M_hi[1]}}","{{M_hi[2]}}"];
+    
+    var c_M = [document.getElementById('M_centre_1'),document.getElementById('M_centre_2'),document.getElementById('M_centre_3')];
+    var pm_M = [document.getElementById('M_pm_1'),document.getElementById('M_pm_2'),document.getElementById('M_pm_3')];
+    var inf_M = [document.getElementById('M_inf_1'),document.getElementById('M_inf_2'),document.getElementById('M_inf_3')];
+    var sup_M = [document.getElementById('M_sup_1'),document.getElementById('M_sup_2'),document.getElementById('M_sup_3')];
+    
+    var i = 0;
+    for (i = 0; i < 3; i++){
+        p_M[i].innerHTML = percentage(u,s_M[i]).p_value;
+        pm_M[i].innerHTML = manicure(u,c_M[i],pm_M[i],ej_M[i],loj_M[i],hij_M[i]).pm_value;
+        inf_M[i].innerHTML = manicure(u,c_M[i],pm_M[i],ej_M[i],loj_M[i],hij_M[i]).inf_value; 
+        sup_M[i].innerHTML = manicure(u,c_M[i],pm_M[i],ej_M[i],loj_M[i],hij_M[i]).sup_value;   
+    }
+    
+    s_M[0].oninput = function(){
+        p_M[0].innerHTML = percentage(u,s_M[0]).p_value;
+        pm_M[0].innerHTML = slider(u,s_M[0],c_M[0],pm_M[0]).pm_r;
+        inf_M[0].innerHTML = slider(u,s_M[0],c_M[0],pm_M[0]).inf_r;
+        sup_M[0].innerHTML = slider(u,s_M[0],c_M[0],pm_M[0]).sup_r;
+    };
+    
+    s_M[1].oninput = function(){
+        p_M[1].innerHTML = percentage(u,s_M[1]).p_value;
+        pm_M[1].innerHTML = slider(u,s_M[1],c_M[1],pm_M[1]).pm_r;
+        inf_M[1].innerHTML = slider(u,s_M[1],c_M[1],pm_M[1]).inf_r;
+        sup_M[1].innerHTML = slider(u,s_M[1],c_M[1],pm_M[1]).sup_r;
+    }
+    
+    s_M[2].oninput = function(){
+        p_M[2].innerHTML = percentage(u,s_M[2]).p_value;
+        pm_M[2].innerHTML = slider(u,s_M[2],c_M[2],pm_M[2]).pm_r;
+        inf_M[2].innerHTML = slider(u,s_M[2],c_M[2],pm_M[2]).inf_r;
+        sup_M[2].innerHTML = slider(u,s_M[2],c_M[2],pm_M[2]).sup_r;
+    }
+    
+    // Processing the stiffness
+    var p_K = [document.getElementById('K_percent_1'),document.getElementById('K_percent_2'),document.getElementById('K_percent_3')];
+    var s_K = [document.getElementById('eK_slider_1'),document.getElementById('eK_slider_2'),document.getElementById('eK_slider_3')];
+    
+    var ej_K =  ["{{K_e[0]}}","{{K_e[1]}}","{{K_e[2]}}"];
+    var loj_K= ["{{K_lo[0]}}","{{K_lo[1]}}","{{K_lo[2]}}"];
+    var hij_K= ["{{K_hi[0]}}","{{K_hi[1]}}","{{K_hi[2]}}"];
+    
+    var c_K = [document.getElementById('K_centre_1'),document.getElementById('K_centre_2'),document.getElementById('K_centre_3')];
+    var pm_K = [document.getElementById('K_pm_1'),document.getElementById('K_pm_2'),document.getElementById('K_pm_3')];
+    var inf_K = [document.getElementById('K_inf_1'),document.getElementById('K_inf_2'),document.getElementById('K_inf_3')];
+    var sup_K = [document.getElementById('K_sup_1'),document.getElementById('K_sup_2'),document.getElementById('K_sup_3')];
+    
+    
+    var i = 0;
+    for (i=0; i<3; i++){
+        p_K[i].innerHTML = percentage(u,s_K[i]).p_value;
+        pm_K[i].innerHTML = manicure(u,c_K[i],pm_K[i],ej_K[i],loj_K[i],hij_K[i]).pm_value;
+        inf_K[i].innerHTML = manicure(u,c_K[i],pm_K[i],ej_K[i],loj_K[i],hij_K[i]).inf_value; 
+        sup_K[i].innerHTML = manicure(u,c_K[i],pm_K[i],ej_K[i],loj_K[i],hij_K[i]).sup_value; 
+        
+    }
+
+    s_K[0].oninput = function(){
+        p_K[0].innerHTML = percentage(u,s_K[0]).p_value; 
+        pm_K[0].innerHTML = slider(u,s_K[0],c_K[0],pm_K[0]).pm_r;
+        inf_K[0].innerHTML = slider(u,s_K[0],c_K[0],pm_K[0]).inf_r;
+        sup_K[0].innerHTML = slider(u,s_K[0],c_K[0],pm_K[0]).sup_r;
+    };
+    
+    s_K[1].oninput = function(){
+        p_K[1].innerHTML = percentage(u,s_K[1]).p_value;
+        pm_K[1].innerHTML = slider(u,s_K[1],c_K[1],pm_K[1]).pm_r;
+        inf_K[1].innerHTML = slider(u,s_K[1],c_K[1],pm_K[1]).inf_r;
+        sup_K[1].innerHTML = slider(u,s_K[1],c_K[1],pm_K[1]).sup_r;
+    };
+    
+    s_K[2].oninput = function(){
+        p_K[2].innerHTML = percentage(u,s_K[2]).p_value;
+        pm_K[2].innerHTML = slider(u,s_K[2],c_K[2],pm_K[2]).pm_r;
+        inf_K[2].innerHTML = slider(u,s_K[2],c_K[2],pm_K[2]).inf_r;
+        sup_K[2].innerHTML = slider(u,s_K[2],c_K[2],pm_K[2]).sup_r;
+    };
+    
+    // Processing the damping
+    var p_C = [document.getElementById('C_percent_1'),document.getElementById('C_percent_2'),document.getElementById('C_percent_3')];
+    var s_C = [document.getElementById('eC_slider_1'),document.getElementById('eC_slider_2'),document.getElementById('eC_slider_3')];
+    
+    var ej_C =  ["{{C_e[0]}}","{{C_e[1]}}","{{C_e[2]}}"];
+    var loj_C= ["{{C_lo[0]}}","{{C_lo[1]}}","{{C_lo[2]}}"];
+    var hij_C= ["{{C_hi[0]}}","{{C_hi[1]}}","{{C_hi[2]}}"];
+    
+    var c_C = [document.getElementById('C_centre_1'),document.getElementById('C_centre_2'),document.getElementById('C_centre_3')];
+    var pm_C = [document.getElementById('C_pm_1'),document.getElementById('C_pm_2'),document.getElementById('C_pm_3')];
+    var inf_C = [document.getElementById('C_inf_1'),document.getElementById('C_inf_2'),document.getElementById('C_inf_3')];
+    var sup_C = [document.getElementById('C_sup_1'),document.getElementById('C_sup_2'),document.getElementById('C_sup_3')];
+    
+    for(i=0; i<3; i++){
+        p_C[i].innerHTML = percentage(u,s_C[i]).p_value;
+    
+        pm_C[i].innerHTML = manicure(u,c_C[i],pm_C[i],ej_C[i],loj_C[i],hij_C[i]).pm_value;
+        inf_C[i].innerHTML = manicure(u,c_C[i],pm_C[i],ej_C[i],loj_C[i],hij_C[i]).inf_value; 
+        sup_C[i].innerHTML = manicure(u,c_C[i],pm_C[i],ej_C[i],loj_C[i],hij_C[i]).sup_value; 
+    }
+    
+    s_C[0].oninput = function(){
+        p_C[0].innerHTML = percentage(u,s_C[0]).p_value;
+        pm_C[0].innerHTML = slider(u,s_C[0],c_C[0],pm_C[0]).pm_r;
+        inf_C[0].innerHTML = slider(u,s_C[0],c_C[0],pm_C[0]).inf_r;
+        sup_C[0].innerHTML = slider(u,s_C[0],c_C[0],pm_C[0]).sup_r;
+    };
+    
+    s_C[1].oninput = function(){
+        p_C[1].innerHTML = percentage(u,s_C[1]).p_value;
+        pm_C[1].innerHTML = slider(u,s_C[1],c_C[1],pm_C[1]).pm_r;
+        inf_C[1].innerHTML = slider(u,s_C[1],c_C[1],pm_C[1]).inf_r;
+        sup_C[1].innerHTML = slider(u,s_C[1],c_C[1],pm_C[1]).sup_r;
+
+    };
+
+    s_C[2].oninput = function(){
+        p_C[2].innerHTML = percentage(u,s_C[2]).p_value;
+        pm_C[2].innerHTML = slider(u,s_C[2],c_C[2],pm_C[2]).pm_r;
+        inf_C[2].innerHTML = slider(u,s_C[2],c_C[2],pm_C[2]).inf_r;
+        sup_C[2].innerHTML = slider(u,s_C[2],c_C[2],pm_C[2]).sup_r;
+    };
+    
+    var M_perc = "{{100*M_e}}";
+    if(M_perc.length>4){var M_perc = Number(M_perc).toFixed(1).toString();};
+    var K_perc = "{{100*K_e}}";
+    if(K_perc.length>4){var K_perc = Number(K_perc).toFixed(1).toString();};
+    var C_perc = "{{100*C_e}}";
+    if(C_perc.length>4){var C_perc = Number(C_perc).toFixed(1).toString();};
+    
+    // var MCs = {{ MCsamp }};
+    var MCs=50;
+    if (MCs==50){document.getElementById("MC_50").checked=true};
+    if (MCs==100){document.getElementById("MC_100").checked=true};
+    if (MCs==200){document.getElementById("MC_200").checked=true};
+    if (MCs==500){document.getElementById("MC_500").checked=true};
+    if (MCs==1000){document.getElementById("MC_1000").checked=true};
+    
+    // var Exci = {{ Exci }};
+    var Exci = '2';
+    if (Exci=='1'){document.getElementById("exci_1").checked=true};
+    if (Exci=='2'){document.getElementById("exci_2").checked=true};
+    if (Exci=='3'){document.getElementById("exci_3").checked=true};
+</script>
+{% endblock %} <!-- end js block -->
+{% endblock %} <!-- end html block -->

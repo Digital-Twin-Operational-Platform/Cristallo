@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% block title %}{% endblock %}
+{% block head %}
+{{ super() }}
+{% endblock %}
+{% block content %}
+
+<p>
+    Welcome to the <i>Experimental data cross validation</i> page.
+</p>
+<h2>Case study: three-storey structure</h2>
+
+<p>
+    In this page, the experimental and numerical data collected from the numerical and physical prototype of the three-story building in each university
+     are presented. <br> Four prototypes of the three-storey structure were made in four different universities: Sheffeild, Swansea,
+      Southampton and Bristol university. In addition, for each prototype,<br> a numerical model was performed for validation purpose.
+       <br>A validation between the numerical and experimental data is shown
+     in addition to a comparision of experimental results collected from the different prototypes of the physical stucture.
+</p>
+<br>
+
+<div id="left" style="margin:auto; width:70%;">
+    <div class='expValidationImagesHeader' >
+        <img src="{{ url_for('static', filename='img/Model.png') }}", alt="HTML5 Icon" width="200" height="300" >
+        <img src="{{ url_for('static', filename='css/fontawesome/svgs/solid/exchange.svg') }}", alt="uncertainty" width="30" height="30" class="expValidationImageCenter">
+        <img src="{{ url_for('static', filename='img/Structure.jpg') }}", alt="HTML5 Icon" width="200" height="300" >
+    </div>
+    <div class="left">
+    <table class="expValidationTable" style="border-spacing: 70px 3px;">
+        <tr>
+            <td><img src="{{ url_for('static', filename='css/fontawesome/svgs/solid/hammer.svg') }}", alt="Exp_Data"></td>
+            <td><a href="crossval_1" >  Experimental data </a></td>
+        </tr>
+        <tr>
+            <td><img src="{{ url_for('static', filename='css/fontawesome/svgs/solid/laptop-code.svg') }}", alt="Num_Data"  ></td>
+            <td><a href="crossval_3" >  Numerical data </a></td>
+        </tr>
+        <tr>
+            <td><img src="{{ url_for('static', filename='css/fontawesome/svgs/solid/handshake.svg') }}", alt="Exp_Num_Data"  ></td>
+            <td><a href="crossval_2" >  Cross validation prototype </a></td>
+        </tr>
+        <tr>
+            <td><img src="{{ url_for('static', filename='css/fontawesome/svgs/solid/compress-arrows.svg') }}", alt="Exp_Exp_Data"  ></td>
+            <td><a href="crossval_4" >  Cross prototypes comparision </a></td>
+        </tr>
+    </table>
+    </div>
+</div>
+
+<div class="Clear" style="clear:both">
+</div>
+{% endblock %}

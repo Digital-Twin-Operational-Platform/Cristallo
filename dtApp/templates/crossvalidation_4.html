@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% block title %}{% endblock %}
+{% block head %}
+{{ super() }}
+{% endblock %}
+{% block content %}
+
+<p>
+    Welcome to the <i>Experimental data cross validation</i> page.
+</p>
+<h2>Case study: three-storey structure</h2>
+
+<p>
+    In this page, the experimental data collected from the four different prototypes are compared. The four prototypes are located as follows:<br>
+    <br>Prototype 1 --> at Swansea University<br>
+    Prototype 2 --> at Southampton University<br>
+    Prototype 3 --> at Sheffield University<br>
+    Prototype 4 --> at Bristol University<br>
+
+</p>
+<br>
+<div class="container" >
+    <div class="row">
+        <div class="col-md-6">
+            <div class="chart" id="chart2">
+            <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.6/d3.min.js"></script>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+                <script>
+                    var graphs = {{plot4 | safe}};
+                    Plotly.plot('chart2',graphs,{});
+                </script>
+            </div>
+            <br><br><br>
+        </div>
+    </div>
+</div>
+
+<div class="Clear" style="clear:both">
+</div>
+
+{% endblock %}

@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+{% block title %}{% endblock %}
+{% block head %}
+{{ super() }}
+{% endblock %}
+{% block content %}
+<!--<h1>Digital Twin Operational Platform (DTOP) for a three-storey structure</h1>-->
+<p>
+    Welcome to the output distribution page.
+</p>
+<h2>Case study: three-storey structure</h2>
+
+<p>
+    The distribution of the requested outputs are shown in this page.
+    To visualise the 1-D histograms with a different number of bins,
+    change the value of the first box and press the Intro key of the keyboard.
+</p>
+
+<p>
+    The second box defines the number of bins of the joint-PDF,
+    and the length of the discretised domain for the analysis.
+<br>
+    Keep in mind that the time to complete the computation of the Fisher information matrix is proportional to
+    the number of bins to the power of the number of requested outputs.
+<br>
+    For more than four outputs requested, six bins are enough to estimate the Fisher information matrix
+    with a reasonable degree of accuracy in a relatively short time
+    (about one minute, for all of the six outputs and 1000 Monte Carlo simulations.)
+</p>
+
+
+<div>
+    <a href="Design_under_uncertainty">Back to input data page</a>
+</div>
+<br>
+<div>
+    <a href="Design_under_uncertainty_fisher">Go to Fisher Information Matrix</a>
+</div>
+
+<form method=post action="" >
+    <h3>Discretisation of the distributions of the outputs:</h3>
+    <table>
+      <tr>
+        <td>Number of bins of the 1-D histograms</td>
+        <td>{{ form.Xsize }}</td>
+      </tr>
+      <tr>
+        <td>Number of bins of the joint-PDF</td>
+        <td>{{ form.JPDFsize }}</td>
+      </tr>
+      </table>
+<p><input type=submit value='Show requested outputs only' formaction=''/>
+<br>
+<br>
+    <h3>Plot distribution of individual otputs:</h3>
+      <div class="container">
+              <input type="submit" name="1" value="Displacement x1">
+              <input type="submit" name="2" value="Displacement x2">
+              <input type="submit" name="3" value="Displacement x3">
+              <input type="submit" name="4" value="Shear force s1">
+              <input type="submit" name="5" value="Shear force s2">
+              <input type="submit" name="6" value="Shear force s3">
+              <br />
+
+     </div>
+</form>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="chart" id="scatter">
+                <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+                <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.6/d3.min.js"></script>
+                <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+                    <script>
+                        var graphs = {{plot | safe}};
+                        Plotly.plot('scatter',graphs,{});
+                    </script>
+                </div>
+            </div>
+        </div>
+
+{% endblock %}

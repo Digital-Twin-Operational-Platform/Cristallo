@@ -1,0 +1,34 @@
+ROOT
+ |--dtopapp/			# Flask code folder for the dtop app
+ |	 |--views.py		# The main flask code specifying routes
+ |	 |--forms.py		# The flask code for webforms
+ |	 |--models.py		# The flask code for linking to databases
+ |	 | 
+ |   |--static/			# Static web content
+ |	 |   |--css/		# Style sheets for web content
+ |	 |   |	|--main.css
+ |	 |	 |--img/		# Static images in this folder
+ |	 |	 |--script/		# JavaScript etc. in this folder
+ |	 |
+ |	 |--templates/		# html pages
+ |	 |   |--index.html	# The website home page
+ |	 |	 |--base.html	# Base html page that defines site format
+ |	 |	 |--other.html	# All other pages...
+ |	 |	
+ |	 |--dtopdata/		# All database files go here
+ |	 |
+ |	 |--dtopcode/
+ |	 |   |--code1.py	# Project specific python code
+ |	 |
+ |	 |--module1.py		# Structure containing DT information
+ |	 |	 
+ |--run.py				# dtop app launcher	
+ |--config.py			# dtop app configuration
+ |--requirements.txt	# A list of all the required Python packages
+ |--venv/				# The virtual environment
+ 
+ 
+ 
+ 
+ 
+ |	 |--views.py		# The flask code for contolling user access

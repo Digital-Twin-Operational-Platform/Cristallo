@@ -1,0 +1,107 @@
+{% extends "base.html" %}
+{% block title %}{% endblock %}
+{% block head %}
+{{ super() }}
+{% endblock %}
+{% block content %}
+
+<div style="padding-left: 1em; width:1000px">
+<p>Welcome to DTOP - Cristallo!</p>
+<p>
+This Digital Twin Operational Platform (DTOP) is Flask-based with the user interface being provided via HTML and CSS/Javascript. 
+The demonstration system is a three-storey structure as shown in the graphic below. 
+</p><p>
+The left-hand menu has links to a set of tools that can be used to interact with the digital twin. 
+Documentation can also be found in the left-hand menu via either a downloadable PDF file or an interactive HTML.
+</p>
+<p> 
+This version of DTOP-Cristallo is designed to be used within the standalone framework and is primarily aimed at demonstrating how this operational platform framework applies to an engineering system in a modular and open-source manor.
+In the spirit of demonstrating the concept, data is either simulated or in some cases pre-recorded experimental data is used.
+</p>
+</div>
+
+<div style="width:500px; float:left; padding-left: 10em; padding-top: 1em;">
+    <a href="https://soton243.autodesk360.com/shares/public/SH919a0QTf3c32634dcf95b180cdf3576ad4" target="_blank"><img src="{{ url_for('static', filename='img/ezgif_com_04size_03speed.gif') }}", width="280px" alt="cadmodel"></a>
+</div>
+
+<!-- <h3>This is the result of a cross-institutional collaborative effort. </h3>
+    
+<p>An interactive web-based platform created to showcase the research taking place at the six Universities of the programme grant.</p>
+
+<p>These webpages are designed to demonstrate some of the ideas each behind research project. </p> -->
+
+<div style="width:400; float:left">
+
+
+
+<p>
+    <a href="https://github.com/Digital-Twin-Operational-Platform/cristallo"><i class="fas fa-code-branch"></i> <u>GitHub</u> </a>
+
+    <br>
+    <br>
+
+    <h3>Research themes</h3>
+
+    <table>
+        <tr>
+            <td><a href="Design_under_uncertainty"><span class="fonticon" style="font-size: 30px;"><i class="fas fa-cubes"></i></span></a></td>
+            <td> &nbsp; &nbsp; Design under uncertainty</td>
+        </tr>
+        <tr>
+            <td><a href="control"><span class="fonticon" style="font-size: 30px;"><i class="fas fa-wave-square"></i></span></a></td>
+            <td> &nbsp; &nbsp; Structural vibration control</td>
+        </tr>
+        <tr>
+            <td><a href="unquant"><span class="fonticon" style="font-size: 30px;"><i class="fas fa-dice"></i></span></a></td>
+            <td> &nbsp; &nbsp; Uncertainty propagation</td>
+        </tr>
+        <tr>
+            <td><a href="FEA"><span class="fonticon" style="font-size: 30px;"><i class="fas fa-th"></i></span></a></td>
+            <td> &nbsp; &nbsp; Finite element analysis</td>
+        </tr>
+        <tr>
+            <td><a href="nonlinearcbc"><span class="fonticon" style="font-size: 30px;"><i class="fas fa-project-diagram"></i></span></a></td>
+            <td> &nbsp; &nbsp; Nonlinear control-based continuation</td>
+        </tr>
+        <tr>
+            <td><a href="crossval"><span class="fonticon" style="font-size: 30px;"><i class="fas fa-retweet"></i></span></a></td>
+            <td> &nbsp; &nbsp; Experimental cross validation</td>
+        </tr>
+    </table>
+    <!-- <p><a href="Design_under_uncertainty"><span class="fonticon" style="font-size: 30px;"><i class="fas fa-cubes"></i></span></a> &nbsp; &nbsp; Design under uncertainty</p>  -->
+    <!-- <p><a href="control"><span class="fonticon" style="font-size: 30px;"><i class="fas fa-wave-square"></i></span></a> &nbsp; &nbsp; Structural vibration control</p>  -->
+    <!-- <p><a href="unquant"><span class="fonticon" style="font-size: 30px;"><i class="fas fa-dice"></i></span></a> &nbsp; &nbsp; Uncertainty propagation</p>  -->
+    <!-- <p><a href="FEA"><span class="fonticon" style="font-size: 30px;"><i class="fas fa-th"></i></span></a> &nbsp; &nbsp; Finite element analysis</p>  -->
+    <!-- <p><a href="nonlinearcbc"><span class="fonticon" style="font-size: 30px;"><i class="fas fa-project-diagram"></i></span></a> &nbsp; &nbsp; Nonlinear continuation</p>  -->
+    <!-- <p><a href="crossval"><span class="fonticon" style="font-size: 30px;"><i class="fas fa-retweet"></i></span></a> &nbsp; &nbsp; Cross validation</p>  -->
+
+<!-- 
+<i class="fas fa-paper-plane"></i> <u>Cite</u>
+<br>
+<br>
+Bonney, M., De Angelis, M., Dal Borgo, M., Andrade Acosta, L., Beregi S., Jamia, N., and Wagg, D. 2021.
+
+Development of an accessible digital twin operational platforms using Python and Flask. 
+
+<i>Engineering with computers.</i> In progress.
+
+doi: -->
+
+</p>
+<!-- <p style="font-size: 13px;">Contributors:</p>
+<ul style="margin: auto; font-size: 13px;">
+    <li style="padding: 5px"><a href='https://github.com/marcodeangelis'>Marco De Angelis</a>, <i>University of Liverpool</i></li>
+    <li style="padding: 5px">Mattia Dal Borgo, <i>University of Southampton</i></li>
+    <li style="padding: 5px">Matthew Bonney, <i>University of Sheffield</i></li>
+    <li style="padding: 5px">David Wagg, <i>University of Sheffield</i></li>
+    <li style="padding: 5px">Luis Andrade Acosta, <i>University of Cambridge</i></li>
+    <li style="padding: 5px">Sandor Beregi, <i>University of Bristol</i></li>
+    <li style="padding: 5px">Nidhal Jamia, <i>Swansea University</i></li>
+    <li style="padding: 5px">Yichen Zhu, <i>University of Sheffield</i></li>
+</ul> -->
+</div>
+
+<div style="clear: both;">
+    <br>
+</div>
+{% endblock %}

@@ -1,0 +1,746 @@
+#%% Import Required Packages 
+from abaqus import *
+from abaqusConstants import *
+import __main__
+import section
+import regionToolset
+import displayGroupMdbToolset as dgm
+import part
+import material
+import assembly
+import step
+import interaction
+import load
+import mesh
+import optimization
+import job
+import sketch
+import visualization
+import xyPlot
+import displayGroupOdbToolset as dgo
+import connectorBehavior
+#%% Generate Leg
+s = mdb.models['Model-1'].ConstrainedSketch(name='__profile__', sheetSize=5.0)
+g, v, d, c = s.geometry, s.vertices, s.dimensions, s.constraints
+s.setPrimaryObject(option=STANDALONE)
+s.rectangle(point1=(0.0, 0.0), point2=(1.0, 0.125))
+p = mdb.models['Model-1'].Part(name='Leg', dimensionality=THREE_D, 
+    type=DEFORMABLE_BODY)
+p = mdb.models['Model-1'].parts['Leg']
+p.BaseSolidExtrude(sketch=s, depth=22.0)
+s.unsetPrimaryObject()
+p = mdb.models['Model-1'].parts['Leg']
+session.viewports['Viewport: 1'].setValues(displayedObject=p)
+del mdb.models['Model-1'].sketches['__profile__']
+p = mdb.models['Model-1'].parts['Leg']
+p.DatumPlaneByPrincipalPlane(principalPlane=XYPLANE, offset=1.0)
+p = mdb.models['Model-1'].parts['Leg']
+p.DatumPlaneByPrincipalPlane(principalPlane=XYPLANE, offset=7.0)
+p = mdb.models['Model-1'].parts['Leg']
+p.DatumPlaneByPrincipalPlane(principalPlane=XYPLANE, offset=8.0)
+p = mdb.models['Model-1'].parts['Leg']
+p.DatumPlaneByPrincipalPlane(principalPlane=XYPLANE, offset=14.0)
+p = mdb.models['Model-1'].parts['Leg']
+p.DatumPlaneByPrincipalPlane(principalPlane=XYPLANE, offset=15.0)
+p = mdb.models['Model-1'].parts['Leg']
+p.DatumPlaneByPrincipalPlane(principalPlane=XYPLANE, offset=21.0)
+p = mdb.models['Model-1'].parts['Leg']
+c = p.cells
+pickedCells = c.getSequenceFromMask(mask=('[#1 ]', ), )
+d1 = p.datums
+p.PartitionCellByDatumPlane(datumPlane=d1[7], cells=pickedCells)
+p = mdb.models['Model-1'].parts['Leg']
+c = p.cells
+pickedCells = c.getSequenceFromMask(mask=('[#2 ]', ), )
+d2 = p.datums
+p.PartitionCellByDatumPlane(datumPlane=d2[6], cells=pickedCells)
+p = mdb.models['Model-1'].parts['Leg']
+c = p.cells
+pickedCells = c.getSequenceFromMask(mask=('[#1 ]', ), )
+d1 = p.datums
+p.PartitionCellByDatumPlane(datumPlane=d1[5], cells=pickedCells)
+p = mdb.models['Model-1'].parts['Leg']
+c = p.cells
+pickedCells = c.getSequenceFromMask(mask=('[#1 ]', ), )
+d2 = p.datums
+p.PartitionCellByDatumPlane(datumPlane=d2[4], cells=pickedCells)
+p = mdb.models['Model-1'].parts['Leg']
+c = p.cells
+pickedCells = c.getSequenceFromMask(mask=('[#2 ]', ), )
+d1 = p.datums
+p.PartitionCellByDatumPlane(datumPlane=d1[3], cells=pickedCells)
+p = mdb.models['Model-1'].parts['Leg']
+c = p.cells
+pickedCells = c.getSequenceFromMask(mask=('[#4 ]', ), )
+d2 = p.datums
+p.PartitionCellByDatumPlane(datumPlane=d2[2], cells=pickedCells)
+#%% Generate Foot
+s1 = mdb.models['Model-1'].ConstrainedSketch(name='__profile__', 
+    sheetSize=10.0)
+g, v, d, c = s1.geometry, s1.vertices, s1.dimensions, s1.constraints
+s1.setPrimaryObject(option=STANDALONE)
+s1.Spot(point=(0.0, 0.0))
+s1.Spot(point=(0.0, 0.25))
+s1.Spot(point=(2.0, 0.0))
+s1.Spot(point=(1.75, 0.25))
+s1.Spot(point=(2.0, 2.0))
+s1.Spot(point=(1.75, 2.0))
+s1.Line(point1=(0.0, 0.25), point2=(0.0, 0.0))
+s1.VerticalConstraint(entity=g[2], addUndoState=False)
+s1.Line(point1=(0.0, 0.0), point2=(2.0, 0.0))
+s1.HorizontalConstraint(entity=g[3], addUndoState=False)
+s1.PerpendicularConstraint(entity1=g[2], entity2=g[3], addUndoState=False)
+s1.Line(point1=(2.0, 0.0), point2=(2.0, 2.0))
+s1.VerticalConstraint(entity=g[4], addUndoState=False)
+s1.PerpendicularConstraint(entity1=g[3], entity2=g[4], addUndoState=False)
+s1.Line(point1=(2.0, 2.0), point2=(1.75, 2.0))
+s1.HorizontalConstraint(entity=g[5], addUndoState=False)
+s1.PerpendicularConstraint(entity1=g[4], entity2=g[5], addUndoState=False)
+s1.Line(point1=(1.75, 2.0), point2=(1.75, 0.25))
+s1.VerticalConstraint(entity=g[6], addUndoState=False)
+s1.PerpendicularConstraint(entity1=g[5], entity2=g[6], addUndoState=False)
+s1.Line(point1=(1.75, 0.25), point2=(0.0, 0.25))
+s1.HorizontalConstraint(entity=g[7], addUndoState=False)
+s1.PerpendicularConstraint(entity1=g[6], entity2=g[7], addUndoState=False)
+p = mdb.models['Model-1'].Part(name='Foot', dimensionality=THREE_D, 
+    type=DEFORMABLE_BODY)
+p = mdb.models['Model-1'].parts['Foot']
+p.BaseSolidExtrude(sketch=s1, depth=1.0)
+s1.unsetPrimaryObject()
+p = mdb.models['Model-1'].parts['Foot']
+session.viewports['Viewport: 1'].setValues(displayedObject=p)
+del mdb.models['Model-1'].sketches['__profile__']
+p = mdb.models['Model-1'].parts['Foot']
+f, v1 = p.faces, p.vertices
+p.DatumPlaneByOffset(plane=f[3], point=v1[0])
+p = mdb.models['Model-1'].parts['Foot']
+f1 = p.faces
+p.DatumPlaneByOffset(plane=f1[3], flip=SIDE2, offset=1.25)
+p = mdb.models['Model-1'].parts['Foot']
+c = p.cells
+pickedCells = c.getSequenceFromMask(mask=('[#1 ]', ), )
+d1 = p.datums
+p.PartitionCellByDatumPlane(datumPlane=d1[2], cells=pickedCells)
+p = mdb.models['Model-1'].parts['Foot']
+c = p.cells
+pickedCells = c.getSequenceFromMask(mask=('[#2 ]', ), )
+d2 = p.datums
+p.PartitionCellByDatumPlane(datumPlane=d2[3], cells=pickedCells)
+#%% Generate Floor
+s = mdb.models['Model-1'].ConstrainedSketch(name='__profile__', sheetSize=20.0)
+g, v, d, c = s.geometry, s.vertices, s.dimensions, s.constraints
+s.setPrimaryObject(option=STANDALONE)
+s.rectangle(point1=(0.0, 0.0), point2=(10.0, 12.0))
+p = mdb.models['Model-1'].Part(name='Floor', dimensionality=THREE_D, 
+    type=DEFORMABLE_BODY)
+p = mdb.models['Model-1'].parts['Floor']
+p.BaseSolidExtrude(sketch=s, depth=1.0)
+s.unsetPrimaryObject()
+p = mdb.models['Model-1'].parts['Floor']
+session.viewports['Viewport: 1'].setValues(displayedObject=p)
+del mdb.models['Model-1'].sketches['__profile__']
+p = mdb.models['Model-1'].parts['Floor']
+f = p.faces
+p.DatumPlaneByOffset(plane=f[2], flip=SIDE2, offset=1.0)
+p = mdb.models['Model-1'].parts['Floor']
+f1 = p.faces
+p.DatumPlaneByOffset(plane=f1[0], flip=SIDE2, offset=1.0)
+p = mdb.models['Model-1'].parts['Floor']
+c = p.cells
+pickedCells = c.getSequenceFromMask(mask=('[#1 ]', ), )
+d1 = p.datums
+p.PartitionCellByDatumPlane(datumPlane=d1[3], cells=pickedCells)
+p = mdb.models['Model-1'].parts['Floor']
+c = p.cells
+pickedCells = c.getSequenceFromMask(mask=('[#2 ]', ), )
+d2 = p.datums
+p.PartitionCellByDatumPlane(datumPlane=d2[2], cells=pickedCells)
+#%% Generate Mounting Plate
+s1 = mdb.models['Model-1'].ConstrainedSketch(name='__profile__', sheetSize=5.0)
+g, v, d, c = s1.geometry, s1.vertices, s1.dimensions, s1.constraints
+s1.setPrimaryObject(option=STANDALONE)
+s1.rectangle(point1=(0.0, 0.0), point2=(1.0, 1.0))
+p = mdb.models['Model-1'].Part(name='MountPlate', dimensionality=THREE_D, 
+    type=DEFORMABLE_BODY)
+p = mdb.models['Model-1'].parts['MountPlate']
+p.BaseSolidExtrude(sketch=s1, depth=0.5)
+s1.unsetPrimaryObject()
+p = mdb.models['Model-1'].parts['MountPlate']
+session.viewports['Viewport: 1'].setValues(displayedObject=p)
+del mdb.models['Model-1'].sketches['__profile__']
+
+#%% Materials
+# Create Material Properties
+mdb.models['Model-1'].Material(name='AL6082')
+mdb.models['Model-1'].materials['AL6082'].Density(table=((density, ), ))
+mdb.models['Model-1'].materials['AL6082'].Elastic(table=((Young, Nu), ))
+# Create Section
+mdb.models['Model-1'].HomogeneousSolidSection(name='Section-1', 
+    material='AL6082', thickness=None)
+# Assign Section to Geometry
+p = mdb.models['Model-1'].parts['Leg']
+c = p.cells
+cells = c.getSequenceFromMask(mask=('[#7f ]', ), )
+region = p.Set(cells=cells, name='Set-1')
+p = mdb.models['Model-1'].parts['Leg']
+p.SectionAssignment(region=region, sectionName='Section-1', offset=0.0, 
+    offsetType=MIDDLE_SURFACE, offsetField='', 
+    thicknessAssignment=FROM_SECTION)
+p = mdb.models['Model-1'].parts['MountPlate']
+session.viewports['Viewport: 1'].setValues(displayedObject=p)
+p = mdb.models['Model-1'].parts['MountPlate']
+c = p.cells
+cells = c.getSequenceFromMask(mask=('[#1 ]', ), )
+region = p.Set(cells=cells, name='Set-1')
+p = mdb.models['Model-1'].parts['MountPlate']
+p.SectionAssignment(region=region, sectionName='Section-1', offset=0.0, 
+    offsetType=MIDDLE_SURFACE, offsetField='', 
+    thicknessAssignment=FROM_SECTION)
+p = mdb.models['Model-1'].parts['Foot']
+session.viewports['Viewport: 1'].setValues(displayedObject=p)
+p = mdb.models['Model-1'].parts['Foot']
+c = p.cells
+cells = c.getSequenceFromMask(mask=('[#7 ]', ), )
+region = p.Set(cells=cells, name='Set-1')
+p = mdb.models['Model-1'].parts['Foot']
+p.SectionAssignment(region=region, sectionName='Section-1', offset=0.0, 
+    offsetType=MIDDLE_SURFACE, offsetField='', 
+    thicknessAssignment=FROM_SECTION)
+p = mdb.models['Model-1'].parts['Floor']
+session.viewports['Viewport: 1'].setValues(displayedObject=p)
+p = mdb.models['Model-1'].parts['Floor']
+c = p.cells
+cells = c.getSequenceFromMask(mask=('[#7 ]', ), )
+region = p.Set(cells=cells, name='Set-1')
+p = mdb.models['Model-1'].parts['Floor']
+p.SectionAssignment(region=region, sectionName='Section-1', offset=0.0, 
+    offsetType=MIDDLE_SURFACE, offsetField='', 
+    thicknessAssignment=FROM_SECTION)
+#%% Assemble
+
+a1 = mdb.models['Model-1'].rootAssembly
+a1.DatumCsysByDefault(CARTESIAN)
+p = mdb.models['Model-1'].parts['Floor']
+a1.Instance(name='Floor-1', part=p, dependent=ON)
+a = mdb.models['Model-1'].rootAssembly
+a1 = mdb.models['Model-1'].rootAssembly
+a1.translate(instanceList=('Floor-1', ), vector=(0.0, 0.0, 7.0))
+a1 = mdb.models['Model-1'].rootAssembly
+a1.LinearInstancePattern(instanceList=('Floor-1', ), direction1=(0.0, 0.0, 
+    1.0), direction2=(0.0, 1.0, 0.0), number1=3, number2=1, spacing1=7.0, 
+    spacing2=12.0)
+a1 = mdb.models['Model-1'].rootAssembly
+p = mdb.models['Model-1'].parts['Leg']
+a1.Instance(name='Leg-1', part=p, dependent=ON)
+a1 = mdb.models['Model-1'].rootAssembly
+a1.translate(instanceList=('Leg-1', ), vector=(0.0, -0.125, 0.0))
+a1 = mdb.models['Model-1'].rootAssembly
+a1.LinearInstancePattern(instanceList=('Leg-1', ), direction1=(1.0, 0.0, 0.0), 
+    direction2=(0.0, 1.0, 0.0), number1=2, number2=2, spacing1=9.0, 
+    spacing2=12.125)
+a1 = mdb.models['Model-1'].rootAssembly
+p = mdb.models['Model-1'].parts['MountPlate']
+a1.Instance(name='MountPlate-1', part=p, dependent=ON)
+a1 = mdb.models['Model-1'].rootAssembly
+a1.rotate(instanceList=('MountPlate-1', ), axisPoint=(0.0, 0.0, 0.0), 
+    axisDirection=(1.0, 0.0, 0.0), angle=90.0)
+a1 = mdb.models['Model-1'].rootAssembly
+a1.translate(instanceList=('MountPlate-1', ), vector=(0.0, -0.125, 0.0))
+a1 = mdb.models['Model-1'].rootAssembly
+a1.LinearInstancePattern(instanceList=('MountPlate-1', ), direction1=(0.0, 1.0, 
+    0.0), direction2=(0.0, 0.0, 1.0), number1=2, number2=4, spacing1=12.75, 
+    spacing2=7.0)
+a1 = mdb.models['Model-1'].rootAssembly
+p = mdb.models['Model-1'].parts['Foot']
+a1.Instance(name='Foot-1', part=p, dependent=ON)
+a1 = mdb.models['Model-1'].rootAssembly
+a1.rotate(instanceList=('Foot-1', ), axisPoint=(0.0, 0.0, 0.0), axisDirection=(
+    1.0, 0.0, 0.0), angle=90.0)
+a1 = mdb.models['Model-1'].rootAssembly
+a1.rotate(instanceList=('Foot-1', ), axisPoint=(0.0, 0.0, 0.0), axisDirection=(
+    0.0, 0.0, 1.0), angle=90.0)
+a1 = mdb.models['Model-1'].rootAssembly
+a1.translate(instanceList=('Foot-1', ), vector=(0.0, -2.625, -0.25))
+a1 = mdb.models['Model-1'].rootAssembly
+p = mdb.models['Model-1'].parts['Foot']
+a1.Instance(name='Foot-2', part=p, dependent=ON)
+a1 = mdb.models['Model-1'].rootAssembly
+a1.rotate(instanceList=('Foot-2', ), axisPoint=(0.0, 0.0, 0.0), axisDirection=(
+    1.0, 0.0, 0.0), angle=90.0)
+a1 = mdb.models['Model-1'].rootAssembly
+a1.rotate(instanceList=('Foot-2', ), axisPoint=(0.0, 0.0, 0.0), axisDirection=(
+    0.0, 0.0, 1.0), angle=-90.0)
+a1 = mdb.models['Model-1'].rootAssembly
+a1.translate(instanceList=('Foot-2', ), vector=(1.0, 14.625, -0.25))
+a1 = mdb.models['Model-1'].rootAssembly
+a1.LinearInstancePattern(instanceList=('MountPlate-1', 'Foot-1', 
+    'MountPlate-1-lin-2-1', 'Foot-2', 'MountPlate-1-lin-2-2', 
+    'MountPlate-1-lin-1-2', 'MountPlate-1-lin-1-3', 'MountPlate-1-lin-1-4', 
+    'MountPlate-1-lin-2-4', 'MountPlate-1-lin-2-3'), direction1=(1.0, 0.0, 
+    0.0), direction2=(0.0, 1.0, 0.0), number1=2, number2=1, spacing1=9.0, 
+    spacing2=17.25)
+
+#%% Create Step
+mdb.models['Model-1'].FrequencyStep(name='Step-1', previous='Initial', 
+    maxEigen=Freq_Max)
+#%% Create Ties
+a = mdb.models['Model-1'].rootAssembly
+s1 = a.instances['Floor-1-lin-3-1'].faces
+side1Faces1 = s1.getSequenceFromMask(mask=('[#800 ]', ), )
+region1=regionToolset.Region(side1Faces=side1Faces1)
+a = mdb.models['Model-1'].rootAssembly
+s1 = a.instances['Leg-1-lin-1-2'].faces
+side1Faces1 = s1.getSequenceFromMask(mask=('[#0 #2 ]', ), )
+region2=regionToolset.Region(side1Faces=side1Faces1)
+mdb.models['Model-1'].Tie(name='Constraint-1', master=region1, slave=region2, 
+    positionToleranceMethod=COMPUTED, adjust=ON, tieRotations=ON, 
+    thickness=ON)
+a = mdb.models['Model-1'].rootAssembly
+s1 = a.instances['Floor-1-lin-2-1'].faces
+side1Faces1 = s1.getSequenceFromMask(mask=('[#800 ]', ), )
+region1=regionToolset.Region(side1Faces=side1Faces1)
+a = mdb.models['Model-1'].rootAssembly
+s1 = a.instances['Leg-1-lin-1-2'].faces
+side1Faces1 = s1.getSequenceFromMask(mask=('[#40000 ]', ), )
+region2=regionToolset.Region(side1Faces=side1Faces1)
+mdb.models['Model-1'].Tie(name='Constraint-2', master=region1, slave=region2, 
+    positionToleranceMethod=COMPUTED, adjust=ON, tieRotations=ON, 
+    thickness=ON)
+a = mdb.models['Model-1'].rootAssembly
+s1 = a.instances['Floor-1'].faces
+side1Faces1 = s1.getSequenceFromMask(mask=('[#800 ]', ), )
+region1=regionToolset.Region(side1Faces=side1Faces1)
+a = mdb.models['Model-1'].rootAssembly
+s1 = a.instances['Leg-1-lin-1-2'].faces
+side1Faces1 = s1.getSequenceFromMask(mask=('[#1000000 ]', ), )
+region2=regionToolset.Region(side1Faces=side1Faces1)
+mdb.models['Model-1'].Tie(name='Constraint-3', master=region1, slave=region2, 
+    positionToleranceMethod=COMPUTED, adjust=ON, tieRotations=ON, 
+    thickness=ON)
+a = mdb.models['Model-1'].rootAssembly
+s1 = a.instances['Leg-1-lin-1-2'].faces
+side1Faces1 = s1.getSequenceFromMask(mask=('[#10000000 ]', ), )
+region1=regionToolset.Region(side1Faces=side1Faces1)
+a = mdb.models['Model-1'].rootAssembly
+s1 = a.instances['MountPlate-1-lin-2-4'].faces
+side1Faces1 = s1.getSequenceFromMask(mask=('[#10 ]', ), )
+region2=regionToolset.Region(side1Faces=side1Faces1)
+mdb.models['Model-1'].Tie(name='Constraint-4', master=region1, slave=region2, 
+    positionToleranceMethod=COMPUTED, adjust=ON, tieRotations=ON, 
+    thickness=ON)
+a = mdb.models['Model-1'].rootAssembly
+s1 = a.instances['Leg-1-lin-1-2'].faces
+side1Faces1 = s1.getSequenceFromMask(mask=('[#80000000 ]', ), )
+region1=regionToolset.Region(side1Faces=side1Faces1)
+a = mdb.models['Model-1'].rootAssembly
+s1 = a.instances['MountPlate-1-lin-2-3'].faces
+side1Faces1 = s1.getSequenceFromMask(mask=('[#10 ]', ), )
+region2=regionToolset.Region(side1Faces=side1Faces1)
+mdb.models['Model-1'].Tie(name='Constraint-5', master=region1, slave=region2, 
+    positionToleranceMethod=COMPUTED, adjust=ON, tieRotations=ON, 
+    thickness=ON)
+a = mdb.models['Model-1'].rootAssembly
+s1 = a.instances['Leg-1-lin-1-2'].faces
+side1Faces1 = s1.getSequenceFromMask(mask=('[#100 ]', ), )
+region1=regionToolset.Region(side1Faces=side1Faces1)
+a = mdb.models['Model-1'].rootAssembly
+s1 = a.instances['MountPlate-1-lin-2-2'].faces
+side1Faces1 = s1.getSequenceFromMask(mask=('[#10 ]', ), )
+region2=regionToolset.Region(side1Faces=side1Faces1)
+mdb.models['Model-1'].Tie(name='Constraint-6', master=region1, slave=region2, 
+    positionToleranceMethod=COMPUTED, adjust=ON, tieRotations=ON, 
+    thickness=ON)
+a = mdb.models['Model-1'].rootAssembly
+s1 = a.instances['Leg-1-lin-1-2'].faces
+side1Faces1 = s1.getSequenceFromMask(mask=('[#4000 ]', ), )
+region1=regionToolset.Region(side1Faces=side1Faces1)
+a = mdb.models['Model-1'].rootAssembly
+s1 = a.instances['MountPlate-1-lin-2-1'].faces
+side1Faces1 = s1.getSequenceFromMask(mask=('[#10 ]', ), )
+region2=regionToolset.Region(side1Faces=side1Faces1)
+mdb.models['Model-1'].Tie(name='Constraint-7', master=region1, slave=region2, 
+    positionToleranceMethod=COMPUTED, adjust=ON, tieRotations=ON, 
+    thickness=ON)
+a = mdb.models['Model-1'].rootAssembly
+s1 = a.instances['MountPlate-1-lin-2-1'].faces
+side1Faces1 = s1.getSequenceFromMask(mask=('[#20 ]', ), )
+region1=regionToolset.Region(side1Faces=side1Faces1)
+a = mdb.models['Model-1'].rootAssembly
+s1 = a.instances['Foot-2'].faces
+side1Faces1 = s1.getSequenceFromMask(mask=('[#4 ]', ), )
+region2=regionToolset.Region(side1Faces=side1Faces1)
+mdb.models['Model-1'].Tie(name='Constraint-8', master=region1, slave=region2, 
+    positionToleranceMethod=COMPUTED, adjust=ON, tieRotations=ON, 
+    thickness=ON)
+a = mdb.models['Model-1'].rootAssembly
+s1 = a.instances['Floor-1-lin-3-1'].faces
+side1Faces1 = s1.getSequenceFromMask(mask=('[#200 ]', ), )
+region1=regionToolset.Region(side1Faces=side1Faces1)
+a = mdb.models['Model-1'].rootAssembly
+s1 = a.instances['Leg-1'].faces
+side1Faces1 = s1.getSequenceFromMask(mask=('[#10000000 ]', ), )
+region2=regionToolset.Region(side1Faces=side1Faces1)
+mdb.models['Model-1'].Tie(name='Constraint-9', master=region1, slave=region2, 
+    positionToleranceMethod=COMPUTED, adjust=ON, tieRotations=ON, 
+    thickness=ON)
+a = mdb.models['Model-1'].rootAssembly
+s1 = a.instances['Floor-1-lin-2-1'].faces
+side1Faces1 = s1.getSequenceFromMask(mask=('[#200 ]', ), )
+region1=regionToolset.Region(side1Faces=side1Faces1)
+a = mdb.models['Model-1'].rootAssembly
+s1 = a.instances['Leg-1'].faces
+side1Faces1 = s1.getSequenceFromMask(mask=('[#80000000 ]', ), )
+region2=regionToolset.Region(side1Faces=side1Faces1)
+mdb.models['Model-1'].Tie(name='Constraint-10', master=region1, slave=region2, 
+    positionToleranceMethod=COMPUTED, adjust=ON, tieRotations=ON, 
+    thickness=ON)
+a = mdb.models['Model-1'].rootAssembly
+s1 = a.instances['Floor-1'].faces
+side1Faces1 = s1.getSequenceFromMask(mask=('[#200 ]', ), )
+region1=regionToolset.Region(side1Faces=side1Faces1)
+a = mdb.models['Model-1'].rootAssembly
+s1 = a.instances['Leg-1'].faces
+side1Faces1 = s1.getSequenceFromMask(mask=('[#100 ]', ), )
+region2=regionToolset.Region(side1Faces=side1Faces1)
+mdb.models['Model-1'].Tie(name='Constraint-11', master=region1, slave=region2, 
+    positionToleranceMethod=COMPUTED, adjust=ON, tieRotations=ON, 
+    thickness=ON)
+a = mdb.models['Model-1'].rootAssembly
+s1 = a.instances['Leg-1'].faces
+side1Faces1 = s1.getSequenceFromMask(mask=('[#0 #2 ]', ), )
+region1=regionToolset.Region(side1Faces=side1Faces1)
+a = mdb.models['Model-1'].rootAssembly
+s1 = a.instances['MountPlate-1-lin-1-4'].faces
+side1Faces1 = s1.getSequenceFromMask(mask=('[#20 ]', ), )
+region2=regionToolset.Region(side1Faces=side1Faces1)
+mdb.models['Model-1'].Tie(name='Constraint-12', master=region1, slave=region2, 
+    positionToleranceMethod=COMPUTED, adjust=ON, tieRotations=ON, 
+    thickness=ON)
+a = mdb.models['Model-1'].rootAssembly
+s1 = a.instances['Leg-1'].faces
+side1Faces1 = s1.getSequenceFromMask(mask=('[#40000 ]', ), )
+region1=regionToolset.Region(side1Faces=side1Faces1)
+a = mdb.models['Model-1'].rootAssembly
+s1 = a.instances['MountPlate-1-lin-1-3'].faces
+side1Faces1 = s1.getSequenceFromMask(mask=('[#20 ]', ), )
+region2=regionToolset.Region(side1Faces=side1Faces1)
+mdb.models['Model-1'].Tie(name='Constraint-13', master=region1, slave=region2, 
+    positionToleranceMethod=COMPUTED, adjust=ON, tieRotations=ON, 
+    thickness=ON)
+a = mdb.models['Model-1'].rootAssembly
+s1 = a.instances['Leg-1'].faces
+side1Faces1 = s1.getSequenceFromMask(mask=('[#1000000 ]', ), )
+region1=regionToolset.Region(side1Faces=side1Faces1)
+a = mdb.models['Model-1'].rootAssembly
+s1 = a.instances['MountPlate-1-lin-1-2'].faces
+side1Faces1 = s1.getSequenceFromMask(mask=('[#20 ]', ), )
+region2=regionToolset.Region(side1Faces=side1Faces1)
+mdb.models['Model-1'].Tie(name='Constraint-14', master=region1, slave=region2, 
+    positionToleranceMethod=COMPUTED, adjust=ON, tieRotations=ON, 
+    thickness=ON)
+a = mdb.models['Model-1'].rootAssembly
+s1 = a.instances['Leg-1'].faces
+side1Faces1 = s1.getSequenceFromMask(mask=('[#10 ]', ), )
+region1=regionToolset.Region(side1Faces=side1Faces1)
+a = mdb.models['Model-1'].rootAssembly
+s1 = a.instances['MountPlate-1'].faces
+side1Faces1 = s1.getSequenceFromMask(mask=('[#20 ]', ), )
+region2=regionToolset.Region(side1Faces=side1Faces1)
+mdb.models['Model-1'].Tie(name='Constraint-15', master=region1, slave=region2, 
+    positionToleranceMethod=COMPUTED, adjust=ON, tieRotations=ON, 
+    thickness=ON)
+a = mdb.models['Model-1'].rootAssembly
+s1 = a.instances['MountPlate-1'].faces
+side1Faces1 = s1.getSequenceFromMask(mask=('[#10 ]', ), )
+region1=regionToolset.Region(side1Faces=side1Faces1)
+a = mdb.models['Model-1'].rootAssembly
+s1 = a.instances['Foot-1'].faces
+side1Faces1 = s1.getSequenceFromMask(mask=('[#4 ]', ), )
+region2=regionToolset.Region(side1Faces=side1Faces1)
+mdb.models['Model-1'].Tie(name='Constraint-16', master=region1, slave=region2, 
+    positionToleranceMethod=COMPUTED, adjust=ON, tieRotations=ON, 
+    thickness=ON)
+a = mdb.models['Model-1'].rootAssembly
+s1 = a.instances['Floor-1-lin-3-1'].faces
+side1Faces1 = s1.getSequenceFromMask(mask=('[#10 ]', ), )
+region1=regionToolset.Region(side1Faces=side1Faces1)
+a = mdb.models['Model-1'].rootAssembly
+s1 = a.instances['Leg-1-lin-2-2'].faces
+side1Faces1 = s1.getSequenceFromMask(mask=('[#0 #2 ]', ), )
+region2=regionToolset.Region(side1Faces=side1Faces1)
+mdb.models['Model-1'].Tie(name='Constraint-17', master=region1, slave=region2, 
+    positionToleranceMethod=COMPUTED, adjust=ON, tieRotations=ON, 
+    thickness=ON)
+a = mdb.models['Model-1'].rootAssembly
+s1 = a.instances['Floor-1-lin-2-1'].faces
+side1Faces1 = s1.getSequenceFromMask(mask=('[#10 ]', ), )
+region1=regionToolset.Region(side1Faces=side1Faces1)
+a = mdb.models['Model-1'].rootAssembly
+s1 = a.instances['Leg-1-lin-2-2'].faces
+side1Faces1 = s1.getSequenceFromMask(mask=('[#40000 ]', ), )
+region2=regionToolset.Region(side1Faces=side1Faces1)
+mdb.models['Model-1'].Tie(name='Constraint-18', master=region1, slave=region2, 
+    positionToleranceMethod=COMPUTED, adjust=ON, tieRotations=ON, 
+    thickness=ON)
+a = mdb.models['Model-1'].rootAssembly
+s1 = a.instances['Floor-1'].faces
+side1Faces1 = s1.getSequenceFromMask(mask=('[#10 ]', ), )
+region1=regionToolset.Region(side1Faces=side1Faces1)
+a = mdb.models['Model-1'].rootAssembly
+s1 = a.instances['Leg-1-lin-2-2'].faces
+side1Faces1 = s1.getSequenceFromMask(mask=('[#1000000 ]', ), )
+region2=regionToolset.Region(side1Faces=side1Faces1)
+mdb.models['Model-1'].Tie(name='Constraint-19', master=region1, slave=region2, 
+    positionToleranceMethod=COMPUTED, adjust=ON, tieRotations=ON, 
+    thickness=ON)
+a = mdb.models['Model-1'].rootAssembly
+s1 = a.instances['Leg-1-lin-2-2'].faces
+side1Faces1 = s1.getSequenceFromMask(mask=('[#10000000 ]', ), )
+region1=regionToolset.Region(side1Faces=side1Faces1)
+a = mdb.models['Model-1'].rootAssembly
+s1 = a.instances['MountPlate-1-lin-2-4-lin-2-1'].faces
+side1Faces1 = s1.getSequenceFromMask(mask=('[#10 ]', ), )
+region2=regionToolset.Region(side1Faces=side1Faces1)
+mdb.models['Model-1'].Tie(name='Constraint-20', master=region1, slave=region2, 
+    positionToleranceMethod=COMPUTED, adjust=ON, tieRotations=ON, 
+    thickness=ON)
+a = mdb.models['Model-1'].rootAssembly
+s1 = a.instances['Leg-1-lin-2-2'].faces
+side1Faces1 = s1.getSequenceFromMask(mask=('[#80000000 ]', ), )
+region1=regionToolset.Region(side1Faces=side1Faces1)
+a = mdb.models['Model-1'].rootAssembly
+s1 = a.instances['MountPlate-1-lin-2-3-lin-2-1'].faces
+side1Faces1 = s1.getSequenceFromMask(mask=('[#10 ]', ), )
+region2=regionToolset.Region(side1Faces=side1Faces1)
+mdb.models['Model-1'].Tie(name='Constraint-21', master=region1, slave=region2, 
+    positionToleranceMethod=COMPUTED, adjust=ON, tieRotations=ON, 
+    thickness=ON)
+a = mdb.models['Model-1'].rootAssembly
+s1 = a.instances['Leg-1-lin-2-2'].faces
+side1Faces1 = s1.getSequenceFromMask(mask=('[#100 ]', ), )
+region1=regionToolset.Region(side1Faces=side1Faces1)
+a = mdb.models['Model-1'].rootAssembly
+s1 = a.instances['MountPlate-1-lin-2-2-lin-2-1'].faces
+side1Faces1 = s1.getSequenceFromMask(mask=('[#10 ]', ), )
+region2=regionToolset.Region(side1Faces=side1Faces1)
+mdb.models['Model-1'].Tie(name='Constraint-22', master=region1, slave=region2, 
+    positionToleranceMethod=COMPUTED, adjust=ON, tieRotations=ON, 
+    thickness=ON)
+a = mdb.models['Model-1'].rootAssembly
+s1 = a.instances['Leg-1-lin-2-2'].faces
+side1Faces1 = s1.getSequenceFromMask(mask=('[#4000 ]', ), )
+region1=regionToolset.Region(side1Faces=side1Faces1)
+a = mdb.models['Model-1'].rootAssembly
+s1 = a.instances['MountPlate-1-lin-2-1-lin-2-1'].faces
+side1Faces1 = s1.getSequenceFromMask(mask=('[#10 ]', ), )
+region2=regionToolset.Region(side1Faces=side1Faces1)
+mdb.models['Model-1'].Tie(name='Constraint-23', master=region1, slave=region2, 
+    positionToleranceMethod=COMPUTED, adjust=ON, tieRotations=ON, 
+    thickness=ON)
+a = mdb.models['Model-1'].rootAssembly
+s1 = a.instances['MountPlate-1-lin-2-1-lin-2-1'].faces
+side1Faces1 = s1.getSequenceFromMask(mask=('[#20 ]', ), )
+region1=regionToolset.Region(side1Faces=side1Faces1)
+a = mdb.models['Model-1'].rootAssembly
+s1 = a.instances['Foot-2-lin-2-1'].faces
+side1Faces1 = s1.getSequenceFromMask(mask=('[#4 ]', ), )
+region2=regionToolset.Region(side1Faces=side1Faces1)
+mdb.models['Model-1'].Tie(name='Constraint-24', master=region1, slave=region2, 
+    positionToleranceMethod=COMPUTED, adjust=ON, tieRotations=ON, 
+    thickness=ON)
+a = mdb.models['Model-1'].rootAssembly
+s1 = a.instances['Floor-1-lin-3-1'].faces
+side1Faces1 = s1.getSequenceFromMask(mask=('[#2000 ]', ), )
+region1=regionToolset.Region(side1Faces=side1Faces1)
+a = mdb.models['Model-1'].rootAssembly
+s1 = a.instances['Leg-1-lin-2-1'].faces
+side1Faces1 = s1.getSequenceFromMask(mask=('[#10000000 ]', ), )
+region2=regionToolset.Region(side1Faces=side1Faces1)
+mdb.models['Model-1'].Tie(name='Constraint-25', master=region1, slave=region2, 
+    positionToleranceMethod=COMPUTED, adjust=ON, tieRotations=ON, 
+    thickness=ON)
+a = mdb.models['Model-1'].rootAssembly
+s1 = a.instances['Floor-1-lin-2-1'].faces
+side1Faces1 = s1.getSequenceFromMask(mask=('[#2000 ]', ), )
+region1=regionToolset.Region(side1Faces=side1Faces1)
+a = mdb.models['Model-1'].rootAssembly
+s1 = a.instances['Leg-1-lin-2-1'].faces
+side1Faces1 = s1.getSequenceFromMask(mask=('[#80000000 ]', ), )
+region2=regionToolset.Region(side1Faces=side1Faces1)
+mdb.models['Model-1'].Tie(name='Constraint-26', master=region1, slave=region2, 
+    positionToleranceMethod=COMPUTED, adjust=ON, tieRotations=ON, 
+    thickness=ON)
+a = mdb.models['Model-1'].rootAssembly
+s1 = a.instances['Floor-1'].faces
+side1Faces1 = s1.getSequenceFromMask(mask=('[#2000 ]', ), )
+region1=regionToolset.Region(side1Faces=side1Faces1)
+a = mdb.models['Model-1'].rootAssembly
+s1 = a.instances['Leg-1-lin-2-1'].faces
+side1Faces1 = s1.getSequenceFromMask(mask=('[#100 ]', ), )
+region2=regionToolset.Region(side1Faces=side1Faces1)
+mdb.models['Model-1'].Tie(name='Constraint-27', master=region1, slave=region2, 
+    positionToleranceMethod=COMPUTED, adjust=ON, tieRotations=ON, 
+    thickness=ON)
+a = mdb.models['Model-1'].rootAssembly
+s1 = a.instances['Leg-1-lin-2-1'].faces
+side1Faces1 = s1.getSequenceFromMask(mask=('[#0 #2 ]', ), )
+region1=regionToolset.Region(side1Faces=side1Faces1)
+a = mdb.models['Model-1'].rootAssembly
+s1 = a.instances['MountPlate-1-lin-1-4-lin-2-1'].faces
+side1Faces1 = s1.getSequenceFromMask(mask=('[#20 ]', ), )
+region2=regionToolset.Region(side1Faces=side1Faces1)
+mdb.models['Model-1'].Tie(name='Constraint-28', master=region1, slave=region2, 
+    positionToleranceMethod=COMPUTED, adjust=ON, tieRotations=ON, 
+    thickness=ON)
+a = mdb.models['Model-1'].rootAssembly
+s1 = a.instances['Leg-1-lin-2-1'].faces
+side1Faces1 = s1.getSequenceFromMask(mask=('[#40000 ]', ), )
+region1=regionToolset.Region(side1Faces=side1Faces1)
+a = mdb.models['Model-1'].rootAssembly
+s1 = a.instances['MountPlate-1-lin-1-3-lin-2-1'].faces
+side1Faces1 = s1.getSequenceFromMask(mask=('[#20 ]', ), )
+region2=regionToolset.Region(side1Faces=side1Faces1)
+mdb.models['Model-1'].Tie(name='Constraint-29', master=region1, slave=region2, 
+    positionToleranceMethod=COMPUTED, adjust=ON, tieRotations=ON, 
+    thickness=ON)
+a = mdb.models['Model-1'].rootAssembly
+s1 = a.instances['Leg-1-lin-2-1'].faces
+side1Faces1 = s1.getSequenceFromMask(mask=('[#1000000 ]', ), )
+region1=regionToolset.Region(side1Faces=side1Faces1)
+a = mdb.models['Model-1'].rootAssembly
+s1 = a.instances['MountPlate-1-lin-1-2-lin-2-1'].faces
+side1Faces1 = s1.getSequenceFromMask(mask=('[#20 ]', ), )
+region2=regionToolset.Region(side1Faces=side1Faces1)
+mdb.models['Model-1'].Tie(name='Constraint-30', master=region1, slave=region2, 
+    positionToleranceMethod=COMPUTED, adjust=ON, tieRotations=ON, 
+    thickness=ON)
+a = mdb.models['Model-1'].rootAssembly
+s1 = a.instances['Leg-1-lin-2-1'].faces
+side1Faces1 = s1.getSequenceFromMask(mask=('[#10 ]', ), )
+region1=regionToolset.Region(side1Faces=side1Faces1)
+a = mdb.models['Model-1'].rootAssembly
+s1 = a.instances['MountPlate-1-lin-2-1-1'].faces
+side1Faces1 = s1.getSequenceFromMask(mask=('[#20 ]', ), )
+region2=regionToolset.Region(side1Faces=side1Faces1)
+mdb.models['Model-1'].Tie(name='Constraint-31', master=region1, slave=region2, 
+    positionToleranceMethod=COMPUTED, adjust=ON, tieRotations=ON, 
+    thickness=ON)
+a = mdb.models['Model-1'].rootAssembly
+s1 = a.instances['MountPlate-1-lin-2-1-1'].faces
+side1Faces1 = s1.getSequenceFromMask(mask=('[#10 ]', ), )
+region1=regionToolset.Region(side1Faces=side1Faces1)
+a = mdb.models['Model-1'].rootAssembly
+s1 = a.instances['Foot-1-lin-2-1'].faces
+side1Faces1 = s1.getSequenceFromMask(mask=('[#4 ]', ), )
+region2=regionToolset.Region(side1Faces=side1Faces1)
+mdb.models['Model-1'].Tie(name='Constraint-32', master=region1, slave=region2, 
+    positionToleranceMethod=COMPUTED, adjust=ON, tieRotations=ON, 
+    thickness=ON)
+
+#%% Boundary Conditions
+a = mdb.models['Model-1'].rootAssembly
+f1 = a.instances['Foot-2-lin-2-1'].faces
+faces1 = f1.getSequenceFromMask(mask=('[#1000 ]', ), )
+f2 = a.instances['Foot-2'].faces
+faces2 = f2.getSequenceFromMask(mask=('[#1000 ]', ), )
+f3 = a.instances['Foot-1-lin-2-1'].faces
+faces3 = f3.getSequenceFromMask(mask=('[#1000 ]', ), )
+f4 = a.instances['Foot-1'].faces
+faces4 = f4.getSequenceFromMask(mask=('[#1000 ]', ), )
+region = regionToolset.Region(faces=faces1+faces2+faces3+faces4)
+mdb.models['Model-1'].DisplacementBC(name='BC-1', createStepName='Initial', 
+    region=region, u1=SET, u2=SET, u3=SET, ur1=UNSET, ur2=UNSET, ur3=UNSET, 
+    amplitude=UNSET, distributionType=UNIFORM, fieldName='', 
+    localCsys=None)
+
+#%% Create Mesh
+# Floor
+p = mdb.models['Model-1'].parts['Floor']
+p.seedPart(size=fl_mesh, deviationFactor=0.1, minSizeFactor=0.1)
+p = mdb.models['Model-1'].parts['Floor']
+c = p.cells
+pickedRegions = c.getSequenceFromMask(mask=('[#7 ]', ), )
+p.setMeshControls(regions=pickedRegions, elemShape=TET, technique=FREE)
+elemType1 = mesh.ElemType(elemCode=C3D20R)
+elemType2 = mesh.ElemType(elemCode=C3D15)
+elemType3 = mesh.ElemType(elemCode=C3D10)
+p = mdb.models['Model-1'].parts['Floor']
+c = p.cells
+cells = c.getSequenceFromMask(mask=('[#7 ]', ), )
+pickedRegions =(cells, )
+p.setElementType(regions=pickedRegions, elemTypes=(elemType1, elemType2, 
+    elemType3))
+p = mdb.models['Model-1'].parts['Floor']
+p.generateMesh()
+# Foot
+p = mdb.models['Model-1'].parts['Foot']
+p.seedPart(size=ft_mesh, deviationFactor=0.1, minSizeFactor=0.1)
+p = mdb.models['Model-1'].parts['Foot']
+c = p.cells
+pickedRegions = c.getSequenceFromMask(mask=('[#7 ]', ), )
+p.setMeshControls(regions=pickedRegions, elemShape=TET, technique=FREE)
+elemType1 = mesh.ElemType(elemCode=C3D20R)
+elemType2 = mesh.ElemType(elemCode=C3D15)
+elemType3 = mesh.ElemType(elemCode=C3D10)
+p = mdb.models['Model-1'].parts['Foot']
+c = p.cells
+cells = c.getSequenceFromMask(mask=('[#7 ]', ), )
+pickedRegions =(cells, )
+p.setElementType(regions=pickedRegions, elemTypes=(elemType1, elemType2, 
+    elemType3))
+p = mdb.models['Model-1'].parts['Foot']
+p.generateMesh()
+# Leg
+p = mdb.models['Model-1'].parts['Leg']
+p.seedPart(size=lg_mesh, deviationFactor=0.1, minSizeFactor=0.1)
+p = mdb.models['Model-1'].parts['Leg']
+c = p.cells
+pickedRegions = c.getSequenceFromMask(mask=('[#7f ]', ), )
+p.setMeshControls(regions=pickedRegions, elemShape=TET, technique=FREE)
+elemType1 = mesh.ElemType(elemCode=C3D20R)
+elemType2 = mesh.ElemType(elemCode=C3D15)
+elemType3 = mesh.ElemType(elemCode=C3D10)
+p = mdb.models['Model-1'].parts['Leg']
+c = p.cells
+cells = c.getSequenceFromMask(mask=('[#7f ]', ), )
+pickedRegions =(cells, )
+p.setElementType(regions=pickedRegions, elemTypes=(elemType1, elemType2, 
+    elemType3))
+p = mdb.models['Model-1'].parts['Leg']
+p.generateMesh()
+# Mount
+p = mdb.models['Model-1'].parts['MountPlate']
+p.seedPart(size=mt_mesh, deviationFactor=0.1, minSizeFactor=0.1)
+p = mdb.models['Model-1'].parts['MountPlate']
+c = p.cells
+pickedRegions = c.getSequenceFromMask(mask=('[#7 ]', ), )
+p.setMeshControls(regions=pickedRegions, elemShape=TET, technique=FREE)
+elemType1 = mesh.ElemType(elemCode=C3D20R)
+elemType2 = mesh.ElemType(elemCode=C3D15)
+elemType3 = mesh.ElemType(elemCode=C3D10)
+p = mdb.models['Model-1'].parts['MountPlate']
+c = p.cells
+cells = c.getSequenceFromMask(mask=('[#7 ]', ), )
+pickedRegions =(cells, )
+p.setElementType(regions=pickedRegions, elemTypes=(elemType1, elemType2, 
+    elemType3))
+p = mdb.models['Model-1'].parts['MountPlate']
+p.generateMesh()
+
+#%% Create Job
+
+mdb.Job(name=jname, model='Model-1', description='', type=ANALYSIS, 
+    atTime=None, waitMinutes=0, waitHours=0, queue=None, memory=90, 
+    memoryUnits=PERCENTAGE, getMemoryFromAnalysis=True, 
+    explicitPrecision=SINGLE, nodalOutputPrecision=SINGLE, echoPrint=OFF, 
+    modelPrint=OFF, contactPrint=OFF, historyPrint=OFF, userSubroutine='', 
+    scratch='', resultsFormat=ODB, multiprocessingMode=DEFAULT, numCpus=1, 
+    numGPUs=0)
+#%% Write Input Deck
+# mdb.jobs[jname].writeInput(consistencyChecking=OFF)
+#%% Submit Job  
+mdb.jobs[jname].submit(consistencyChecking=OFF)
+
+
+
+
