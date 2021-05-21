@@ -12,7 +12,7 @@ This code requires python 3.8 or later, and a code editing system such as VS cod
 
 To install the code, first clone the repository using: 
 ``` bash
-$ git clone git@github.com:Digital-Twin-Operational-Platform/dtop3.git
+$ git clone git@github.com:Digital-Twin-Operational-Platform/cristallo.git
 ```
 
 On MacOS/Linux:
