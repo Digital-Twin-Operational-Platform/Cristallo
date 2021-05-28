@@ -60,17 +60,17 @@ $ python -m venv v-env
 You have to enable running scripts. Run PowerShell as Administrator and type "Set-ExecutionPolicy -ExecutionPolicy AllSigned". Then ypu can run the 'activate' script.
 
 ``` bash
-$ venv\Scripts\activate
+$ v-env\Scripts\activate
 
-(venv) $ pip install -r requirements.txt
+(v-env) $ pip install -r requirements.txt
 
-(venv) $env:FLASK_APP="run.py"
+(v-env) $env:FLASK_APP="run.py"
 
-(venv) $env:FLASK_ENV="development"
+(v-env) $env:FLASK_ENV="development"
 
-(venv) $env:FLASK_DEBUG=1
+(v-env) $env:FLASK_DEBUG=1
 
-(venv) $ flask run
+(v-env) $ flask run
 ```
 
 Then in a web browser navigate to <http://localhost:5000/> where the DTOP webpages should be available.
