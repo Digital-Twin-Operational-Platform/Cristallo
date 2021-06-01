@@ -73,6 +73,12 @@ $ v-env\Scripts\activate
 (v-env) $ flask run
 ```
 
-Then in a web browser navigate to <http://localhost:5000/> where the DTOP webpages should be available.
+Then in a web browser navigate to `http://localhost:5000/` to access the DTOP.
 
-Please refer to the documentation for more detailed information.
+Please refer to the official [documentation](https://digital-twin-operational-platform.github.io/) for more detailed information.
+
+## Links
+
+Official documentation: https://digital-twin-operational-platform.github.io/
+
+Github page: https://github.com/Digital-Twin-Operational-Platform/Cristallo/
