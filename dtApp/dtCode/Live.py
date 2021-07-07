@@ -1,7 +1,7 @@
 '''
 This tool is for the reading of live sensor data
 '''
-from flask import render_template, request, redirect, url_for
+from flask import render_template, request, redirect, url_for,send_file
 from dtApp import app
 from dtApp import date
 import ctypes
@@ -12,7 +12,8 @@ from picosdk.ps4000a import ps4000a as ps
 from picosdk.functions import adc2mV, assert_pico_ok
 import numpy as np
 import json,time
-
+from pathlib import Path
+from openpyxl import Workbook   
 
 @app.route('/live',methods=['GET','POST'])
 def Monitor():
@@ -23,7 +24,7 @@ def Monitor():
         fig = make_subplots(rows=2, cols=2)
         plot = json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)
         
-        return render_template("live.html",rate=sample,Dur=time0,plot=plot)
+        return render_template("live.html",rate=sample,Dur=time0,SCOP=plot)
     elif request.method=='POST': # Active Reading
         req = request.form
         
@@ -181,6 +182,7 @@ def Monitor():
             bufferCompleteB = np.zeros(shape=Sizebuffer, dtype=np.int16)
             bufferCompleteC = np.zeros(shape=Sizebuffer, dtype=np.int16)
             bufferCompleteD = np.zeros(shape=Sizebuffer, dtype=np.int16)
+            global nextSample
             nextSample = 0
             autoStopOuter = False
             wasCalledBack = False
@@ -243,13 +245,47 @@ def Monitor():
             fig.update_yaxes(title_text='Acceleration [g]', titlefont=dict(size=14), row=2, col=2) # fig.update_xaxes(type="log")
             fig.update_xaxes(title_text='Time [s]', titlefont=dict(size=14), row=2, col=2)
             
-            fig.update_layout(title_text="Bounds on displacement Frequency Response Function (FRF)",\
+            fig.update_layout(title_text="Streaming Graph",\
             showlegend=True,\
             font=dict(size=14),\
             plot_bgcolor= 'rgba(0, 0, 0, 0.1)',paper_bgcolor= 'rgba(0, 0, 0, 0)') #paper_bgcolor= 'rgba(0, 0, 0, 0.05)'
                         
             sideplot = json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)
             ActualSamplerate=1/((time0[15]-time0[0])/15)
+  
+            path = "dtApp/dtData/SensorReadings.csv"
+            if (Path(path)).is_file():
+                pass    
+            else:
+                f = open(path, "x")
+                f.close()
+            
+            #f = open(path, "w")
+            workbook=Workbook()
+            sheet=workbook.active
+            sheet["A1"]="Time"
+            sheet["B1"]="Channal A"
+            sheet["C1"]="Channal B"
+            sheet["D1"]="Channal C"
+            sheet["E1"]="Channal D"
+            sheet["F1"]="Buffersize"
+            sheet["G1"]="SampleInterval Ps"
+            sheet["H1"]="ActualSamplerate Hz"
+            # a=time0
+            # b=adc2mVChBMax[:]
+            for i in range(len(time0)):
+                sheet["A"+str(i+2)]=time0[i]
+                sheet["B"+str(i+2)]=adc2mVChAMax[:][i]
+                sheet["C"+str(i+2)]=adc2mVChBMax[:][i]
+                sheet["D"+str(i+2)]=adc2mVChCMax[:][i]
+                sheet["E"+str(i+2)]=adc2mVChDMax[:][i]
+            sheet["F2"]= Sizebuffer 
+            sheet["G2"]= SampleInterval
+            sheet["H2"]= ActualSamplerate
+            workbook.save(filename=path)
+            
+            #f.close()
+
             #%% Stop the scope
             # handle = chandle
             status["stop"] = ps.ps4000aStop(chandle)
@@ -259,6 +295,21 @@ def Monitor():
             # handle = chandle
             status["close"] = ps.ps4000aCloseUnit(chandle)
             assert_pico_ok(status["close"])
-                    
-        
-        return render_template('live.html', rate=ActualSamplerate,Dur=time0,plot=sideplot)
+            
+            print('Saved File as '+path)
+        return render_template('live.html', rate=ActualSamplerate,Dur=time0[-1],SCOP=sideplot)                    
+   
+@app.route('/Sensordownload')
+def livedownloadFile():
+#For windows you need to use drive name [ex: F:/Example.pdf]
+    path = "dtApp/dtData/SensorReadings.csv"
+    path_d = "dtData/SensorReadings.csv"
+    if (Path(path)).is_file():
+        pass    
+    else:
+        return 'File not found'
+    
+    
+    print('Read file '+path)
+    
+    return send_file(path_d, as_attachment=True)
