@@ -1,17 +1,217 @@
 {% extends "base.html" %}
 {% block title %}{% endblock %}
 {% block head %}
+<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
 {{ super() }}
 {% endblock %}
 {% block content %}
+<!-- Site navigation menu -->
 
+<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+<script id="MathJax-script" async
+          src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+</script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<!-- <script>
+    $(document).ready(function(){
+      $("radio").click(function(){
+        $("#field1").show();
+      });
+    });
+</script> -->
 <h2>Welcome to the <i>Profile generator page</i>. </h2>
-<p> Text text text.
+<p> Please select a csv file for the 3-storey structure containing frequency data on the 1st column,
+    <br> 
+    accelerance of the 1st floor as 2nd column, accelerance of the 2nd floor as 3rd column and accelerance of the 3rd floor as 4th column.
+    <br>
+    Remember to use "j" as imaginary unit and do not use headings. 
+    <br>
+    You can find some csv examples in this application path "Cristallo\dtApp\dtData\frfs": test_1.csv, test_2.csv, test_3.csv.
+    <br>
+    After submitting the csv file, the model parameters are calculated. They will be displayed along with some plots on the screen.
+    <br>
+    A new profile will also be genreated, which will be stored in Cristallo\dtApp\dtData\profiles named profile_"name od frf data file submitted".
+    <br>
+    The profile csv contains the values of the 3 masses on the first row, the 3 stiffnesses on the second row and the 3 dampings on the third row
 </p>
 
+<form action = "http://localhost:5000/lpm_update" method = "POST" enctype = "multipart/form-data">
+    <input type = "file" name = "csvfile" value = ""/>
+    <input type = "submit" value = "Submit" />
+</form>
+
+{% if plot1==null or plot1=='' %}
+    <div class="div2">
+
+    </div>
+{% else %}
 <div>
-	
+    <div class="div1">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="chart" id="circlefit1">
+                <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+                <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.6/d3.min.js"></script>
+                <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-MML-AM_CHTML"></script> -->
+                    <script>
+                        var graphs = {{plot1 | safe}};
+                        Plotly.plot('circlefit1',graphs,{});
+                    </script>
+                </div>
+            </div>
+        </div>
+    </div>	
+    <div class="div3">
+        <br>
+    </div>
+    <div class="div1">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="chart" id="circlefit2">
+                <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+                <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.6/d3.min.js"></script>
+                <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-MML-AM_CHTML"></script> -->
+                    <script>
+                        var graphs = {{plot2 | safe}};
+                        Plotly.plot('circlefit2',graphs,{});
+                    </script>
+                </div>
+            </div>
+        </div>
+    </div>	
+    <div class="div3">
+        <br>
+    </div>
+    <div class="div1">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="chart" id="circlefit3">
+                <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+                <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.6/d3.min.js"></script>
+                <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-MML-AM_CHTML"></script> -->
+                    <script>
+                        var graphs = {{plot3 | safe}};
+                        Plotly.plot('circlefit3',graphs,{});
+                    </script>
+                </div>
+            </div>
+        </div>
+    </div>	
+    <table>
+        <tr>
+            <td>Natural frequency</td>
+        </tr>
+        <tr>
+            <td>fn1 = </td>
+            <td>{{fn1}}</td>
+            <td>[Hz]</td>
+        </tr>
+        <tr>
+            <td>fn2 = </td>
+            <td>{{fn2}}</td>
+            <td>[Hz]</td>
+        </tr>
+        <tr>
+            <td>fn3 = </td>
+            <td>{{fn3}}</td>
+            <td>[Hz]</td>
+        </tr>
+        <tr>
+            <td>Damping ratio</td>
+        </tr>
+        <tr>
+            <td>eta1 = </td>
+            <td>{{eta1}}</td>
+            <td>[-]</td>
+        </tr>
+        <tr>
+            <td>eta2 = </td>
+            <td>{{eta2}}</td>
+            <td>[-]</td>
+        </tr>
+        <tr>
+            <td>eta3 = </td>
+            <td>{{eta3}}</td>
+            <td>[-]</td>
+        </tr>
+        <tr>
+            <td>Modes</td>
+        </tr>
+        <tr>
+            <td>mode1 = </td>
+            <td>{{mode1}}</td>
+        </tr>
+        <tr>
+            <td>mode2 = </td>
+            <td>{{mode2}}</td>
+        </tr>
+        <tr>
+            <td>mode3 = </td>
+            <td>{{mode3}}</td>
+        </tr>
+        </tr>
+        <tr>
+            <td>identified mass parameters</td>
+        </tr>
+        <tr>
+            <td>m1 = </td>
+            <td>{{m1}}</td>
+            <td>[kg]</td>
+        </tr>
+        <tr>
+            <td>m2 = </td>
+            <td>{{m2}}</td>
+            <td>[kg]</td>
+        </tr>
+        <tr>
+            <td>m3 = </td>
+            <td>{{m3}}</td>
+            <td>[kg]</td>
+        </tr>
+        <tr>
+            <td>identified stiffness parameters</td>
+        </tr>
+        <tr>
+            <td>k1 = </td>
+            <td>{{k1}}</td>
+            <td>[N/m]</td>
+        </tr>
+        <tr>
+            <td>k2 = </td>
+            <td>{{k2}}</td>
+            <td>[N/m]</td>
+        </tr>
+        <tr>
+            <td>k3 = </td>
+            <td>{{k3}}</td>
+            <td>[N/m]</td>
+        </tr>
+        <tr>
+            <td>identified damping parameters</td>
+        </tr>
+        <tr>
+            <td>c1 = </td>
+            <td>{{c1}}</td>
+            <td>[Ns/m]</td>
+        </tr>
+        <tr>
+            <td>c2 = </td>
+            <td>{{c2}}</td>
+            <td>[Ns/m]</td>
+        </tr>
+        <tr>
+            <td>c3 = </td>
+            <td>{{c3}}</td>
+            <td>[Ns/m]</td>
+        </tr>
+        </tr>
+    </table>
+    <div class="div3">
+        <br>
+        New profile generated. Please look in folder ..\Cristallo\dtApp\dtData\profiles\
+    </div>
 </div>
+{% endif %}
 <br><br>
 
 <div class="Clear" style="clear:both"></div>
