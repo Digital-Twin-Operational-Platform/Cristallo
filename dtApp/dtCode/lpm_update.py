@@ -10,7 +10,6 @@ import plotly
 import plotly.graph_objs as go
 from plotly.subplots import make_subplots
 import json
-#import os
 
 
 from dtLib.lpmupdate.circleFitting import circle_fit
@@ -320,7 +319,8 @@ def lpm_update():
         # generate profile and save to csv in folder Cristallo\dtApp\dtData\profiles
         profile = np.array([[MM1, MM2, MM3], [KK1, KK2, KK3], [CC1, CC2, CC3]])
         #profilename = 
-        np.savetxt('..\Cristallo\dtApp\dtData\profiles\profile_'+f.filename, profile, fmt='%.4f', delimiter=';', newline='\n', header='', footer='', comments='# ', encoding=None)
+
+        np.savetxt('dtApp/dtData/profiles/profile_'+f.filename, profile, fmt='%.4f', delimiter=';', newline='\n', header='', footer='', comments='# ', encoding=None)
 
         return render_template('lpm_update.html', plot1=circfit1, plot2=circfit2, plot3=circfit3, fn1="{:.2f}".format(fn_mode1), fn2="{:.2f}".format(fn_mode2), fn3="{:.2f}".format(fn_mode3), eta1="{:.4f}".format(eta_mode1), eta2="{:.4f}".format(eta_mode2), eta3="{:.4f}".format(eta_mode3), mode1=mode1_inf.reshape(3,1), mode2=mode2_inf.reshape(3,1), mode3=mode3_inf.reshape(3,1), m1="{:.2f}".format(MM1), m2="{:.2f}".format(MM2), m3="{:.2f}".format(MM3), k1="{:.2f}".format(KK1), k2="{:.2f}".format(KK2), k3="{:.2f}".format(KK3), c1="{:.2f}".format(CC1), c2="{:.2f}".format(CC2), c3="{:.2f}".format(CC3), date=date)
 

@@ -38,7 +38,7 @@ _build/html/
  *.inp
  *.SMAmanifest
 dtApp/dtData/ABAQUS_Scratch/RunScript.py
-
+dtApp/dtData/profiles/profile_*.csv
 
 
 
