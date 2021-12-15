@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% block title %}{% endblock %}
+{% block head %}
+{{ super() }}
+{% endblock %}
+{% block content %}
+<style>
+    .div1 {
+      float: left;
+      width: 40%;
+      clear: both;
+    }
+    .div2 {
+    float: right;
+    width: 40%;
+    clear: both;
+    }
+    .div3 {
+      clear: both;
+    }
+    
+</style>
+    
+<p>Results Calculated within Profile</p>
+
+<div stype=div1>
+<p>
+	<h3>Calculated Values</h3>
+	<table>
+	<tr>
+		<td>|m1 = {{form['m1']}}</td><td>|m2 = {{form['m2']}}</td><td>|m3 = {{form['m3']}}|</td>
+	</tr>
+	<tr>
+		<td>|k1 = {{form['k1']}}</td><td>|k2 = {{form['k2']}}</td><td>|k3 = {{form['k3']}}|</td>
+	</tr>
+	<tr>
+		<td>|c1 = {{form['c1']}}</td><td>|c2 = {{form['c2']}}</td><td>|c3 = {{form['c3']}}|</td>
+	</tr>
+	</table>
+</p>
+</div>
+
+<div style="clear: both;">
+    <br>
+</div>
+{% endblock %}

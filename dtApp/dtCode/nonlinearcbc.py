@@ -31,7 +31,6 @@ def bristolcbc():
         b1, b2, b3 = pars[3], pars[4], pars[5]
         s1, s2, s3 = pars[6], pars[7], pars[8]
         s13 = pars[9]
-
     else:
 
         m1, m2, m3 = 0.2, 0.2, 0.2 #masses
