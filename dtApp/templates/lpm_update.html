@@ -12,6 +12,8 @@
           src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
 </script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.6/d3.min.js"></script>
+<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-MML-AM_CHTML"></script> -->
 <!-- <script>
     $(document).ready(function(){
       $("radio").click(function(){
@@ -19,21 +21,23 @@
       });
     });
 </script> -->
-<h2>Welcome to the <i>Profile generator page</i>. </h2>
+<h2><button onclick="myFunction()">+</button> Welcome to the <i>Profile generator page</i>. </h2>
+<div id="hideshow" style="display: none">
 <p> Please select a csv file for the 3-storey structure containing frequency data on the 1st column,
     <br> 
     accelerance of the 1st floor as 2nd column, accelerance of the 2nd floor as 3rd column and accelerance of the 3rd floor as 4th column.
     <br>
-    Remember to use "j" as imaginary unit and do not use headings. 
+    Remember to use "j" for the imaginary unit and do not use headings. 
     <br>
     You can find some csv examples in this application path "Cristallo\dtApp\dtData\frfs": test_1.csv, test_2.csv, test_3.csv.
     <br>
     After submitting the csv file, the model parameters are calculated. They will be displayed along with some plots on the screen.
     <br>
-    A new profile will also be genreated, which will be stored in Cristallo\dtApp\dtData\profiles named profile_"name od frf data file submitted".
+    A new profile will also be generated, which will be stored in Cristallo\dtApp\dtData\profiles named profile_"name od frf data file submitted".
     <br>
-    The profile csv contains the values of the 3 masses on the first row, the 3 stiffnesses on the second row and the 3 dampings on the third row
+    The profile csv contains the values of the 3 masses on the first row, the 3 stiffnesses on the second row and the 3 dampings on the third row.
 </p>
+</div>
 
 <form action = "http://localhost:5000/lpm_update" method = "POST" enctype = "multipart/form-data">
     <input type = "file" name = "csvfile" value = ""/>
@@ -41,65 +45,14 @@
 </form>
 
 {% if plot1==null or plot1=='' %}
-    <div class="div2">
-
+    <div class="div2" style="padding: 5cm;">
     </div>
+    <div class="Clear" style="clear:both"></div>
 {% else %}
-<div>
-    <div class="div1">
-        <div class="row">
-            <div class="col-md-6">
-                <div class="chart" id="circlefit1">
-                <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
-                <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.6/d3.min.js"></script>
-                <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-MML-AM_CHTML"></script> -->
-                    <script>
-                        var graphs = {{plot1 | safe}};
-                        Plotly.plot('circlefit1',graphs,{});
-                    </script>
-                </div>
-            </div>
-        </div>
-    </div>	
-    <div class="div3">
-        <br>
-    </div>
-    <div class="div1">
-        <div class="row">
-            <div class="col-md-6">
-                <div class="chart" id="circlefit2">
-                <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
-                <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.6/d3.min.js"></script>
-                <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-MML-AM_CHTML"></script> -->
-                    <script>
-                        var graphs = {{plot2 | safe}};
-                        Plotly.plot('circlefit2',graphs,{});
-                    </script>
-                </div>
-            </div>
-        </div>
-    </div>	
-    <div class="div3">
-        <br>
-    </div>
-    <div class="div1">
-        <div class="row">
-            <div class="col-md-6">
-                <div class="chart" id="circlefit3">
-                <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
-                <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.6/d3.min.js"></script>
-                <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-MML-AM_CHTML"></script> -->
-                    <script>
-                        var graphs = {{plot3 | safe}};
-                        Plotly.plot('circlefit3',graphs,{});
-                    </script>
-                </div>
-            </div>
-        </div>
-    </div>	
+<div id="left" style="float:left; width:40%; padding: 5mm;">
     <table>
         <tr>
-            <td>Natural frequency</td>
+            <td colspan="3" style="padding: 2mm;"><h3>Natural frequency</h3></td>
         </tr>
         <tr>
             <td>fn1 = </td>
@@ -117,7 +70,7 @@
             <td>[Hz]</td>
         </tr>
         <tr>
-            <td>Damping ratio</td>
+            <td colspan="3" style="padding-top: 10mm;"><h3>Damping ratio</h3></td>
         </tr>
         <tr>
             <td>eta1 = </td>
@@ -135,7 +88,7 @@
             <td>[-]</td>
         </tr>
         <tr>
-            <td>Modes</td>
+            <td colspan="3" style="padding-top: 10mm;"><h3>Modes</h3></td>
         </tr>
         <tr>
             <td>mode1 = </td>
@@ -151,7 +104,7 @@
         </tr>
         </tr>
         <tr>
-            <td>identified mass parameters</td>
+            <td colspan="3" style="padding-top: 10mm;"><h3>Identified mass parameters</h3></td>
         </tr>
         <tr>
             <td>m1 = </td>
@@ -169,7 +122,7 @@
             <td>[kg]</td>
         </tr>
         <tr>
-            <td>identified stiffness parameters</td>
+            <td colspan="3" style="padding-top: 10mm;"><h3>Identified stiffness parameters</h3></td>
         </tr>
         <tr>
             <td>k1 = </td>
@@ -187,7 +140,7 @@
             <td>[N/m]</td>
         </tr>
         <tr>
-            <td>identified damping parameters</td>
+            <td colspan="3" style="padding-top: 10mm;"><h3>Identified damping parameters</h3></td>
         </tr>
         <tr>
             <td>c1 = </td>
@@ -206,13 +159,47 @@
         </tr>
         </tr>
     </table>
-    <div class="div3">
-        <br>
-        New profile generated. Please look in folder ..\Cristallo\dtApp\dtData\profiles\
+        <div style="padding-top: 2cm;">
+            <font style="font-size: 11pt;">New profile generated. Please look in folder ..\Cristallo\dtApp\dtData\profiles\</font>
+        </div>
     </div>
-</div>
+    <div style="float:right; width:55%;">
+        <div class="chart" id="circlefit1">
+            <script>
+                var graphs = {{plot1 | safe}};
+                Plotly.plot('circlefit1',graphs,{});
+            </script>
+        </div>	
+        <div style="padding: 3mm"></div>
+        <div class="chart" id="circlefit2">
+        <script>
+            var graphs = {{plot2 | safe}};
+            Plotly.plot('circlefit2',graphs,{});
+        </script>
+        </div>	
+        <div style="padding: 3mm"></div>
+        <div class="chart" id="circlefit3">
+            <script>
+                var graphs = {{plot3 | safe}};
+                Plotly.plot('circlefit3',graphs,{});
+            </script>
+        </div>
+    </div>	
 {% endif %}
-<br><br>
 
 <div class="Clear" style="clear:both"></div>
-{% endblock %}
+
+{% block javascript %}
+<script type="text/javascript" charset="utf-8">
+
+    function myFunction() {
+    var x = document.getElementById("hideshow");
+    if (x.style.display === "none") {
+        x.style.display = "block";
+    } else {
+        x.style.display = "none";
+    }
+    }
+</script>
+{% endblock %}  <!-- end js block -->
+{% endblock %}  <!-- end html block -->

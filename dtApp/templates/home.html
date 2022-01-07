@@ -5,7 +5,7 @@
 {% endblock %}
 {% block content %}
 
-<div style="padding-left: 1em; width:1000px">
+<div style="padding-left: 1em; width:1100px">
 <p>Welcome to DTOP - Cristallo!</p>
 <p>
 This Digital Twin Operational Platform (DTOP) is Flask-based with the user interface being provided via HTML and CSS/Javascript. 
@@ -20,7 +20,7 @@ In the spirit of demonstrating the concept, data is either simulated or in some 
 </p>
 </div>
 
-<div style="width:500px; float:left; padding-left: 10em; padding-top: 1em;">
+<div style="width:350px; float:left; padding-left: 5em; padding-top: 1em;">
     <a href="https://soton243.autodesk360.com/shares/public/SH919a0QTf3c32634dcf95b180cdf3576ad4" target="_blank"><img src="{{ url_for('static', filename='img/ezgif_com_04size_03speed.gif') }}", width="280px" alt="cadmodel"></a>
 </div>
 
@@ -30,52 +30,59 @@ In the spirit of demonstrating the concept, data is either simulated or in some 
 
 <p>These webpages are designed to demonstrate some of the ideas each behind research project. </p> -->
 
-<div style="width:400; float:left">
+<div style="width:700; float:left">
 
 
 
 <p>
-    <a href="https://github.com/Digital-Twin-Operational-Platform/cristallo"><i class="fas fa-code-branch"></i> <u>GitHub</u> </a>
+    <!-- <a href="https://github.com/Digital-Twin-Operational-Platform/cristallo"><i class="fas fa-code-branch"></i> <u>GitHub</u> </a> -->
 
     <br>
     <br>
 
+    <div style="float:left; width:350;">
     <h3>Research themes</h3>
 
     <table>
         <tr>
-            <td><a href="Design_under_uncertainty"><span class="fonticon" style="font-size: 30px;"><i class="fas fa-cubes"></i></span></a></td>
+            <td><a href="Design_under_uncertainty"><span class="fonticon" style="font-size: 30px; padding: 1mm;"><i class="fas fa-cubes"></i></span></a></td>
             <td> &nbsp; &nbsp; Design under uncertainty</td>
         </tr>
         <tr>
-            <td><a href="control"><span class="fonticon" style="font-size: 30px;"><i class="fas fa-wave-square"></i></span></a></td>
+            <td><a href="control"><span class="fonticon" style="font-size: 30px; padding: 1mm;"><i class="fas fa-wave-square"></i></span></a></td>
             <td> &nbsp; &nbsp; Structural vibration control</td>
         </tr>
         <tr>
-            <td><a href="unquant"><span class="fonticon" style="font-size: 30px;"><i class="fas fa-dice"></i></span></a></td>
+            <td><a href="unquant"><span class="fonticon" style="font-size: 30px; padding: 1mm;"><i class="fas fa-dice"></i></span></a></td>
             <td> &nbsp; &nbsp; Uncertainty propagation</td>
         </tr>
         <tr>
-            <td><a href="FEA"><span class="fonticon" style="font-size: 30px;"><i class="fas fa-th"></i></span></a></td>
+            <td><a href="FEA"><span class="fonticon" style="font-size: 30px; padding: 1mm;"><i class="fas fa-th"></i></span></a></td>
             <td> &nbsp; &nbsp; Finite element analysis</td>
         </tr>
         <tr>
-            <td><a href="nonlinearcbc"><span class="fonticon" style="font-size: 30px;"><i class="fas fa-project-diagram"></i></span></a></td>
+            <td><a href="nonlinearcbc"><span class="fonticon" style="font-size: 30px; padding: 1mm;"><i class="fas fa-project-diagram"></i></span></a></td>
             <td> &nbsp; &nbsp; Nonlinear control-based continuation</td>
         </tr>
         <tr>
-            <td><a href="crossval"><span class="fonticon" style="font-size: 30px;"><i class="fas fa-retweet"></i></span></a></td>
+            <td><a href="crossval"><span class="fonticon" style="font-size: 30px; padding: 1mm;"><i class="fas fa-retweet"></i></span></a></td>
             <td> &nbsp; &nbsp; Experimental cross validation</td>
         </tr>
-        <tr>
-            <td><a href="lpm_update"><span class="fonticon" style="font-size: 30px;"><i class="fas fa-upload"></i></span></a></td>
-            <td> &nbsp; &nbsp; Profile generator</td>
-        </tr>
-        <tr>
-            <td><a href="Profile_Hub"><span class="fonticon" style="font-size: 30px;"><i class="fas fa-id-badge"></i></span></a></td>
-            <td> &nbsp; &nbsp; Profile Hub</td>
-        </tr>
     </table>
+</div>
+<div style="float:right; width:300;">
+    <h3>Profiles</h3>
+    <table>
+    <tr>
+        <td><a href="lpm_update"><span class="fonticon" style="font-size: 30px; padding: 1mm;"><i class="fas fa-upload"></i></span></a></td>
+        <td> &nbsp; &nbsp; Profile generator</td>
+    </tr>
+    <tr>
+        <td><a href="Profile_Hub"><span class="fonticon" style="font-size: 30px; padding: 1mm; padding-left: 2mm;"><i class="fas fa-id-badge"></i></span></a></td>
+        <td> &nbsp; &nbsp; Profile Hub</td>
+    </tr>
+</table>
+</div>
     <!-- <p><a href="Design_under_uncertainty"><span class="fonticon" style="font-size: 30px;"><i class="fas fa-cubes"></i></span></a> &nbsp; &nbsp; Design under uncertainty</p>  -->
     <!-- <p><a href="control"><span class="fonticon" style="font-size: 30px;"><i class="fas fa-wave-square"></i></span></a> &nbsp; &nbsp; Structural vibration control</p>  -->
     <!-- <p><a href="unquant"><span class="fonticon" style="font-size: 30px;"><i class="fas fa-dice"></i></span></a> &nbsp; &nbsp; Uncertainty propagation</p>  -->
