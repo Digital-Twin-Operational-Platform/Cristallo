@@ -1,0 +1,107 @@
+{% extends "base.html" %}
+{% block title %}{% endblock %}
+{% block head %}
+{{ super() }}
+{% endblock %}
+{% block content %}
+<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.6/d3.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+
+
+<!-- <h2><button onclick="myFunction()" style="margin: 10px;">+</button>Hammer test simulator </h2> -->
+<h2 style="padding-left: 15px;">Hammer test simulator </h2>
+
+<form action="/simulator" method="POST" id="form">
+    <div class="onepagecontainer">
+    <div style="padding-left: 15px;">
+        <p> Three-degree-of-freedom system's response to hammer excitation </p> 
+        <p>Hammer hits 1st mass at 0.5 seconds with 300 N.</p>
+        <!-- <p>To avoid downtime select no more than 100 MC samples.</p> -->
+        <!-- <u>Disclaimer</u>: this page is created for illustration purposes. The use of inner bounds may not provide enough coverage thus it is discouraged for the validation step.</p> -->
+    </div>
+    <table>
+        <tr>
+            <td style="padding-left:15px;">
+                <font>Dispersion: 5%</font>
+            </td>
+            <!-- <td>
+                <input type="number" class="input" id="maxU" name="maxU" value="5" min="1" max="20" step="1">
+            </td> -->
+            <!-- <td>
+                <font>%</font>
+            </td> -->
+            <td style="width: 20px;">  </td>
+            <td style="padding-left:15px;">Simulated scenarios: </td>
+            <td style="padding-left:15px;"><label for="MC_5">5</label><br><input type="radio" value="5" id="MC_5" name="MC_samples"></td>
+            <td style="padding-left:15px;"><label for="MC_15">15</label><br><input type="radio" value="15" id="MC_15" name="MC_samples"></td>
+            <td style="padding-left:15px;"><label for="MC_20">20</label><br><input type="radio" value="20" id="MC_20" name="MC_samples"></td>
+            <td style="padding-left:15px;"><label for="MC_30">30</label><br><input type="radio" value="30" id="MC_30" name="MC_samples"></td>
+            <td style="padding-left:15px;"><label for="MC_50">50</label><br><input type="radio" value="50" id="MC_50" name="MC_samples"></td>
+            <td><input style="font-size:14pt;padding: 10px;margin: 10px;" type="submit" value="Recompute" /></td>
+        </tr>
+        <!-- <tr>
+            <td style="padding:15px;">
+                <font>Hammer hits 1st mass at 0.5 seconds with 300 N.</font>
+            </td>
+        </tr> -->
+    </table>
+    <div style="padding-left: 15px;"><font>Number of simulated scenarios = {{N}}</font></div>
+    
+<div id="left" style="float:left; width:600;">
+    <div class="chart" id="areaplot1">
+        <script>
+            var graphs = {{timeplot | safe}};
+            Plotly.plot('areaplot1', graphs, {});
+        </script>
+    </div>
+</div>
+<div id="right" style="float:right; width:600;">
+    <div class="chart" id="areaplot2">
+        <script>
+            var graphs = {{freqplot | safe}};
+            Plotly.plot('areaplot2', graphs, {});
+        </script>
+    </div>
+</div>
+<!--    <canvas id="myChart" width="650" height="500"></canvas>-->
+</div>
+
+<div class="Clear" style="clear:both"></div>
+
+</form>
+{% block javascript %}
+<script type="text/javascript" charset="utf-8">
+    
+function myFunction() {
+  var x = document.getElementById("hideshow");
+  if (x.style.display === "none") {
+    x.style.display = "block";
+  } else {
+    x.style.display = "none";
+  }
+}
+
+if ("{{N}}" === "5")
+{
+document.getElementById("MC_5").checked = true;
+}
+if ("{{N}}" === "15")
+{
+document.getElementById("MC_15").checked = true;
+}
+if ("{{N}}" === "20")
+{
+document.getElementById("MC_20").checked = true;
+}
+if ("{{N}}" === "30")
+{
+document.getElementById("MC_30").checked = true;
+}
+if ("{{N}}" === "50")
+{
+document.getElementById("MC_50").checked = true;
+}
+</script>
+{% endblock %}
+{% endblock %} <!-- end html block -->

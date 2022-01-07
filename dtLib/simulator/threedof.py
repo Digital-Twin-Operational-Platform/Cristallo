@@ -3,7 +3,7 @@
 `dtLib/threedof.py`
 
 
-:Author: 
+:Authors: 
     David J Wagg, University of Sheffield
     Marco De Angelis, University of Liverpool
     
