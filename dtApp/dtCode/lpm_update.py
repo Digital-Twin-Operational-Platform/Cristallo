@@ -274,9 +274,9 @@ def lpm_update():
         eta_mode3 = np.average([eta_1_mode3, eta_2_mode3, eta_3_mode3])
         
         # identify mode shapes
-        mode1 = [r_1_mode1*np.sign(xc_1_mode1), r_2_mode1*np.sign(xc_2_mode1), r_3_mode1*np.sign(xc_3_mode1)]
-        mode2 = [r_1_mode2*np.sign(xc_1_mode2), r_2_mode2*np.sign(xc_2_mode2), r_3_mode2*np.sign(xc_3_mode2)]
-        mode3 = [r_1_mode3*np.sign(xc_1_mode3), r_2_mode3*np.sign(xc_2_mode3), r_3_mode3*np.sign(xc_3_mode3)]
+        mode1 = [((2*np.pi*fn_mode1)**2)*eta_mode1*2*r_1_mode1*np.sign(xc_1_mode1), ((2*np.pi*fn_mode1)**2)*eta_mode1*2*r_2_mode1*np.sign(xc_2_mode1), ((2*np.pi*fn_mode1)**2)*eta_mode1*2*r_3_mode1*np.sign(xc_3_mode1)]
+        mode2 = [((2*np.pi*fn_mode2)**2)*eta_mode2*2*r_1_mode2*np.sign(xc_1_mode2), ((2*np.pi*fn_mode2)**2)*eta_mode2*2*r_2_mode2*np.sign(xc_2_mode2), ((2*np.pi*fn_mode2)**2)*eta_mode2*2*r_3_mode2*np.sign(xc_3_mode2)]
+        mode3 = [((2*np.pi*fn_mode3)**2)*eta_mode3*2*r_1_mode3*np.sign(xc_1_mode3), ((2*np.pi*fn_mode3)**2)*eta_mode3*2*r_2_mode3*np.sign(xc_2_mode3), ((2*np.pi*fn_mode3)**2)*eta_mode3*2*r_3_mode3*np.sign(xc_3_mode3)]
 
         mode1_inf = mode1/np.linalg.norm(mode1, ord=np.inf) # normalise mode shapes ()
         mode2_inf = mode2/np.linalg.norm(mode2, ord=np.inf)
