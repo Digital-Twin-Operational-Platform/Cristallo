@@ -317,7 +317,7 @@ def lpm_update():
         # compare 3-dof model frf with experimental frf
 
         # generate profile and save to csv in folder Cristallo\dtApp\dtData\profiles
-        profile = np.array([[MM1, MM2, MM3], [KK1, KK2, KK3], [CC1, CC2, CC3]])
+        profile = np.array([[MM1, MM2, MM3], [KK1, KK2, KK3], [CC1, CC2, CC3], [fn_mode1,fn_mode2,fn_mode3],[eta_mode1,eta_mode2,eta_mode3],mode1_inf,mode2_inf,mode3_inf])
         #profilename = 
 
         np.savetxt('dtApp/dtData/profiles/profile_'+f.filename, profile, fmt='%.4f', delimiter=';', newline='\n', header='', footer='', comments='# ', encoding=None)

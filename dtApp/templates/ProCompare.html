@@ -1,0 +1,140 @@
+{% extends "base.html" %}
+{% block title %}{% endblock %}
+{% block head %}
+<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+{{ super() }}
+{% endblock %}
+{% block content %}
+<style>
+table, th, td {
+  border:1px solid black;
+}
+    .div1 {
+      float: left;
+      width: 50%;
+      clear: both;
+    }
+    
+    .div2 {
+      float: right;
+      width: 50%;
+    }
+
+    .div3 {
+      clear: both;
+    }
+    .div4 {
+      float:center;
+      width: 80%;
+    }
+</style>
+<!-- Site navigation menu -->
+<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+<script id="MathJax-script" async
+          src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+</script>
+
+<p> <button onclick="myFunction()">+</button> Profile Comparison</p>
+<div id="hideshow" style="display: none">
+<p>In this page you can give context to multiple profiles.
+    <br>
+    This page compares multiple profiles to give context to the user.
+</p>
+</div>
+
+<hr> 
+<div>
+    <div class="div4">
+    <h2 id="a">Numerical Data</h2>
+        <table>
+    		<tr>
+    			<th>Profile Name</th>
+    			<th>\(\omega_1\)</th>
+    			<th>\(\omega_2\)</th>
+    			<th>\(\omega_3\)</th>
+    			<th>\(\eta_1\)</th>
+    			<th>\(\eta_2\)</th>
+    			<th>\(\eta_3\)</th>
+    		</tr>
+            <tr>
+                <td>{{form['P1Name']}}</td>
+                <td>{{form['P1w1']}}</td>
+                <td>{{form['P1w2']}}</td>
+                <td>{{form['P1w3']}}</td>
+                <td>{{form['P1d1']}}</td>
+                <td>{{form['P1d2']}}</td>
+                <td>{{form['P1d3']}}</td>
+            </tr>
+            <tr>
+                <td>{{form['P2Name']}}</td>
+                <td>{{form['P2w1']}}</td>
+                <td>{{form['P2w2']}}</td>
+                <td>{{form['P2w3']}}</td>
+                <td>{{form['P2d1']}}</td>
+                <td>{{form['P2d2']}}</td>
+                <td>{{form['P2d3']}}</td>
+            </tr>
+            <tr>
+                <td>{{form['P3Name']}}</td>
+                <td>{{form['P3w1']}}</td>
+                <td>{{form['P3w2']}}</td>
+                <td>{{form['P3w3']}}</td>
+                <td>{{form['P3d1']}}</td>
+                <td>{{form['P3d2']}}</td>
+                <td>{{form['P3d3']}}</td>
+            </tr>
+	    </table>
+        <br>
+    </div>
+<br>
+
+    <div class="div4">
+        <div class="col-md-6">
+            <div class="chart" id="chart1">
+            <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.6/d3.min.js"></script>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+                <script>
+                    var graphs = {{plot1 | safe}};
+                    Plotly.plot('chart1',graphs,{});
+                </script>
+            </div>
+            <br><br><br>
+        </div>
+    </div>
+
+    <div class="div4">
+        <div class="col-md-6">
+            <div class="chart" id="chart2">
+            <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.6/d3.min.js"></script>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+                <script>
+                    var graphs = {{plot2 | safe}};
+                    Plotly.plot('chart2',graphs,{});
+                </script>
+            </div>
+            <br><br><br>
+        </div>
+    </div>
+</div>
+
+
+
+<div class="Clear" style="clear:both">
+</div>
+{% block javascript %}
+<script type="text/javascript" charset="utf-8">
+    
+function myFunction() {
+  var x = document.getElementById("hideshow");
+  if (x.style.display === "none") {
+    x.style.display = "block";
+  } else {
+    x.style.display = "none";
+  }
+}
+    
+</script>
+{% endblock %}
+{% endblock %}
