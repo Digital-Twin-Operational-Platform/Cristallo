@@ -122,7 +122,7 @@ def DisplayProfiles():
     fig1.update_xaxes(title_text="Normalized Mode Shape", titlefont=dict(size=15), row=1, col=2)
 
     #Fig1.c
-    fig1.add_scatter(x=form1['mode3'],y=y, name='Profile 1', mode = 'lines', row=1, col=3)
+    fig1.add_scatter(x=form1['mode3'],y=y, name='Profile 1', mode = 'lines', row=1, col=3,line={'color':'black'})
     fig1.add_scatter(x=form2['mode3'],y=y, name='Profile 2', mode = 'lines', row=1, col=3,line={'color':'red'})
     fig1.add_scatter(x=form3['mode3'],y=y, name='Profile 3', mode = 'lines', row=1, col=3,line={'color':'green'})
 
