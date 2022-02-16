@@ -12,7 +12,7 @@ import subprocess
 proc = subprocess.Popen('git log -1 --format=%cd', shell=True, stdout=subprocess.PIPE, )
 date1 = proc.communicate()[0]
 date2 = date1.decode().split(' ')
-date = date2[2]+' '+date2[1]+' '+date2[4] 
+date = date1#date2[2]+' '+date2[1]+' '+date2[4] 
 
 # This imports routes and defines the context
 from dtApp import routes
