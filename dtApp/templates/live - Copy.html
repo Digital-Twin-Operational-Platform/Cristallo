@@ -1,0 +1,85 @@
+﻿{% extends "base.html" %}
+{% block title %}{% endblock %}
+{% block head %}
+{{ super() }}
+{% endblock %}
+{% block content %}
+
+<br>
+<div class="div1">
+    <form action="/live" method="POST">
+    <br>
+        <fieldset style="width: 200%; height: 130">
+            <legend>Capturing Variable:</legend>
+            <div style=" width:auto;">
+            <table>
+                <tr>
+                    <td>Capture Sample Rate</td>
+                  <td></td>
+                    <td><input type="number" id="SamplerateIntake" name="SamplerateIntake" min="10" max="8*1e7" step=any value="{{rate}}"></td>
+                    <td>[Hz]</td>
+					<td>Max:80MHz</td>
+                </tr>
+                <tr>
+                    <td>Buffer Time</td>
+                    <td></td>
+                    <td><input type="number" id="BuffertimeIntake" name="BuffertimeIntake" min="0.001" max="1e9" step=any value="{{Dur}}"></td>
+                    <td>[S]</td>
+                </tr>
+                <tr>
+                    <td>Number of Buffers</td>
+                    <td></td>
+                    <td><input type="number" id="Nbuffers" name="Nbuffers" min="1" max="1e6" step="1" value="1" readonly></td>
+                    <td>[buffer]</td>
+                </tr>
+				<input type="submit" value="Start">
+            </table>
+            </div>
+        </fieldset>
+        <br>
+        <fieldset style="width: 200%; height: 40">
+            <legend>Actual Capturing Setup:</legend>
+            <table>
+                <tr>
+                    <td>Actual Sample Rate=</td>
+                  <td>{{rate}}</td>
+                    <td>[Hz]</td>
+                </tr>       
+                
+            </table>
+        </fieldset>
+    </form>
+    </div>
+    <br>
+        <fieldset style="width: 100%; height: 500">
+            <legend>Plots:</legend>
+            <div style=" width:auto;">
+            <table>
+    
+
+<div class="container" >
+    <div style="width:100%;">
+        <div class="col-md-6">
+            <div class="chart" id="chart">
+            <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.6/d3.min.js"></script>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+                <script>
+                    var graphs = {{SCOP| safe}};
+                    Plotly.plot('chart',graphs,{});
+                </script>
+            </div>
+            <br><br><br>
+        </div>
+    </div>
+</div>
+
+                
+            </div>    
+            </table>
+        </fieldset>
+
+<a href="/Sensordownload" target="blank"><button>Download results</button></a>
+<div class="Clear" style="clear:both">
+</div>
+{% endblock %}
