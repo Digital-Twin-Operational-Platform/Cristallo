@@ -334,3 +334,5 @@ venv/
 ENV/
 env.bak/
 venv.bak/
+v-env/
+venv1/
