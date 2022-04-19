@@ -450,7 +450,7 @@ def Reader():
         
 #%%Circilar Fit
 @app.route('/Circlefit',methods=['GET','POST'])
-def Reader():
+def ReaderCF():
     if request.method=='GET': # Initial load
         sample=10e3  # Hz
         time0=1.0   #Seconds
