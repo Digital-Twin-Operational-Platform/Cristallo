@@ -14,7 +14,18 @@ from picosdk.functions import adc2mV, assert_pico_ok
 import numpy as np
 import json,time
 from pathlib import Path
-from openpyxl import Workbook   
+from openpyxl import Workbook  
+from sqlalchemy import event 
+from sqlalchemy import create_engine
+from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy import Table, Column, String, Integer, Numeric, ForeignKey, DateTime, MetaData, ARRAY, select
+from datetime import datetime
+from sqlalchemy.orm import Session
+from sqlalchemy.ext.automap import automap_base
+from sqlalchemy.orm import sessionmaker
+from scipy import optimize
+
+
 
 @app.route('/live',methods=['GET','POST'])
 def Monitor():
@@ -318,135 +329,88 @@ def livedownloadFile():
 #%%Database Analysis
 @app.route('/database',methods=['GET','POST'])
 def Reader():
-    if request.method=='GET': # Initial load
-        sample=10e3  # Hz
-        time0=1.0   #Seconds
-        
-        fig = make_subplots(rows=2, cols=2)
-        plot = json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)
-        
-        return render_template("live.html",rate=sample,Dur=time0,SCOP=plot)
-    elif request.method=='POST': # Active Reading
-        req = request.form  
-        
-        
-        from sqlalchemy import event
-        def init_search_path(connection, conn_record):
-            cursor = connection.cursor()
-            try:
-                cursor.execute('SET search_path TO new_db_schema;')
-            finally:
-                cursor.close()
-        
-        
-        from sqlalchemy import create_engine
-        from sqlalchemy.ext.declarative import declarative_base
-        from sqlalchemy import Table, Column, String, Integer, Numeric, ForeignKey, DateTime, MetaData, ARRAY, select
-        from datetime import datetime
-        from sqlalchemy.orm import Session
-        import numpy as np
-        from sqlalchemy.ext.automap import automap_base
-        base=automap_base()
-        engine = create_engine("postgresql+psycopg2://postgres:d1g1tw1n@localhost:5432",echo=True)
-        connection  = engine.connect()
-        event.listen(engine, 'connect', init_search_path)
-        Base = declarative_base()
-        metadata = MetaData()
-        session = Session(engine)
-        
-        from sqlalchemy.orm import sessionmaker
-        Session = sessionmaker(bind=engine)
-        session=Session()
-        base.prepare(engine,reflect=True)
-        
-        r = int(np.abs(session.query(base.classes.try1.id).first()))
-        
-        print(r)
-        
-        adc2mVChAMax1 = session.query(base.classes.try1.Channala).filter(base.classes.try1.id==r).all()
-        adc2mVChBMax1 = session.query(base.classes.try1.Channalb).filter(base.classes.try1.id==r).all()
-        adc2mVChCMax1 = session.query(base.classes.try1.Channalc).filter(base.classes.try1.id==r).all()
-        adc2mVChDMax1 = session.query(base.classes.try1.Channald).filter(base.classes.try1.id==r).all()
-        Sizebuffer = session.query(base.classes.try1.Buffersize).filter(base.classes.try1.id==r).all()
-        SampleInterval = session.query(base.classes.try1.SampleInterval).filter(base.classes.try1.id==1).all()
-        time01 = session.query(base.classes.try1.Time).filter(base.classes.try1.id==1).all()
-        
-        adc2mVChAMax = np.array(np.array(adc2mVChAMax1[0])[0])
-        adc2mVChBMax = np.array(np.array(adc2mVChBMax1[0])[0])
-        adc2mVChCMax = np.array(np.array(adc2mVChCMax1[0])[0])
-        adc2mVChDMax = np.array(np.array(adc2mVChDMax1[0])[0])
-        time0 = np.array(np.array(time01[0])[0])
-        
-        session.close()
-        
-        import matplotlib.pyplot as plt
-        plt.figure(num=0,clear=True)
-        plt.plot(time0, adc2mVChAMax[:],label='Hammer')
-        plt.legend()
-        plt.xlabel('Time (s)')
-        plt.ylabel('Voltage (mV)')
-        plt.show()
-        
-        plt.figure(num=1,clear=True)
-        plt.plot(time0, adc2mVChBMax[:],label='1st floor')
-        plt.legend()
-        plt.xlabel('Time (s)')
-        plt.ylabel('Voltage (mV)')
-        plt.show()
-        
-        plt.figure(num=2,clear=True)
-        plt.plot(time0, adc2mVChCMax[:],label='2nd floor')
-        plt.legend()
-        plt.xlabel('Time (s)')
-        plt.ylabel('Voltage (mV)')
-        plt.show()
-        
-        plt.figure(num=3,clear=True)
-        plt.plot(time0, adc2mVChDMax[:],label='3rd floor')
-        plt.legend()
-        plt.xlabel('Time (s)')
-        plt.ylabel('Voltage (mV)')
-        plt.show()
+
+    req = request.form  
     
-        #time.sleep(Sleeptime)
-            
-        import plotly.graph_objects as go
-        import numpy
-        import plotly
-        from plotly.subplots import make_subplots
-        import json
+    
+    
+    def init_search_path(connection, conn_record):
+        cursor = connection.cursor()
+        try:
+            cursor.execute('SET search_path TO new_db_schema;')
+        finally:
+            cursor.close()
+    
+    
+
+    base=automap_base()
+    engine = create_engine("postgresql+psycopg2://postgres:d1g1tw1n@localhost:5432",echo=True)
+    connection  = engine.connect()
+    event.listen(engine, 'connect', init_search_path)
+    Base = declarative_base()
+    metadata = MetaData()
+    session = Session(engine)
+    
+    
+    Session = sessionmaker(bind=engine)
+    session=Session()
+    base.prepare(engine,reflect=True)
+    
+    r = int(np.abs(session.query(base.classes.try1.id).first()))
+    
+    print(r)
+    
+    adc2mVChAMax1 = session.query(base.classes.try1.Channala).filter(base.classes.try1.id==r).all()
+    adc2mVChBMax1 = session.query(base.classes.try1.Channalb).filter(base.classes.try1.id==r).all()
+    adc2mVChCMax1 = session.query(base.classes.try1.Channalc).filter(base.classes.try1.id==r).all()
+    adc2mVChDMax1 = session.query(base.classes.try1.Channald).filter(base.classes.try1.id==r).all()
+    Sizebuffer = session.query(base.classes.try1.Buffersize).filter(base.classes.try1.id==r).all()
+    SampleInterval = session.query(base.classes.try1.SampleInterval).filter(base.classes.try1.id==1).all()
+    time01 = session.query(base.classes.try1.Time).filter(base.classes.try1.id==1).all()
+    
+    adc2mVChAMax = np.array(np.array(adc2mVChAMax1[0])[0])
+    adc2mVChBMax = np.array(np.array(adc2mVChBMax1[0])[0])
+    adc2mVChCMax = np.array(np.array(adc2mVChCMax1[0])[0])
+    adc2mVChDMax = np.array(np.array(adc2mVChDMax1[0])[0])
+    time0 = np.array(np.array(time01[0])[0])
+    
+    session.close()
+    
+
         
-        
-        fig = make_subplots(rows=2, cols=2, subplot_titles=("Hammer","1 floor","2 Floor","3 Floor"), shared_xaxes=False)
-        #fig.add_trace(go.Scatter(x=3, y=adc2mVChAMax[:], mode='markers', name='markers'))
-        #fig.add_trace(go.Scatter(x=[7,9,0], y=[1,2,3], mode='markers', name='markers'))
-        fig.add_trace(go.Scatter(x=time0, y=np.array(adc2mVChAMax[:])/2.25, mode='lines', name='Hammers'))
-        fig.update_yaxes(title_text='[N]', titlefont=dict(size=14), row=1, col=1) # fig.update_xaxes(type="log")
-        fig.update_xaxes(title_text='[Time(s)]', titlefont=dict(size=14), row=1, col=1)
-        
-        fig.add_trace(go.Scatter(x=time0, y=np.array(adc2mVChBMax[:])/10.27, mode='lines', name='1 floor'),row=1, col=2)
-        fig.update_yaxes(title_text='[Acceleration(g)]', titlefont=dict(size=14), row=1, col=2) # fig.update_xaxes(type="log")
-        fig.update_xaxes(title_text='[Time(s)]', titlefont=dict(size=14), row=1, col=2)
-        
-        fig.add_trace(go.Scatter(x=time0, y=np.array(adc2mVChCMax[:])/10.17, mode='lines', name='2 Floor'),row=2, col=1)
-        fig.update_yaxes(title_text='[Acceleration(g)]', titlefont=dict(size=14), row=2, col=1) # fig.update_xaxes(type="log")
-        fig.update_xaxes(title_text='[Time(s)]', titlefont=dict(size=14), row=2, col=1)
-        
-        fig.add_trace(go.Scatter(x=time0, y=np.array(adc2mVChDMax[:])/10.33, mode='lines', name='3 Floor'),row=2, col=2)
-        fig.update_yaxes(title_text='[Acceleration(g)]', titlefont=dict(size=14), row=2, col=2) # fig.update_xaxes(type="log")
-        fig.update_xaxes(title_text='[Time(s)]', titlefont=dict(size=14), row=2, col=2)
-        
-        fig.update_layout(title_text="Bounds on displacement Frequency Response Function (FRF)",\
-        showlegend=True,\
-        font=dict(size=14),\
-        plot_bgcolor= 'rgba(0, 0, 0, 0.1)',paper_bgcolor= 'rgba(0, 0, 0, 0)') #paper_bgcolor= 'rgba(0, 0, 0, 0.05)'
-                    
-        sideplot = json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)
-        fig.show()
-        
-        # import plotly.offline as of
-        # of.plot(fig)
-        ActualSamplerate=1/((time0[15]-time0[0])/15)
+
+    
+    
+    fig = make_subplots(rows=2, cols=2, subplot_titles=("Hammer","1 floor","2 Floor","3 Floor"), shared_xaxes=False)
+    #fig.add_trace(go.Scatter(x=3, y=adc2mVChAMax[:], mode='markers', name='markers'))
+    #fig.add_trace(go.Scatter(x=[7,9,0], y=[1,2,3], mode='markers', name='markers'))
+    fig.add_trace(go.Scatter(x=time0, y=np.array(adc2mVChAMax[:])/2.25, mode='lines', name='Hammers'))
+    fig.update_yaxes(title_text='[N]', titlefont=dict(size=14), row=1, col=1) # fig.update_xaxes(type="log")
+    fig.update_xaxes(title_text='[Time(s)]', titlefont=dict(size=14), row=1, col=1)
+    
+    fig.add_trace(go.Scatter(x=time0, y=np.array(adc2mVChBMax[:])/10.27, mode='lines', name='1 floor'),row=1, col=2)
+    fig.update_yaxes(title_text='[Acceleration(g)]', titlefont=dict(size=14), row=1, col=2) # fig.update_xaxes(type="log")
+    fig.update_xaxes(title_text='[Time(s)]', titlefont=dict(size=14), row=1, col=2)
+    
+    fig.add_trace(go.Scatter(x=time0, y=np.array(adc2mVChCMax[:])/10.17, mode='lines', name='2 Floor'),row=2, col=1)
+    fig.update_yaxes(title_text='[Acceleration(g)]', titlefont=dict(size=14), row=2, col=1) # fig.update_xaxes(type="log")
+    fig.update_xaxes(title_text='[Time(s)]', titlefont=dict(size=14), row=2, col=1)
+    
+    fig.add_trace(go.Scatter(x=time0, y=np.array(adc2mVChDMax[:])/10.33, mode='lines', name='3 Floor'),row=2, col=2)
+    fig.update_yaxes(title_text='[Acceleration(g)]', titlefont=dict(size=14), row=2, col=2) # fig.update_xaxes(type="log")
+    fig.update_xaxes(title_text='[Time(s)]', titlefont=dict(size=14), row=2, col=2)
+    
+    fig.update_layout(title_text="Bounds on displacement Frequency Response Function (FRF)",\
+    showlegend=True,\
+    font=dict(size=14),\
+    plot_bgcolor= 'rgba(0, 0, 0, 0.1)',paper_bgcolor= 'rgba(0, 0, 0, 0)') #paper_bgcolor= 'rgba(0, 0, 0, 0.05)'
+                
+    sideplot = json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)
+    fig.show()
+    
+    # import plotly.offline as of
+    # of.plot(fig)
+    ActualSamplerate=1/((time0[15]-time0[0])/15)
         
 #%%Circilar Fit
 @app.route('/Circlefit',methods=['GET','POST'])
@@ -462,7 +426,6 @@ def ReaderCF():
     elif request.method=='POST': # Active Reading
         req = request.form  
         
-        from sqlalchemy import event
         def init_search_path(connection, conn_record):
             cursor = connection.cursor()
             try:
@@ -470,14 +433,7 @@ def ReaderCF():
             finally:
                 cursor.close()
         
-        
-        from sqlalchemy import create_engine
-        from sqlalchemy.ext.declarative import declarative_base
-        from sqlalchemy import Table, Column, String, Integer, Numeric, ForeignKey, DateTime, MetaData, ARRAY, select
-        from datetime import datetime
-        from sqlalchemy.orm import Session
-        import numpy as np
-        from sqlalchemy.ext.automap import automap_base
+
         base=automap_base()
         engine = create_engine("postgresql+psycopg2://postgres:d1g1tw1n@localhost:5432",echo=True)
         connection  = engine.connect()
@@ -485,8 +441,7 @@ def ReaderCF():
         Base = declarative_base()
         metadata = MetaData()
         session = Session(engine)
-        
-        from sqlalchemy.orm import sessionmaker
+
         Session = sessionmaker(bind=engine)
         session=Session()
         base.prepare(engine,reflect=True)
@@ -512,7 +467,7 @@ def ReaderCF():
         session.close()
         #%%FunctionCF
         #from numpy import *
-        from scipy import optimize
+        
 
         # == METHOD 2b ==
         method_2b  = "leastsq with jacobian"
@@ -555,10 +510,6 @@ def ReaderCF():
             return {'xc': xc_2b, 'yc': yc_2b, 'r':R_2b}
 
         #%%Circular Fit
-        import matplotlib.pyplot as plt
-        import numpy as np
-        from scipy import optimize
-        import csv
         #from FunctionCF 
         #import circle_fit
         #%% User Parameters
