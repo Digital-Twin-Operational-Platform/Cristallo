@@ -9,7 +9,7 @@
 <div class="div1">
     <form action="/live" method="POST">
     <br>
-        <fieldset style="width: 200%; height: 130">
+        <fieldset style="width: 100%; height: 130">
             <legend>Capturing Variable:</legend>
             <div style=" width:auto;">
             <table>
@@ -37,7 +37,7 @@
             </div>
         </fieldset>
         <br>
-        <fieldset style="width: 200%; height: 40">
+        <fieldset style="width: 100%; height: 40">
             <legend>Actual Capturing Setup:</legend>
             <table>
                 <tr>
@@ -51,7 +51,7 @@
     </form>
     </div>
     <br>
-        <fieldset style="width: 100%; height: 500">
+        <fieldset style="width:100%; height: auto">
             <legend>Plots:</legend>
             <div style=" width:auto;">
             <table>
@@ -84,7 +84,7 @@
 </div>
 
     <br>
-        <fieldset style="width: 100%; height: 500">
+        <fieldset style="width: auto; height: 500">
             <legend>Database Plots:</legend>
             <div style=" width:auto;">
             <a href="/database" target="blank"><button>Plot Data from Database(Most Recent)</button></a>
@@ -102,8 +102,8 @@
             <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.6/d3.min.js"></script>
             <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-MML-AM_CHTML"></script>
                 <script>
-                    var graphs = {{SCOP| safe}};
-                    Plotly.plot('chart',graphs,{});
+                    var graphs = {{DB| safe}};
+                    Plotly.plot('chart2',graphs,{});
                 </script>
             </div>
             <br><br><br>
@@ -117,35 +117,62 @@
         </fieldset>
         
             <br>
-        <fieldset style="width: 100%; height: 500">
+        <fieldset style="width: auto; height: 500">
             <legend>Database Circle Fit:</legend>
             <div style=" width:auto;">
             <a href="/Circlefit" target="blank"><button>Analysis Data From Database(Most Recent)</button></a>
             <div class="Clear" style="clear:both">
             </div>
 
-            <table>
-    
+          
+<table style="float:right;width:50%">
+         
+         <tr>
+         <td>Nature Frequency : </td > 
+         <tr> 
+         <td>Fn1 = </td><td>{{NF2}}</td><td>[Hz]</td>
+         </tr>
+         <td>Fn2 = </td><td>{{NF3}}</td><td>[Hz]</td>
+         </tr>
+       
+         <tr>
+         <td>Fn3 = </td><td>{{NF4}}</td><td>[Hz]</td>
+         </tr>
+        
+        <tr>
+        <td>Damping Ratio : </td>
+         <tr> 
+         <td>Dr1 = </td><td>{{DR2}}</td><td>[Hz]</td>
+         </tr>
+         <td>Dr2 = </td><td>{{DR3}}</td><td>[Hz]</td>
+         </tr>
+         
+         <tr>
+         <td>Dr3 = </td><td>{{DR4}}</td><td>[Hz]</td>
+        </tr>
+            
+</table>
+                 
 
 <div class="container" >
-    <div style="width:100%;">
+    <div style="float:left;width:30%">
         <div class="col-md-6">
             <div class="chart" id="chart3">
             <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
             <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.6/d3.min.js"></script>
             <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-MML-AM_CHTML"></script>
                 <script>
-                    var graphs = {{SCOP| safe}};
-                    Plotly.plot('chart',graphs,{});
+                    var graphs = {{CF| safe}};
+                    Plotly.plot('chart3',graphs,{});
                 </script>
             </div>
             <br><br><br>
-        </div>
+       </div>
     </div>
-</div>
-
-                
-            </div>    
-            </table>
+</div>        
+   
+              
+           
+            </div>  
         </fieldset>
 {% endblock %}

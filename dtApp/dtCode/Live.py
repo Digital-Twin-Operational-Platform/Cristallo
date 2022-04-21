@@ -345,15 +345,15 @@ def Reader():
 
     base=automap_base()
     engine = create_engine("postgresql+psycopg2://postgres:d1g1tw1n@localhost:5432",echo=True)
-    connection  = engine.connect()
-    event.listen(engine, 'connect', init_search_path)
-    Base = declarative_base()
-    metadata = MetaData()
-    session = Session(engine)
+    # connection  = engine.connect()
+    # event.listen(engine, 'connect', init_search_path)
+    # Base = declarative_base()
+    # metadata = MetaData()
+    # session = Session(engine)
     
     
-    Session = sessionmaker(bind=engine)
-    session=Session()
+    Session1 = sessionmaker(bind=engine)
+    session=Session1()
     base.prepare(engine,reflect=True)
     
     r = int(np.abs(session.query(base.classes.try1.id).first()))
@@ -406,184 +406,191 @@ def Reader():
     plot_bgcolor= 'rgba(0, 0, 0, 0.1)',paper_bgcolor= 'rgba(0, 0, 0, 0)') #paper_bgcolor= 'rgba(0, 0, 0, 0.05)'
                 
     sideplot = json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)
-    fig.show()
+  
     
     # import plotly.offline as of
     # of.plot(fig)
     ActualSamplerate=1/((time0[15]-time0[0])/15)
-        
+    return render_template("live.html",DB=sideplot)  
 #%%Circilar Fit
 @app.route('/Circlefit',methods=['GET','POST'])
 def ReaderCF():
-    if request.method=='GET': # Initial load
-        sample=10e3  # Hz
-        time0=1.0   #Seconds
+
+    req = request.form  
+    
+    def init_search_path(connection, conn_record):
+        cursor = connection.cursor()
+        try:
+            cursor.execute('SET search_path TO new_db_schema;')
+        finally:
+            cursor.close()
+    
+
+    base=automap_base()
+    engine = create_engine("postgresql+psycopg2://postgres:d1g1tw1n@localhost:5432",echo=True)
+    # connection  = engine.connect()
+    # event.listen(engine, 'connect', init_search_path)
+    # Base = declarative_base()
+    # metadata = MetaData()
+    # session = Session(engine)
+
+    Session = sessionmaker(bind=engine)
+    session=Session()
+    base.prepare(engine,reflect=True)
+    
+    r = int(np.abs(session.query(base.classes.try1.id).first()))
+    # r = int(1)
+    print(r)
+    
+    adc2mVChAMax1 = session.query(base.classes.try1.Channala).filter(base.classes.try1.id==r).all()
+    adc2mVChBMax1 = session.query(base.classes.try1.Channalb).filter(base.classes.try1.id==r).all()
+    adc2mVChCMax1 = session.query(base.classes.try1.Channalc).filter(base.classes.try1.id==r).all()
+    adc2mVChDMax1 = session.query(base.classes.try1.Channald).filter(base.classes.try1.id==r).all()
+    Sizebuffer = session.query(base.classes.try1.Buffersize).filter(base.classes.try1.id==r).all()
+    SampleInterval = session.query(base.classes.try1.SampleInterval).filter(base.classes.try1.id==1).all()
+    time01 = session.query(base.classes.try1.Time).filter(base.classes.try1.id==1).all()
+    
+    adc2mVChAMax = np.array(np.array(adc2mVChAMax1[0])[0])
+    adc2mVChBMax = np.array(np.array(adc2mVChBMax1[0])[0])
+    adc2mVChCMax = np.array(np.array(adc2mVChCMax1[0])[0])
+    adc2mVChDMax = np.array(np.array(adc2mVChDMax1[0])[0])
+    time0 = np.array(np.array(time01[0])[0])
+    
+    session.close()
+    #%%FunctionCF
+    #from numpy import *
+    
+
+    # == METHOD 2b ==
+    method_2b  = "leastsq with jacobian"
+
+    def circle_fit(x,y):
+        """Circle fitting the data (real and imaginary parts of the accelerance [g/N])"""
+        # coordinates of the barycenter
+        def calc_R(xc, yc):
+            """ calculate the distance of each data points from the center (xc, yc) """
+            return sqrt((x-xc)**2 + (y-yc)**2)
+
+        def f_2b(c):
+            """ calculate the algebraic distance between the 2D points and the mean circle centered at c=(xc, yc) """
+            Ri = calc_R(*c)
+            return Ri - Ri.mean()
+
+        def Df_2b(c):
+            """ Jacobian of f_2b
+            The axis corresponding to derivatives must be coherent with the col_deriv option of leastsq"""
+            xc, yc     = c
+            df2b_dc    = empty((len(c), x.size))
+
+            Ri = calc_R(xc, yc)
+            df2b_dc[0] = (xc - x)/Ri                   # dR/dxc
+            df2b_dc[1] = (yc - y)/Ri                   # dR/dyc
+            df2b_dc    = df2b_dc - df2b_dc.mean(axis=1)[:, newaxis]
+
+            return df2b_dc
+
+        x_m = mean(x)
+        y_m = mean(y)
+        center_estimate = x_m, y_m
+        center_2b, ier = optimize.leastsq(f_2b, center_estimate, Dfun=Df_2b, col_deriv=True)
+
+        xc_2b, yc_2b = center_2b
+        Ri_2b        = calc_R(*center_2b)
+        R_2b         = Ri_2b.mean()
+        # residu_2b    = sum((Ri_2b - R_2b)**2)
+
+        return {'xc': xc_2b, 'yc': yc_2b, 'r':R_2b}
+
+    #%%Circular Fit
+    #from FunctionCF 
+    #import circle_fit
+    #%% User Parameters
+    # path='MAST_tests_25-03-2022/5Hz_70Hz_0.1ms-2_300mm_beam_2.csv'
+    # # ModeRanges=[[10,25],[38,42],[55,65]] # Scenario 1
+    ModeRanges=[[15,18]] # Scenario 2.5
+    # ModeRanges=[[9.25,9.75],[29,32],[33,37]]# Scenario 2.5
+    # scenario=2.5
+    # HitNum=1
+    #%% Import Raw Time History
+    channels=['channala','channalb','channalc','channald']
+    HitNum=1
+    inc=(HitNum-1)*len(channels)
+
+    h1 = np.array(adc2mVChAMax) / 2.25
+    h2 = np.array(adc2mVChBMax) / 10.16
+    h3 = np.array(adc2mVChCMax) / 10.24
+    h4 = np.array(adc2mVChDMax) / 10.31
+    time0 = np.array(np.array(time01[0])[0])
+    DATA=[h1,h2,h3,h4]
+    sf=2048
+
+    nsamples=len(h1)
+    time = np.arange(0,nsamples/sf,1/sf)
+    LDATA=len(channels)
         
-        fig = make_subplots(rows=2, cols=2)
-        plot = json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)
+    # %% Convert to FRF
+    FRF=[]
+    for i in range(LDATA):
+        Y=DATA[i]
+        resp=np.fft.fft(Y)
+        freq=np.fft.fftfreq(time.shape[-1],d=1/sf)
+        resp,freq=resp[:int(len(resp)/2)],freq[:int(len(resp)/2)]
+        FRF.append(resp)
+    # Get linear frequency
+    freq = np.real(freq)    # frequency vector [Hz]
+    w = 2*np.pi*freq
+    dfreq=freq[1]-freq[0]
+    theta = np.linspace(0, 2*np.pi, num=1000)
+    delta_freq_point = 1
+    #%% Multi Mode Extraction
+    for ModeIndex in range(len(ModeRanges)):
+        freq_mode = freq[int(ModeRanges[ModeIndex][0]/dfreq):int(ModeRanges[ModeIndex][1]/dfreq)]
         
-        return render_template("live.html",rate=sample,Dur=time0,SCOP=plot)
-    elif request.method=='POST': # Active Reading
-        req = request.form  
-        
-        def init_search_path(connection, conn_record):
-            cursor = connection.cursor()
-            try:
-                cursor.execute('SET search_path TO new_db_schema;')
-            finally:
-                cursor.close()
-        
-
-        base=automap_base()
-        engine = create_engine("postgresql+psycopg2://postgres:d1g1tw1n@localhost:5432",echo=True)
-        connection  = engine.connect()
-        event.listen(engine, 'connect', init_search_path)
-        Base = declarative_base()
-        metadata = MetaData()
-        session = Session(engine)
-
-        Session = sessionmaker(bind=engine)
-        session=Session()
-        base.prepare(engine,reflect=True)
-        
-        r = int(np.abs(session.query(base.classes.try1.id).first()))
-        
-        print(r)
-        
-        adc2mVChAMax1 = session.query(base.classes.try1.Channala).filter(base.classes.try1.id==r).all()
-        adc2mVChBMax1 = session.query(base.classes.try1.Channalb).filter(base.classes.try1.id==r).all()
-        adc2mVChCMax1 = session.query(base.classes.try1.Channalc).filter(base.classes.try1.id==r).all()
-        adc2mVChDMax1 = session.query(base.classes.try1.Channald).filter(base.classes.try1.id==r).all()
-        Sizebuffer = session.query(base.classes.try1.Buffersize).filter(base.classes.try1.id==r).all()
-        SampleInterval = session.query(base.classes.try1.SampleInterval).filter(base.classes.try1.id==1).all()
-        time01 = session.query(base.classes.try1.Time).filter(base.classes.try1.id==1).all()
-        
-        adc2mVChAMax = np.array(np.array(adc2mVChAMax1[0])[0])
-        adc2mVChBMax = np.array(np.array(adc2mVChBMax1[0])[0])
-        adc2mVChCMax = np.array(np.array(adc2mVChCMax1[0])[0])
-        adc2mVChDMax = np.array(np.array(adc2mVChDMax1[0])[0])
-        time0 = np.array(np.array(time01[0])[0])
-        
-        session.close()
-        #%%FunctionCF
-        #from numpy import *
-        
-
-        # == METHOD 2b ==
-        method_2b  = "leastsq with jacobian"
-
-        def circle_fit(x,y):
-            """Circle fitting the data (real and imaginary parts of the accelerance [g/N])"""
-            # coordinates of the barycenter
-            def calc_R(xc, yc):
-                """ calculate the distance of each data points from the center (xc, yc) """
-                return sqrt((x-xc)**2 + (y-yc)**2)
-
-            def f_2b(c):
-                """ calculate the algebraic distance between the 2D points and the mean circle centered at c=(xc, yc) """
-                Ri = calc_R(*c)
-                return Ri - Ri.mean()
-
-            def Df_2b(c):
-                """ Jacobian of f_2b
-                The axis corresponding to derivatives must be coherent with the col_deriv option of leastsq"""
-                xc, yc     = c
-                df2b_dc    = empty((len(c), x.size))
-
-                Ri = calc_R(xc, yc)
-                df2b_dc[0] = (xc - x)/Ri                   # dR/dxc
-                df2b_dc[1] = (yc - y)/Ri                   # dR/dyc
-                df2b_dc    = df2b_dc - df2b_dc.mean(axis=1)[:, newaxis]
-
-                return df2b_dc
-
-            x_m = mean(x)
-            y_m = mean(y)
-            center_estimate = x_m, y_m
-            center_2b, ier = optimize.leastsq(f_2b, center_estimate, Dfun=Df_2b, col_deriv=True)
-
-            xc_2b, yc_2b = center_2b
-            Ri_2b        = calc_R(*center_2b)
-            R_2b         = Ri_2b.mean()
-            # residu_2b    = sum((Ri_2b - R_2b)**2)
-
-            return {'xc': xc_2b, 'yc': yc_2b, 'r':R_2b}
-
-        #%%Circular Fit
-        #from FunctionCF 
-        #import circle_fit
-        #%% User Parameters
-        # path='MAST_tests_25-03-2022/5Hz_70Hz_0.1ms-2_300mm_beam_2.csv'
-        # # ModeRanges=[[10,25],[38,42],[55,65]] # Scenario 1
-        ModeRanges=[[15,18]] # Scenario 2.5
-        # ModeRanges=[[9.25,9.75],[29,32],[33,37]]# Scenario 2.5
-        # scenario=2.5
-        # HitNum=1
-        #%% Import Raw Time History
-        channels=['channala','channalb','channalc','channald']
-        HitNum=1
-        inc=(HitNum-1)*len(channels)
-
-        h1 = np.array(adc2mVChAMax) / 2.25
-        h2 = np.array(adc2mVChBMax) / 10.16
-        h3 = np.array(adc2mVChCMax) / 10.24
-        h4 = np.array(adc2mVChDMax) / 10.31
-        time0 = np.array(np.array(time01[0])[0])
-        DATA=[h1,h2,h3,h4]
-        sf=2048
-
-        nsamples=len(h1)
-        time = np.arange(0,nsamples/sf,1/sf)
-        LDATA=len(channels)
-            
-        # %% Convert to FRF
-        FRF=[]
+        r_mode,xc_mode,yc_mode=np.zeros(LDATA),np.zeros(LDATA),np.zeros(LDATA)
+        fn_mode,eta_mode,shape_mode=np.zeros(LDATA),np.zeros(LDATA),np.zeros(LDATA)
         for i in range(LDATA):
-            Y=DATA[i]
-            resp=np.fft.fft(Y)
-            freq=np.fft.fftfreq(time.shape[-1],d=1/sf)
-            resp,freq=resp[:int(len(resp)/2)],freq[:int(len(resp)/2)]
-            FRF.append(resp)
-        # Get linear frequency
-        freq = np.real(freq)    # frequency vector [Hz]
-        w = 2*np.pi*freq
-        dfreq=freq[1]-freq[0]
-        theta = np.linspace(0, 2*np.pi, num=1000)
-        delta_freq_point = 1
-        #%% Multi Mode Extraction
-        for ModeIndex in range(len(ModeRanges)):
-            freq_mode = freq[int(ModeRanges[ModeIndex][0]/dfreq):int(ModeRanges[ModeIndex][1]/dfreq)]
+            y = FRF[i]/(1j*w)
+            y_mode = y[int(ModeRanges[ModeIndex][0]/dfreq):int(ModeRanges[ModeIndex][1]/dfreq)]
+            y_mode_real = np.real(y_mode)
+            y_mode_imag = np.imag(y_mode)
+            modalfit= circle_fit(y_mode_real, y_mode_imag) # fit circle to mobility of sensor 1 around mode 1
+            xc_mode[i] = modalfit['xc']
+            yc_mode[i] = modalfit['yc']
+            r_mode[i] = modalfit['r']
+            # Natural Frequency 
+            idx = np.argmax(np.absolute(y_mode))
+            fn_mode[i] = freq_mode[idx]
+            # Damping Ratio
+            fc = freq_mode[idx-delta_freq_point]
+            fd = freq_mode[idx+delta_freq_point]
+            thetac = np.angle(y_mode[idx])-np.angle(y_mode[idx-delta_freq_point])
+            thetad = np.angle(y_mode[idx])-np.angle(y_mode[idx+delta_freq_point])
+            eta_mode[i] = np.absolute(fc**2-fd**2)/(fn_mode[i]**2*(np.absolute(np.tan(thetac/2))+np.absolute(np.tan(thetad/2))))
+        # Mode Shape
+        for i in range(LDATA):
+            shape_mode[i]=((2*np.pi*np.mean(fn_mode))**2)*np.mean(eta_mode)*2*r_mode[i]*np.sign(xc_mode[i])
             
-            r_mode,xc_mode,yc_mode=np.zeros(LDATA),np.zeros(LDATA),np.zeros(LDATA)
-            fn_mode,eta_mode,shape_mode=np.zeros(LDATA),np.zeros(LDATA),np.zeros(LDATA)
-            for i in range(LDATA):
-                y = FRF[i]/(1j*w)
-                y_mode = y[int(ModeRanges[ModeIndex][0]/dfreq):int(ModeRanges[ModeIndex][1]/dfreq)]
-                y_mode_real = np.real(y_mode)
-                y_mode_imag = np.imag(y_mode)
-                modalfit= circle_fit(y_mode_real, y_mode_imag) # fit circle to mobility of sensor 1 around mode 1
-                xc_mode[i] = modalfit['xc']
-                yc_mode[i] = modalfit['yc']
-                r_mode[i] = modalfit['r']
-                # Natural Frequency 
-                idx = np.argmax(np.absolute(y_mode))
-                fn_mode[i] = freq_mode[idx]
-                # Damping Ratio
-                fc = freq_mode[idx-delta_freq_point]
-                fd = freq_mode[idx+delta_freq_point]
-                thetac = np.angle(y_mode[idx])-np.angle(y_mode[idx-delta_freq_point])
-                thetad = np.angle(y_mode[idx])-np.angle(y_mode[idx+delta_freq_point])
-                eta_mode[i] = np.absolute(fc**2-fd**2)/(fn_mode[i]**2*(np.absolute(np.tan(thetac/2))+np.absolute(np.tan(thetad/2))))
-            # Mode Shape
-            for i in range(LDATA):
-                shape_mode[i]=((2*np.pi*np.mean(fn_mode))**2)*np.mean(eta_mode)*2*r_mode[i]*np.sign(xc_mode[i])
-                
-            # Normalize
-            shape_mode = shape_mode/np.linalg.norm(shape_mode, ord=np.inf) 
-                
-            # Show results
-            plt.figure()
-            plt.plot(shape_mode,'kx')
-            plt.show()
-            
-            print([np.mean(fn_mode),np.mean(eta_mode)])
+        # Normalize
+        shape_mode = shape_mode/np.linalg.norm(shape_mode, ord=np.inf) 
+        # np.insert(shape_mode,0,[0])  
+        nparr1=[0]
+        shape_mode = np.append(nparr1,shape_mode)
+        # Show results
+        # plt.figure()
+        # plt.plot(shape_mode,'kx')
+        # plt.show()
+        print([np.mean(fn_mode),np.mean(eta_mode)])
+        fig = make_subplots(rows=1, cols=1, subplot_titles=(" "), shared_xaxes=False)
+    #fig.add_trace(go.Scatter(x=3, y=adc2mVChAMax[:], mode='markers', name='markers'))
+    #fig.add_trace(go.Scatter(x=[7,9,0], y=[1,2,3], mode='markers', name='markers'))
+        fig.add_trace(go.Scatter(x=np.array(shape_mode[:]), y=[0,1,2,3], mode='lines', name='Structure'))#line_shape='spline',
+        fig.update_yaxes(title_text='Floor Number', titlefont=dict(size=14), row=1, col=1) # fig.update_xaxes(type="log")
+        fig.update_xaxes(title_text='Normalized Mode Shape', titlefont=dict(size=14), row=1, col=1)
+        fig.update_layout(title_text=" ",\
+        showlegend=True,\
+        font=dict(size=14),\
+        plot_bgcolor= 'rgba(0, 0, 0, 0.1)',paper_bgcolor= 'rgba(0, 0, 0, 0)') #paper_bgcolor= 'rgba(0, 0, 0, 0.05)'
+                    
+        sideplot2 = json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)
+        
+        return render_template("live.html",CF=sideplot2,NF2=fn_mode[1],NF3=fn_mode[2],NF4=fn_mode[3],DR2=eta_mode[1],DR3=eta_mode[2],DR4=eta_mode[3])  
