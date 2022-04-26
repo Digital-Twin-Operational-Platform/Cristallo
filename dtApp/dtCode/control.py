@@ -7,16 +7,17 @@ from dtApp import date
 import plotly
 import plotly.graph_objs as go
 from plotly.subplots import make_subplots
-import pandas as pd
 import numpy as np
 import json
-import control.matlab as ctrmat
+# import control.matlab as ctrmat
 
 from dtLib.control.passiveStructure import keoriginal
 from dtLib.control.passiveControlTMD import keTMD
 from dtLib.control.activeControlVFC import keVFC
 from dtLib.control.activeControlVFCmodified import keVFCmod
 from dtLib.control.activeControlLQG import keLQG
+
+from dtLib.third_party.python_control.ctrlutil import mag2db
 
 @app.route('/control', methods=['GET','POST'])
 def control():
@@ -94,7 +95,7 @@ def control():
             ITstmd = ControlTMD['IntKE']
 
             RTtmd = ITstmd/ITs
-            RTtmd = -(0.5)*ctrmat.mag2db(RTtmd)
+            RTtmd = -(0.5)*mag2db(RTtmd)
 
             fig.add_scatter(x=freq_TMD,y=T_TMD, name='kinetic energy structure with passive control (TMD)', mode = 'lines', row=1, col=1)
             fig.update_layout(showlegend=True, font=dict(size=14), legend=dict(x=-.1, y=1.2))
@@ -110,12 +111,12 @@ def control():
             gm = ControlVFC['Gm']
 
             RTvfc = ITsvfc/ITs
-            RTvfc = -(0.5)*ctrmat.mag2db(RTvfc)
+            RTvfc = -(0.5)*mag2db(RTvfc)
 
             IPvfc = IPvfc/(Bl**2)*Ze
 
             if gm>float(1):
-                gm = ctrmat.mag2db(gm)
+                gm = mag2db(gm)
                 stab = 'Yes'
             else:
                 stab = 'No'
@@ -154,12 +155,12 @@ def control():
             gmmod = ControlVFCmod['Gm']
 
             RTvfcmod = ITsvfcmod/ITs
-            RTvfcmod = -(0.5)*ctrmat.mag2db(RTvfcmod)
+            RTvfcmod = -(0.5)*mag2db(RTvfcmod)
 
             IPvfcmod = IPvfcmod/(Bl**2)*Ze
 
             if gmmod>float(1):
-                gmmod = ctrmat.mag2db(gmmod)
+                gmmod = mag2db(gmmod)
                 stabmod = 'Yes'
             else:
                 stabmod = 'No'
@@ -198,12 +199,12 @@ def control():
             gmLQG = ControlLQG['Gm']
 
             RTLQG = ITsLQG/ITs
-            RTLQG = -(0.5)*ctrmat.mag2db(RTLQG)
+            RTLQG = -(0.5)*20*np.log10(RTLQG) # RTLQG = -(0.5)*ctrmat.mag2db(RTLQG)
 
             IPLQG = IPLQG/(Bl**2)*Ze
 
             if gmLQG>float(1):
-                gmLQG = ctrmat.mag2db(gmLQG)
+                gmLQG = mag2db(gmLQG)
                 stabLQG = '--'
             else:
                 stabLQG = '--'

@@ -4,8 +4,7 @@ This function calculates the kinetic energy of the structure controlled by a Lin
 from dtApp.dtData.soton_twin import Soton_twin_data
 import numpy as np
 import scipy.linalg as la
-from control import *
-import control.matlab as ctrmat
+# from control import * # Take care of this for the server-based version. Build Slycot from source.
 from plotly.subplots import make_subplots
 
 
@@ -129,5 +128,5 @@ def keLQG(nfs, mb, mp, kp, cp, Bl, Ze, q, r, Qn, Rn):
         
     ITsvfc = np.trapz(T.real, x=2*np.pi*freq)
     IPvfc = np.trapz(P.real, x=2*np.pi*freq)
-    T = ctrmat.mag2db(abs(T))
-    return {'freq': freq, 'ke': T, 'ol':L, 'IntKE': ITsvfc, 'IntCE': IPvfc, 'Gm': gm}
+    T_ = 20*np.log10(T)# T = ctrmat.mag2db(abs(T))
+    return {'freq': freq, 'ke': T_, 'ol':L, 'IntKE': ITsvfc, 'IntCE': IPvfc, 'Gm': gm}

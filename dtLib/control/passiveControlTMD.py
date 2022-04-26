@@ -4,9 +4,10 @@ This function calculates the kinetic energy of the structure controlled by a pas
 from dtApp.dtData.soton_twin import Soton_twin_data
 import numpy as np
 import scipy.linalg as la
-import control.matlab as ctrmat
+# import control.matlab as ctrmat
 from plotly.subplots import make_subplots
 
+from dtLib.third_party.python_control.ctrlutil import mag2db
 
 def keTMD(nfs, mb, mp, kp, cp):
     fs = 1e2
@@ -79,5 +80,5 @@ def keTMD(nfs, mb, mp, kp, cp):
         T[ii] = (1/4)*dotX.conjugate().transpose()@Msstar@dotX
 
     ITstmd = np.trapz(T.real, x=2*np.pi*freq)    
-    T = ctrmat.mag2db(abs(T))
-    return {'freq': freq, 'ke': T, 'IntKE': ITstmd}
+    T_ = mag2db(abs(T))
+    return {'freq': freq, 'ke': T_, 'IntKE': ITstmd}
