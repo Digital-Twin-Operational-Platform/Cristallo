@@ -4,10 +4,11 @@ This function compares the experimental FRFs of each structure with the simulate
 from flask import render_template
 from dtApp import app
 from dtApp import date
+
 import plotly
 import plotly.graph_objs as go
 from plotly.subplots import make_subplots
-import pandas as pd
+
 import numpy as np
 import json
 

@@ -5,7 +5,6 @@ import numpy as np
 import scipy.linalg as la
 import math
 from scipy.integrate import odeint
-import matplotlib.pyplot as plt
 
 def Open_loop_3st(u,t,p,Minv,B,S,s13):
     Phi = p[0]
