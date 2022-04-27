@@ -7,7 +7,7 @@ import scipy.linalg as la
 # import control.matlab as ctrmat
 from plotly.subplots import make_subplots
 
-from dtLib.third_party.python_control.ctrlutil import mag2db
+from dtLib.third_party.python_control_v091.control.ctrlutil import mag2db
 
 def keTMD(nfs, mb, mp, kp, cp):
     fs = 1e2

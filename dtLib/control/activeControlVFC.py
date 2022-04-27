@@ -7,10 +7,12 @@ import scipy.linalg as la
 # import control.matlab as ctrmat
 from plotly.subplots import make_subplots
 
-from dtLib.third_party.python_control.iosys import ss
-from dtLib.third_party.python_control.xferfcn import tf
-from dtLib.third_party.python_control.bdalg import series
-from dtLib.third_party.python_control.margins import margin
+from dtLib.third_party.python_control_v091.control.statesp import ss
+from dtLib.third_party.python_control_v091.control.xferfcn import tf
+from dtLib.third_party.python_control_v091.control.bdalg import series
+from dtLib.third_party.python_control_v091.control.margins import margin
+
+from dtLib.third_party.python_control_v091.control.ctrlutil import mag2db
 
 
 def keVFC(nfs, mb, mp, kp, cp, Bl, Ze, h):
@@ -124,5 +126,5 @@ def keVFC(nfs, mb, mp, kp, cp, Bl, Ze, h):
         
     ITsvfc = np.trapz(T.real, x=2*np.pi*freq)
     IPvfc = np.trapz(P.real, x=2*np.pi*freq)
-    T_ = 20*np.log10(T)# T = ctrmat.mag2db(abs(T))
+    T_ = mag2db(abs(T))
     return {'freq': freq, 'ke': T_, 'ol':L, 'IntKE': ITsvfc, 'IntCE': IPvfc, 'Gm': gm}

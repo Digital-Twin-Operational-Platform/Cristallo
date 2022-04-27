@@ -17,7 +17,7 @@ from dtLib.control.activeControlVFC import keVFC
 from dtLib.control.activeControlVFCmodified import keVFCmod
 from dtLib.control.activeControlLQG import keLQG
 
-from dtLib.third_party.python_control.ctrlutil import mag2db
+from dtLib.third_party.python_control_v091.control.ctrlutil import mag2db
 
 @app.route('/control', methods=['GET','POST'])
 def control():

@@ -2,12 +2,13 @@
 This function calculates the kinetic energy of the original structure without control.
 '''
 from dtApp.dtData.soton_twin import Soton_twin_data
+
 import numpy as np
 import scipy.linalg as la
 # import control.matlab as ctrmat
 from plotly.subplots import make_subplots
 
-from dtLib.third_party.python_control.ctrlutil import mag2db
+from dtLib.third_party.python_control_v091.control.ctrlutil import mag2db
 
 def keoriginal():
     fs = 1e2
