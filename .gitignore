@@ -335,3 +335,4 @@ venv/
 ENV/
 env.bak/
 venv.bak/
+dtApp/dtData/profiles/*.csv
