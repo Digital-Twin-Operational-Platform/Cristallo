@@ -4,8 +4,10 @@ This function compares the experimental FRFs of each structure with the simulate
 from flask import render_template
 from dtApp import app
 from dtApp import date
+
 import plotly
 from plotly.subplots import make_subplots
+import numpy as np
 import json
 
 from dtLib.crossval.extract_data import tSW,tSO,tSH,tBR,youtSW,youtSO,youtSH,youtBR
