@@ -1,6 +1,6 @@
 #  Welcome to Cristallo! 
 
-*Cristallo* is an open-source web-based _digital twin operational platform_ (DTOP). User interaction is currently via webforms. This version works best on a standalone machine, and is primarily aimed at demonstrating how this type of digital twin can be applied to a specific engineering application. In this code, the application structure is a 3-storey structure. 
+*Cristallo* is an open-source web-based _digital twin operational platform_ (DTOP). User interaction is currently provided via webforms. This version works best on a standalone machine, and is primarily aimed at demonstrating how this type of digital twin can be applied to a specific engineering application. In this code, the application structure is a 3-storey structure. 
 
 >Disclaimer: The repository does not include code for recording data, because of the hardware-specific nature of such code. In the spirit of demonstrating the concept, data is either simulated or in some cases pre-recorded experimental data is used.   
    
@@ -164,6 +164,20 @@ The successful excecution of this CLI sequence will start the flask server, whic
 
 Now you can navigate to the URL `http://localhost:5000/` via your browser to access the DTOP.
 
+# Cite 
+>Bonney, M., De Angelis, M., Dal Borgo, M., Andrade, L., Beregi, S., Jamia, N., & Wagg, D. (2022). Development of a digital twin operational platform using Python Flask. Data-Centric Engineering, 3, E1. doi:10.1017/dce.2022.1
+
+```BibteX
+@article{bonney_de angelis_dal borgo_andrade_beregi_jamia_wagg_2022, 
+title = {Development of a digital twin operational platform using Python Flask},
+volume = {3}, 
+DOI = {10.1017/dce.2022.1}, 
+journal = {Data-Centric Engineering}, 
+publisher = {Cambridge University Press}, 
+author = {Bonney, Matthew S. and de Angelis, Marco and Dal Borgo, Mattia and Andrade, Luis and Beregi, Sandor and Jamia, Nidhal and Wagg, David J.}, 
+year = {2022}, 
+pages = {e1}}
+```
 
 # More
 Instructions on how to contribute to the project as adeveloper can be consulted via our documentation.
