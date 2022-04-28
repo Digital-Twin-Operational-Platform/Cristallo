@@ -5,8 +5,6 @@ import numpy as np
 import plotly
 import plotly.graph_objs as go
 from plotly.subplots import make_subplots
-import matplotlib.pyplot as plt
-import pandas as pd
 import json
 
 dataSwExp = pd.read_csv('dtLib/crossval/Data/Experimental Data/ExpDataSw.csv',header=None,sep=",")

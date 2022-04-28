@@ -44,7 +44,6 @@ import io
 import plotly
 import plotly.graph_objs as go
 from plotly.subplots import make_subplots
-import pandas as pd
 import json
 
 @app.route('/Design_under_uncertainty', methods=['GET', 'POST'])

@@ -21,6 +21,9 @@ from .dtCode import cadmodel
 from .dtCode import design
 from .dtCode import nonlinearcbc
 from .dtCode import simulator
+from .dtCode import lpm_update
+from .dtCode import Profile_hub
+from .dtCode import Profile_Compare
 
 @app.route('/')
 @app.route('/home')

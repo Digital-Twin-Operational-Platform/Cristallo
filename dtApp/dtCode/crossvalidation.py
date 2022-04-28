@@ -4,15 +4,14 @@ This function compares the experimental FRFs of each structure with the simulate
 from flask import render_template
 from dtApp import app
 from dtApp import date
+
 import plotly
-import plotly.graph_objs as go
 from plotly.subplots import make_subplots
-import pandas as pd
 import numpy as np
 import json
 
-from dtLib.crossval.example import tSW,tSO,tSH,tBR,youtSW,youtSO,youtSH,youtBR
-from dtLib.crossval.example import tNumSW,tNumSWmiddle,tNumSO,tNumSH,tNumBR,tNumSHmiddle,youtNumSW,youtNumSO,youtNumSH,youtNumBR
+from dtLib.crossval.extract_data import tSW,tSO,tSH,tBR,youtSW,youtSO,youtSH,youtBR
+from dtLib.crossval.extract_data import tNumSW,tNumSWmiddle,tNumSO,tNumSH,tNumBR,tNumSHmiddle,youtNumSW,youtNumSO,youtNumSH,youtNumBR
 
 @app.route('/crossval')#@app.route('/ExpValidation_Updated')
 def ExpValidation_Updated():
@@ -29,36 +28,36 @@ def Exp_Data():
     subplot_titles=("<b>Prototype 1<b>","<b>Prototype 2<b>", "<b>Prototype 3<b>", "<b>Prototype 4<b>"))
 
     # Fig1.a
-    fig1.add_scatter(x=tSW,y=youtSW[0], name='Acc floor 1', mode = 'lines', row=1, col=1)
-    fig1.add_scatter(x=tSW,y=youtSW[1], name='Acc floor 2', mode = 'lines', row=1, col=1)
-    fig1.add_scatter(x=tSW,y=youtSW[2], name='Acc floor 3', mode = 'lines', row=1, col=1)
+    fig1.add_scatter(x=tSW,y=youtSW[:,0], name='Acc floor 1', mode = 'lines', row=1, col=1)
+    fig1.add_scatter(x=tSW,y=youtSW[:,1], name='Acc floor 2', mode = 'lines', row=1, col=1)
+    fig1.add_scatter(x=tSW,y=youtSW[:,2], name='Acc floor 3', mode = 'lines', row=1, col=1)
     # Update xaxis properties
     fig1.update_xaxes(title_text="Freq (Hz)", titlefont=dict(size=15), row=1, col=1)
     # Update yaxis properties
     fig1.update_yaxes(title_text="dB", titlefont=dict(size=15), row=1, col=1)
 
     ## Fig1.b
-    fig1.add_scatter(x=tSO,y=youtSO[0], name='Acc floor 1', mode = 'lines', row=1, col=2)
-    fig1.add_scatter(x=tSO,y=youtSO[1], name='Acc floor 2', mode = 'lines', row=1, col=2)
-    fig1.add_scatter(x=tSO,y=youtSO[2], name='Acc floor 3', mode = 'lines', row=1, col=2)
+    fig1.add_scatter(x=tSO,y=youtSO[:,0], name='Acc floor 1', mode = 'lines', row=1, col=2)
+    fig1.add_scatter(x=tSO,y=youtSO[:,1], name='Acc floor 2', mode = 'lines', row=1, col=2)
+    fig1.add_scatter(x=tSO,y=youtSO[:,2], name='Acc floor 3', mode = 'lines', row=1, col=2)
     # Update xaxis properties
     fig1.update_xaxes(title_text="Freq (Hz)", titlefont=dict(size=15), row=1, col=2)
     # Update yaxis properties
     fig1.update_yaxes(title_text="dB", titlefont=dict(size=15), row=1, col=2)
 
     #Fig1.c
-    fig1.add_scatter(x=tSH,y=youtSH[0], name='Acc floor 1', mode = 'lines', row=2, col=1)
-    fig1.add_scatter(x=tSH,y=youtSH[1], name='Acc floor 2', mode = 'lines', row=2, col=1)
-    fig1.add_scatter(x=tSH,y=youtSH[2], name='Acc floor 3', mode = 'lines', row=2, col=1)
+    fig1.add_scatter(x=tSH,y=youtSH[:,0], name='Acc floor 1', mode = 'lines', row=2, col=1)
+    fig1.add_scatter(x=tSH,y=youtSH[:,1], name='Acc floor 2', mode = 'lines', row=2, col=1)
+    fig1.add_scatter(x=tSH,y=youtSH[:,2], name='Acc floor 3', mode = 'lines', row=2, col=1)
     # Update xaxis properties
     fig1.update_xaxes(title_text="Freq (Hz)", titlefont=dict(size=15), row=2, col=1)
     # Update yaxis properties
     fig1.update_yaxes(title_text="dB", titlefont=dict(size=15), row=2, col=1)
 
     #Fig1.d
-    fig1.add_scatter(x=tBR,y=youtBR[0], name='Acc floor 1', mode = 'lines', row=2, col=2)
-    fig1.add_scatter(x=tBR,y=youtBR[1], name='Acc floor 2', mode = 'lines', row=2, col=2)
-    fig1.add_scatter(x=tBR,y=youtBR[2], name='Acc floor 3', mode = 'lines', row=2, col=2)
+    fig1.add_scatter(x=tBR,y=youtBR[:,0], name='Acc floor 1', mode = 'lines', row=2, col=2)
+    fig1.add_scatter(x=tBR,y=youtBR[:,1], name='Acc floor 2', mode = 'lines', row=2, col=2)
+    fig1.add_scatter(x=tBR,y=youtBR[:,2], name='Acc floor 3', mode = 'lines', row=2, col=2)
     # Update xaxis properties
     fig1.update_xaxes(title_text="Freq (Hz)", titlefont=dict(size=15), row=2, col=2)
     # Update yaxis properties
@@ -87,32 +86,32 @@ def Exp_Num_Data():
     subplot_titles=("<b>Prototype 1<b>","<b>Prototype 2<b>", "<b>Prototype 3<b>", "<b>Prototype 4<b>"))
 
     # Fig3.a
-    fig3.add_scatter(x=tSW,y=youtSW[0], name='Exp Data', mode = 'lines', row=1, col=1)
-    fig3.add_scatter(x=tNumSW,y=youtNumSW[0], name='Num Data', mode = 'markers', marker=dict(size= 1.5), row=1, col=1)
+    fig3.add_scatter(x=tSW,y=youtSW[:,0], name='Exp Data', mode = 'lines', row=1, col=1)
+    fig3.add_scatter(x=tNumSW,y=youtNumSW[:,0], name='Num Data', mode = 'markers', marker=dict(size= 1.5), row=1, col=1)
     # Update xaxis properties
     fig3.update_xaxes(title_text="Freq (Hz)", titlefont=dict(size=15), row=1, col=1)
     # Update yaxis properties
     fig3.update_yaxes(title_text="dB", titlefont=dict(size=15),row=1,col=1)
 
     ## Fig3.b
-    fig3.add_scatter(x=tSO,y=youtSO[0], name='Exp Data', mode = 'lines', row=1, col=2)
-    fig3.add_scatter(x=tNumSO,y=youtNumSO[0], name='Num Data', mode = 'markers', marker=dict(size= 1.5), row=1, col=2)
+    fig3.add_scatter(x=tSO,y=youtSO[:,0], name='Exp Data', mode = 'lines', row=1, col=2)
+    fig3.add_scatter(x=tNumSO,y=youtNumSO[:,0], name='Num Data', mode = 'markers', marker=dict(size= 1.5), row=1, col=2)
     # Update xaxis properties
     fig3.update_xaxes(title_text="Freq (Hz)", titlefont=dict(size=15), row=1, col=2)
     # Update yaxis properties
     fig3.update_yaxes(title_text="dB", titlefont=dict(size=15),row=1,col=2)
 
     #Fig3.c
-    fig3.add_scatter(x=tSH,y=youtSH[0], name='Exp Data', mode = 'lines', row=2, col=1)
-    fig3.add_scatter(x=tNumSH,y=youtNumSH[0], name='Num Data', mode = 'markers', marker=dict(size= 1.5), row=2, col=1)
+    fig3.add_scatter(x=tSH,y=youtSH[:,0], name='Exp Data', mode = 'lines', row=2, col=1)
+    fig3.add_scatter(x=tNumSH,y=youtNumSH[:,0], name='Num Data', mode = 'markers', marker=dict(size= 1.5), row=2, col=1)
     # Update xaxis properties
     fig3.update_xaxes(title_text="Freq (Hz)", titlefont=dict(size=15), row=2, col=1)
     # Update yaxis properties
     fig3.update_yaxes(title_text="dB", titlefont=dict(size=15),row=2,col=1)
 
     #Fig3.d
-    fig3.add_scatter(x=tBR,y=youtBR[0], name='Exp Data', mode = 'lines', row=2, col=2)
-    fig3.add_scatter(x=tNumBR,y=youtNumBR[0], name='Num Data', mode = 'markers', marker=dict(size= 3), row=2, col=2)
+    fig3.add_scatter(x=tBR,y=youtBR[:,0], name='Exp Data', mode = 'lines', row=2, col=2)
+    fig3.add_scatter(x=tNumBR,y=youtNumBR[:,0], name='Num Data', mode = 'markers', marker=dict(size= 3), row=2, col=2)
     # Update xaxis properties
     fig3.update_xaxes(title_text="Freq (Hz)", titlefont=dict(size=15), row=2, col=2)
     # Update yaxis properties
@@ -140,36 +139,36 @@ def Num_Data():
     subplot_titles=("<b>Prototype 1<b>","<b>Prototype 2<b>", "<b>Prototype 3<b>", "<b>Prototype 4<b>"))
 
     # Fig2.a
-    fig2.add_scatter(x=tNumSW,y=youtNumSW[0], name='Acc floor 1', mode = 'lines', row=1, col=1)
-    fig2.add_scatter(x=tNumSWmiddle,y=youtNumSW[1], name='Acc floor 2', mode = 'lines', row=1, col=1)
-    fig2.add_scatter(x=tNumSW,y=youtNumSW[2], name='Acc floor 3', mode = 'lines', row=1, col=1)
+    fig2.add_scatter(x=tNumSW,y=youtNumSW[:,0], name='Acc floor 1', mode = 'lines', row=1, col=1)
+    fig2.add_scatter(x=tNumSWmiddle,y=youtNumSW[:,1], name='Acc floor 2', mode = 'lines', row=1, col=1)
+    fig2.add_scatter(x=tNumSW,y=youtNumSW[:,2], name='Acc floor 3', mode = 'lines', row=1, col=1)
     # Update xaxis properties
     fig2.update_xaxes(title_text="Freq (Hz)", titlefont=dict(size=15), row=1, col=1)
     # Update yaxis properties
     fig2.update_yaxes(title_text="dB", titlefont=dict(size=15), row=1, col=1)
 
     ## Fig2.b
-    fig2.add_scatter(x=tNumSO,y=youtNumSO[0], name='Acc floor 1', mode = 'lines', row=1, col=2)
-    fig2.add_scatter(x=tNumSO,y=youtNumSO[1], name='Acc floor 2', mode = 'lines', row=1, col=2)
-    fig2.add_scatter(x=tNumSO,y=youtNumSO[2], name='Acc floor 3', mode = 'lines', row=1, col=2)
+    fig2.add_scatter(x=tNumSO,y=youtNumSO[:,0], name='Acc floor 1', mode = 'lines', row=1, col=2)
+    fig2.add_scatter(x=tNumSO,y=youtNumSO[:,1], name='Acc floor 2', mode = 'lines', row=1, col=2)
+    fig2.add_scatter(x=tNumSO,y=youtNumSO[:,2], name='Acc floor 3', mode = 'lines', row=1, col=2)
     # Update xaxis properties
     fig2.update_xaxes(title_text="Freq (Hz)", titlefont=dict(size=15), row=1, col=2)
     # Update yaxis properties
     fig2.update_yaxes(title_text="dB", titlefont=dict(size=15), row=1, col=2)
 
     #Fig2.c
-    fig2.add_scatter(x=tNumSH,y=youtNumSH[0], name='Acc floor 1', mode = 'lines', row=2, col=1)
-    fig2.add_scatter(x=tNumSHmiddle,y=youtNumSH[1], name='Acc floor 2', mode = 'lines', row=2, col=1)
-    fig2.add_scatter(x=tNumSH,y=youtNumSH[2], name='Acc floor 3', mode = 'lines', row=2, col=1)
+    fig2.add_scatter(x=tNumSH,y=youtNumSH[:,0], name='Acc floor 1', mode = 'lines', row=2, col=1)
+    fig2.add_scatter(x=tNumSHmiddle,y=youtNumSH[:,1], name='Acc floor 2', mode = 'lines', row=2, col=1)
+    fig2.add_scatter(x=tNumSH,y=youtNumSH[:,2], name='Acc floor 3', mode = 'lines', row=2, col=1)
     # Update xaxis properties
     fig2.update_xaxes(title_text="Freq (Hz)", titlefont=dict(size=15), row=2, col=1)
     # Update yaxis properties
     fig2.update_yaxes(title_text="dB", titlefont=dict(size=15), row=2, col=1)
 
     #Fig2.d
-    fig2.add_scatter(x=tNumBR,y=youtNumBR[0], name='Acc floor 1', mode = 'lines', row=2, col=2)
-    fig2.add_scatter(x=tNumBR,y=youtNumBR[1], name='Acc floor 2', mode = 'lines', row=2, col=2)
-    fig2.add_scatter(x=tNumBR,y=youtNumBR[2], name='Acc floor 3', mode = 'lines', row=2, col=2)
+    fig2.add_scatter(x=tNumBR,y=youtNumBR[:,0], name='Acc floor 1', mode = 'lines', row=2, col=2)
+    fig2.add_scatter(x=tNumBR,y=youtNumBR[:,1], name='Acc floor 2', mode = 'lines', row=2, col=2)
+    fig2.add_scatter(x=tNumBR,y=youtNumBR[:,2], name='Acc floor 3', mode = 'lines', row=2, col=2)
     # Update xaxis properties
     fig2.update_xaxes(title_text="Freq (Hz)", titlefont=dict(size=15), row=2, col=2)
     # Update yaxis properties
@@ -195,10 +194,10 @@ def Exp_Exp_Data():
     """
     # Figure4
     fig4 = make_subplots(rows=1, cols=1, shared_xaxes=True, vertical_spacing=0.01)
-    fig4.add_scatter(x=tSW,y=youtSW[0], name='Prototype 1 - Exp Data', mode = 'lines', row=1, col=1)
-    fig4.add_scatter(x=tSO,y=youtSO[0], name='Prototype 2 - Exp Data', mode = 'lines', row=1, col=1)
-    fig4.add_scatter(x=tSH,y=youtSH[0], name='Prototype 3 - Exp Data', mode = 'lines', row=1, col=1)
-    fig4.add_scatter(x=tBR,y=youtBR[0], name='Prototype 4 - Exp Data', mode = 'lines', row=1, col=1)
+    fig4.add_scatter(x=tSW,y=youtSW[:,0], name='Prototype 1 - Exp Data', mode = 'lines', row=1, col=1)
+    fig4.add_scatter(x=tSO,y=youtSO[:,0], name='Prototype 2 - Exp Data', mode = 'lines', row=1, col=1)
+    fig4.add_scatter(x=tSH,y=youtSH[:,0], name='Prototype 3 - Exp Data', mode = 'lines', row=1, col=1)
+    fig4.add_scatter(x=tBR,y=youtBR[:,0], name='Prototype 4 - Exp Data', mode = 'lines', row=1, col=1)
     # Update xaxis properties
     fig4.update_xaxes(title_text="Freq (Hz)", titlefont=dict(size=20), row=1, col=1)
     # Update yaxis properties

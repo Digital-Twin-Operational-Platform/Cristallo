@@ -4,9 +4,15 @@ This function calculates the kinetic energy of the structure controlled by a dir
 from dtApp.dtData.soton_twin import Soton_twin_data
 import numpy as np
 import scipy.linalg as la
-import control.matlab as ctrmat
+# import control.matlab as ctrmat
 from plotly.subplots import make_subplots
 
+from dtLib.third_party.python_control_v091.control.statesp import ss
+from dtLib.third_party.python_control_v091.control.xferfcn import tf
+from dtLib.third_party.python_control_v091.control.bdalg import series
+from dtLib.third_party.python_control_v091.control.margins import margin
+
+from dtLib.third_party.python_control_v091.control.ctrlutil import mag2db
 
 def keVFCmod(nfs, mb, mp, kp, cp, Bl, Ze, h, wpest, xipest, wc, xic):
     fs = 1e2
@@ -96,18 +102,18 @@ def keVFCmod(nfs, mb, mp, kp, cp, Bl, Ze, h, wpest, xipest, wc, xic):
     Cvfc = np.zeros((1,8))
     Cvfc[0][2+nfs] = 1
 
-    BLDGc_VFC = ctrmat.ss(A, Bu, Cvfc, 0)
+    BLDGc_VFC = ss(A, Bu, Cvfc, 0)
 
-    BLDGc_VFCtf = ctrmat.tf(BLDGc_VFC)
+    BLDGc_VFCtf = tf(BLDGc_VFC)
 
     # compensator tranfer function
     num = [[[1, 2*xipest*wpest, wpest**2]]]
     den = [[[1, 2*xic*wc, wc**2]]]
-    Comp = ctrmat.tf(num,den)
+    Comp = tf(num,den)
 
-    sysvfc_cp = ctrmat.series(BLDGc_VFCtf, Comp*h*Bl*ga)
+    sysvfc_cp = series(BLDGc_VFCtf, Comp*h*Bl*ga)
 
-    gm, pm, wg, wp = ctrmat.margin(sysvfc_cp)
+    gm, pm, wg, wp = margin(sysvfc_cp)
 
     T = np.zeros((ns),dtype=complex)
     L = np.zeros((ns),dtype=complex)
@@ -129,5 +135,5 @@ def keVFCmod(nfs, mb, mp, kp, cp, Bl, Ze, h, wpest, xipest, wc, xic):
         
     ITsvfc = np.trapz(T.real, x=2*np.pi*freq)
     IPvfc = np.trapz(P.real, x=2*np.pi*freq)
-    T = ctrmat.mag2db(abs(T))
-    return {'freq': freq, 'ke': T, 'ol':L, 'IntKE': ITsvfc, 'IntCE': IPvfc, 'Gm': gm}
+    T_ = mag2db(abs(T))
+    return {'freq': freq, 'ke': T_, 'ol':L, 'IntKE': ITsvfc, 'IntCE': IPvfc, 'Gm': gm}
