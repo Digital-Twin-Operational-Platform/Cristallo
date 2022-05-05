@@ -1,13 +1,11 @@
 '''
 This function updates the parameters of the 3dof model.
 '''
-from types import ModuleType
 from flask import render_template, request, redirect, url_for
 from dtApp import app
 from dtApp import date
 import numpy as np
 import plotly
-import plotly.graph_objs as go
 from plotly.subplots import make_subplots
 import json
 
@@ -52,21 +50,21 @@ def lpm_update():
         dfreq = freq[1]-freq[0] # frequency increment
 
         # cut mobility vector around each resonance
-        y1_mode1 = y1[int(4/dfreq):int(12/dfreq)]
-        y1_mode2 = y1[int(12/dfreq):int(22/dfreq)]
-        y1_mode3 = y1[int(22/dfreq):int(40/dfreq)]
+        y1_mode1 = y1[int(5.9/dfreq):int(7/dfreq)]
+        y1_mode2 = y1[int(17/dfreq):int(19/dfreq)]
+        y1_mode3 = y1[int(25/dfreq):int(27.5/dfreq)]
 
-        y2_mode1 = y2[int(4/dfreq):int(12/dfreq)]
-        y2_mode2 = y2[int(12/dfreq):int(22/dfreq)]
-        y2_mode3 = y2[int(22/dfreq):int(40/dfreq)]
+        y2_mode1 = y2[int(5.9/dfreq):int(7/dfreq)]
+        y2_mode2 = y2[int(17/dfreq):int(19/dfreq)]
+        y2_mode3 = y2[int(25/dfreq):int(27.5/dfreq)]
 
-        y3_mode1 = y3[int(4/dfreq):int(12/dfreq)]
-        y3_mode2 = y3[int(12/dfreq):int(22/dfreq)]
-        y3_mode3 = y3[int(22/dfreq):int(40/dfreq)]
+        y3_mode1 = y3[int(5.9/dfreq):int(7/dfreq)]
+        y3_mode2 = y3[int(17/dfreq):int(19/dfreq)]
+        y3_mode3 = y3[int(25/dfreq):int(27.5/dfreq)]
 
-        freq_mode1 = freq[int(4/dfreq):int(12/dfreq)]
-        freq_mode2 = freq[int(12/dfreq):int(22/dfreq)]
-        freq_mode3 = freq[int(22/dfreq):int(40/dfreq)]
+        freq_mode1 = freq[int(5.9/dfreq):int(7/dfreq)]
+        freq_mode2 = freq[int(17/dfreq):int(19/dfreq)]
+        freq_mode3 = freq[int(25/dfreq):int(27.5/dfreq)]
 
         y1_mode1_real = np.real(y1_mode1)
         y1_mode1_imag = np.imag(y1_mode1)
