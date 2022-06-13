@@ -10,45 +10,102 @@
 
 
 <!-- <h2><button onclick="myFunction()" style="margin: 10px;">+</button>Hammer test simulator </h2> -->
-<h2 style="padding-left: 15px;">Hammer test simulator </h2>
+<h2 style="padding-left: 15px;">Hammer/shaker test simulator </h2>
+
+<p style="padding: 20px;">Impact hammer force acts at 0.5 s on 1st mass</p>
 
 <form action="/simulator" method="POST" id="form">
     <div class="onepagecontainer">
-    <div style="padding-left: 15px;">
-        <p> Three-degree-of-freedom system's response to hammer excitation </p> 
-        <p>Hammer hits 1st mass at 0.5 seconds with 300 N.</p>
-        <!-- <p>To avoid downtime select no more than 100 MC samples.</p> -->
-        <!-- <u>Disclaimer</u>: this page is created for illustration purposes. The use of inner bounds may not provide enough coverage thus it is discouraged for the validation step.</p> -->
-    </div>
-    <table>
+    <table style="padding-left: 20px; padding-bottom: 20px;">
+        <!-- Determine Excitiation -->
         <tr>
-            <td style="padding-left:15px;">
-                <font>Dispersion: 5%</font>
-            </td>
-            <!-- <td>
-                <input type="number" class="input" id="maxU" name="maxU" value="5" min="1" max="20" step="1">
-            </td> -->
-            <!-- <td>
-                <font>%</font>
-            </td> -->
-            <td style="width: 20px;">  </td>
-            <td style="padding-left:15px;">Simulated scenarios: </td>
-            <td style="padding-left:15px;"><label for="MC_5">5</label><br><input type="radio" value="5" id="MC_5" name="MC_samples"></td>
-            <td style="padding-left:15px;"><label for="MC_15">15</label><br><input type="radio" value="15" id="MC_15" name="MC_samples"></td>
-            <td style="padding-left:15px;"><label for="MC_20">20</label><br><input type="radio" value="20" id="MC_20" name="MC_samples"></td>
-            <td style="padding-left:15px;"><label for="MC_30">30</label><br><input type="radio" value="30" id="MC_30" name="MC_samples"></td>
-            <td style="padding-left:15px;"><label for="MC_50">50</label><br><input type="radio" value="50" id="MC_50" name="MC_samples"></td>
-            <td><input style="font-size:14pt;padding: 10px;margin: 10px;" type="submit" value="Recompute" /></td>
+            <td style="padding-left:15px; padding-bottom: 10px; padding-right: 100px;">Excitation: </td>
+            <td style="padding-left:15px; padding-bottom: 10px;"><label for="Ex_h">Impact Hammer</label> </td>
+            <td style="padding-left:15px; padding-bottom: 10px;"><input type="radio" value="Hammer" id="Ex_h" name="Excite"></td>
+            <td style="padding-left:120px; padding-bottom: 10px;"><label for="Ex_w">White Noise</label></td>
+            <td style="padding-left:15px; padding-bottom: 10px;"><input type="radio" value="White" id="Ex_w" name="Excite"></td>
         </tr>
-        <!-- <tr>
-            <td style="padding:15px;">
-                <font>Hammer hits 1st mass at 0.5 seconds with 300 N.</font>
-            </td>
-        </tr> -->
     </table>
-    <div style="padding-left: 15px;"><font>Number of simulated scenarios = {{N}}</font></div>
-    
-<div id="left" style="float:left; width:600;">
+    <table style="padding-left: 20px; padding-bottom: 20px;">
+        <tr>
+            <td style="padding-left:15px; padding-bottom: 10px; padding-right: 20px;">Simulation Properties: </td>
+            <td style="padding-left:15px; padding-bottom: 10px;">Total Time [s]</td>
+            <td style="padding-left:15px; padding-bottom: 10px;"><label for="Time"></label><input type="number" class="input" maxlength="6" id="Time" name="Time" value="{{Defaults['T']}}" min="0" step=".1"></td>
+            <td style="padding-left:55px; padding-bottom: 10px; padding-right:10px">Sample Frequency [Hz]</td>
+            <td><label for="S_256">256</label><input type="radio" value="256" id="256" name="SFreq"></td>
+            <td><label for="S_512">512</label><input type="radio" value="512" id="512" name="SFreq"></td>
+            <td><label for="S_1024">1024</label><input type="radio" value="1024" id="1024" name="SFreq"></td>
+            <td><label for="S_2048">2048</label><input type="radio" value="2048" id="2048" name="SFreq"></td>
+            <td><label for="S_4096">4096</label><input type="radio" value="4096" id="4096" name="SFreq"></td>
+            <!-- <td style="padding-left:15px; padding-bottom: 10px;"><label for="SFreq"></label><input type="number" class="input" maxlength="6" id="SFreq" name="SFreq" value="{{Defaults['Sf']}}" min="0" step="0.1"></td> -->
+        </tr>
+    </table>
+
+    <table style="padding-left: 20px; padding-bottom: 20px;">
+        <!-- Determine Monte Carlo Parameters -->
+        <tr>
+            <td style="padding-left:15px; padding-bottom: 10px; padding-right: 30px;">Simulated scenarios: </td>
+            <td style="padding-left:15px; padding-bottom: 10px;"><label for="MC_1">1</label><br><input type="radio" value="1" id="MC_1" name="MC_samples"></td>
+            <td style="padding-left:15px; padding-bottom: 10px;"><label for="MC_5">5</label><br><input type="radio" value="5" id="MC_5" name="MC_samples"></td>
+            <td style="padding-left:15px; padding-bottom: 10px;"><label for="MC_15">15</label><br><input type="radio" value="15" id="MC_15" name="MC_samples"></td>
+            <td style="padding-left:15px; padding-bottom: 10px;"><label for="MC_20">20</label><br><input type="radio" value="20" id="MC_20" name="MC_samples"></td>
+            <td style="padding-left:15px; padding-bottom: 10px;"><label for="MC_30">30</label><br><input type="radio" value="30" id="MC_30" name="MC_samples"></td>
+            <td style="padding-left:15px; padding-bottom: 10px;"><label for="MC_50">50</label><br><input type="radio" value="50" id="MC_50" name="MC_samples"></td>
+            
+        </tr>
+    </table>
+
+    <table style="padding-left: 20px; padding-bottom: 20px;">
+        <!-- Header -->
+        <th>
+            <td style="padding:15px;">Mass [kg]</td>
+            <td style="padding:15px;">Stiffness [N/m]</td>
+            <td style="padding:15px;">Damping [Ns/m]</td>
+            <td style="padding:15px;">Initial disp. [m]</td>
+            <td style="padding:15px;">Initial vel. [m/s]</td>
+        </th>
+         <!-- Third storey -->
+         <tr>
+            <td style="padding-left:15px;">Third storey: </td>
+            <td style="padding-left:15px;"><label for="mass3"></label><input type="number" class="input" id="mass3" name="mass3" value="{{Defaults['M'][2]}}" min="0" step="any"></td>
+            <td style="padding-left:15px;"><label for="stiff3"></label><input type="number" class="input" id="stiff3" name="stiff1" value="{{Defaults['K'][2]}}" min="0" step="any"></td>
+            <td style="padding-left:15px;"><label for="damp3"></label><input type="number" class="input" id="damp3" name="damp3" value="{{Defaults['C'][2]}}" min="0" step="any"></td>
+            <td style="padding-left:15px;"><label for="x3"></label><input type="number" class="input" id="x3" name="x3" value="{{Defaults['Ix'][2]}}" min="0" step="0.01"></td>
+            <td style="padding-left:15px;"><label for="v3"></label><input type="number" class="input" id="v2" name="v2" value="{{Defaults['Iv'][2]}}" min="0" step="0.01"></td>
+        </tr>
+        <!-- Second storey -->
+        <tr>
+            <td style="padding-left:15px;">Second storey: </td>
+            <td style="padding-left:15px;"><label for="mass2"></label><input type="number" class="input" id="mass2" name="mass2" value="{{Defaults['M'][1]}}" min="0" step="any"></td>
+            <td style="padding-left:15px;"><label for="stiff2"></label><input type="number" class="input" id="stiff2" name="stiff1" value="{{Defaults['K'][1]}}" min="0" step="any"></td>
+            <td style="padding-left:15px;"><label for="damp2"></label><input type="number" class="input" id="damp2" name="damp2" value="{{Defaults['C'][1]}}" min="0" step="any"></td>
+            <td style="padding-left:15px;"><label for="x2"></label><input type="number" class="input" id="x2" name="x2" value="{{Defaults['Ix'][1]}}" min="0" step="0.01"></td>
+            <td style="padding-left:15px;"><label for="v2"></label><input type="number" class="input" id="v2" name="v2" value="{{Defaults['Iv'][1]}}" min="0" step="0.01"></td>
+        </tr>
+        <!-- First storey -->
+        <tr>
+            <td style="padding-left:15px;"> First storey: </td>
+            <td style="padding-left:15px;"><label for="mass1"></label><input type="number" class="input" id="mass1" name="mass1" value="{{Defaults['M'][0]}}" min="0" step="any"></td>
+            <td style="padding-left:15px;"><label for="stiff1"></label><input type="number" class="input" id="stiff1" name="stiff1" value="{{Defaults['K'][0]}}" min="0" step="any"></td>
+            <td style="padding-left:15px;"><label for="damp1"></label><input type="number" class="input" id="damp1" name="damp1" value="{{Defaults['C'][0]}}" min="0" step="any"></td>
+            <td style="padding-left:15px;"><label for="x1"></label><input type="number" class="input" id="x1" name="x1" value="{{Defaults['Ix'][0]}}" min="0" step="0.01"></td>
+            <td style="padding-left:15px;"><label for="v1"></label><input type="number" class="input" id="v1" name="v1" value="{{Defaults['Iv'][0]}}" min="0" step="0.01"></td>
+        </tr>
+        <!-- Dispersion -->
+        <tr>
+            <td style="padding-left:15px; padding-top: 15px;"> Statistical dispersion: </td>
+            <td style="padding-left:15px; padding-top: 15px;"><label for="massD"></label><input type="number" class="input" id="massD" name="massD" value="{{Defaults['Disp'][0]}}" min="0" step="any"></td>
+            <td style="padding-left:15px; padding-top: 15px;"><label for="stiffD"></label><input type="number" class="input" id="stiff1" name="stiffD" value="{{Defaults['Disp'][1]}}" min="0" step="any"></td>
+            <td style="padding-left:15px; padding-top: 15px;"><label for="dampD"></label><input type="number" class="input" id="damp1" name="dampD" value="{{Defaults['Disp'][2]}}" min="0" step="any"></td>
+            <td style="padding-left:15px; padding-top: 15px;"><label for="xD"></label><input type="number" class="input" id="xD" name="xD" value="{{Defaults['D_init'][0]}}" min="0" step="0.01"></td>
+            <td style="padding-left:15px; padding-top: 15px;"><label for="vD"></label><input type="number" class="input" id="vD" name="vD" value="{{Defaults['D_init'][1]}}" min="0" step="0.01"></td>
+        </tr>
+    </table>
+
+    <p style="padding-left: 20px;"><input style="font-size:11pt;padding: 10px;margin: 10px;" type="submit" value="Recompute" /></p>
+
+
+<div id="left" style="float:left; width:600px;">
     <div class="chart" id="areaplot1">
         <script>
             var graphs = {{timeplot | safe}};
@@ -56,7 +113,7 @@
         </script>
     </div>
 </div>
-<div id="right" style="float:right; width:600;">
+<div id="right" style="float:left; width:600px;">
     <div class="chart" id="areaplot2">
         <script>
             var graphs = {{freqplot | safe}};
@@ -82,26 +139,19 @@ function myFunction() {
   }
 }
 
-if ("{{N}}" === "5")
-{
-document.getElementById("MC_5").checked = true;
-}
-if ("{{N}}" === "15")
-{
-document.getElementById("MC_15").checked = true;
-}
-if ("{{N}}" === "20")
-{
-document.getElementById("MC_20").checked = true;
-}
-if ("{{N}}" === "30")
-{
-document.getElementById("MC_30").checked = true;
-}
-if ("{{N}}" === "50")
-{
-document.getElementById("MC_50").checked = true;
-}
+if ("{{Defaults['Excite']}}" == "Hammer"){document.getElementById("Ex_h").checked = true;}
+if ("{{Defaults['Excite']}}" == "White"){document.getElementById("Ex_w").checked = true;}
+if ("{{Defaults['N']}}" === "1")        {document.getElementById("MC_1").checked = true;}
+if ("{{Defaults['N']}}" === "5")        {document.getElementById("MC_5").checked = true;}
+if ("{{Defaults['N']}}" === "15")       {document.getElementById("MC_15").checked = true;}
+if ("{{Defaults['N']}}" === "20")       {document.getElementById("MC_20").checked = true;}
+if ("{{Defaults['N']}}" === "30")       {document.getElementById("MC_30").checked = true;}
+if ("{{Defaults['N']}}" === "50")       {document.getElementById("MC_50").checked = true;}
+if ("{{Sf}}" === "256")     {document.getElementById("256").checked = true;}
+if ("{{Sf}}" === "512")     {document.getElementById("512").checked = true;}
+if ("{{Sf}}" === "1024")    {document.getElementById("1024").checked = true;}
+if ("{{Sf}}" === "2048")    {document.getElementById("2048").checked = true;}
+if ("{{Sf}}" === "4096")    {document.getElementById("4096").checked = true;}
 </script>
 {% endblock %}
 {% endblock %} <!-- end html block -->

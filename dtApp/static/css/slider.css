@@ -38,3 +38,9 @@
   border-bottom: 2px solid green;
   font-size:11pt;
 }
+.onepagecontainer .input[type=number]{
+  /* Set width to 40characters */
+  width: 100px;
+  /* prevent overflow of container */
+  max-width: 100%; 
+}
