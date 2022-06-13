@@ -1,24 +1,65 @@
 """
-# Generate modal data for 3DOF system using numerical integration
-# DJW 26 December 2021
-# 
-# Currently this is for simulating an impact hammer excitation of a 3DOF (non)linear mass-spring system
-# The impact force is applied to Mass 1, and random initial conditions are also applied to the displacements
-# The parameters are ICs are selected from Gaussian distributions at the start of each time series simulation.
-# The mean and standard deviations for the Gaussians can be defined in the code.
-# 
-# The results for N sets of displacement time series are put into the numpy array xs.
-# Plots are produced to give a visual check.
+
+`dtLib/threedof.py`
+
+:Authors: 
+
+    David J Wagg, University of Sheffield
+
+    Marco De Angelis, University of Liverpool
+    
+:Created: December 2021
+:Edited:  January 2022
+:Copyright:     BSD Licence
+
+
+This python file ``threedof.py`` is the scientific code for the simulator page.
+
+This module is intended to be self-contained, thus it is orthogonal to any other scientific module in this software. 
+It generates modal data for 3DOF system using numerical integration
+ 
+Currently this is for simulating an impact hammer excitation of a 3DOF (non)linear mass-spring system.
+
+The impact force is applied to Mass 1, and random initial conditions are also applied to the displacements.
+
+The parameters are ICs are selected from Gaussian distributions at the start of each time series simulation.
+
+The mean and standard deviations for the Gaussians can be defined in the code.
+
+The results for N sets of displacement time series are put into the numpy array xs.
+
+Plots are produced to give a visual check.
+
+If inputs are not passed to the functions of this module the following default values will be assumed:
+
+.. code-block:: python
+    MASS = [5.0, 5.0,  5.0]            # kg
+    STFF = [35025.0, 43250.0, 43250.0] # N/m
+    DAMP = [8.0, 8.0, 8.0]             # Ns/m
+
+This page makes use of the following dependencies.
+External dependencies 
+
+.. code-block:: python
+    import numpy
+    import numpy.integrate.odeint
+    import scipy.stats
+    import scipy.signal
+
+If not otherwise specified: 
+|    * The excitation is applied at floor 1. 
+|    * The number of MonteCarlo samples is 30.
+
 """
 
 import numpy
-from matplotlib import pyplot
+# from matplotlib import pyplot
 from scipy import stats
 from scipy.signal import savgol_filter
 
-M_INP_1, M_INP_2, M_INP_3 = 5.0394,4.9919,4.9693
-K_INP_1, K_INP_2, K_INP_3 = 34958.3691,43195.1237,43295.9086
-C_INP_1, C_INP_2, C_INP_3 = 7.8963,4.0129,5.4905
+M_INP_1, M_INP_2, M_INP_3 = 5.0394,     4.9919,     4.9693
+K_INP_1, K_INP_2, K_INP_3 = 34958.3691, 43195.1237, 43295.9086
+C_INP_1, C_INP_2, C_INP_3 = 7.8963,     4.0129,     5.4905
 
 M=[M_INP_1,M_INP_2,M_INP_3]
 K=[K_INP_1,K_INP_2,K_INP_3]
@@ -262,18 +303,19 @@ def simulator(Defaults):
 #      FOURIER T      #
 # ------------------- #
 from scipy import signal
-def fourier_transform(t,x):
+def fourier_transform(t,x,samps=2048):
     N = x.shape[0]
     time_step=t[1]
+    # samps = 8192 #2048 #256
     # Compute the power spectrum of the diplacement signals
     FF = 1/time_step
-    ftemp, Pxx_temp = signal.welch(x[0, 1, :], FF, 'hann',256, scaling='density')
+    ftemp, Pxx_temp = signal.welch(x[0, 1, :], FF, 'hann',samps, scaling='density')
     freq = numpy.zeros((N, 3, ftemp.size), float)
     Pxx_spec = numpy.zeros((N, 3, Pxx_temp.size), float)
     for i in range(0, N):
-        freq[i,0,:], Pxx_spec[i,0,:] = signal.welch(x[i, 1, :], FF, 'hann', 256, scaling='density')
-        freq[i,1,:], Pxx_spec[i,1,:] = signal.welch(x[i, 2, :], FF, 'hann', 256, scaling='density')
-        freq[i,2,:], Pxx_spec[i,2,:] = signal.welch(x[i, 3, :], FF, 'hann', 256, scaling='density')
+        freq[i,0,:], Pxx_spec[i,0,:] = signal.welch(x[i, 1, :], FF, 'hann', samps, scaling='density')
+        freq[i,1,:], Pxx_spec[i,1,:] = signal.welch(x[i, 2, :], FF, 'hann', samps, scaling='density')
+        freq[i,2,:], Pxx_spec[i,2,:] = signal.welch(x[i, 3, :], FF, 'hann', samps, scaling='density')
     return freq, Pxx_spec
 
 # if __name__ == '__main__':

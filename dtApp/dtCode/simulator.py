@@ -73,9 +73,9 @@ from dtApp import date
 from dtLib.simulator import threedof
 
 
-M_INP_1, M_INP_2, M_INP_3 = 5.0394,4.9919,4.9693
-K_INP_1, K_INP_2, K_INP_3 = 34958.3691,43195.1237,43295.9086
-C_INP_1, C_INP_2, C_INP_3 = 7.8963,4.0129,5.4905
+M_INP_1, M_INP_2, M_INP_3 = 5.0394,     4.9919,     4.9693
+K_INP_1, K_INP_2, K_INP_3 = 34958.3691, 43195.1237, 43295.9086
+C_INP_1, C_INP_2, C_INP_3 = 7.8963,     4.0129,     5.4905
 
 SLIDER_SCALE = 10000
 
@@ -87,10 +87,10 @@ PLOT_HEIGHT = 800
 W_PLOT_RANGE = [5,200]
 
 Defaults={}
-Defaults["N"],Defaults["T"],Defaults["Sf"],Defaults["Excite"]=1,5.0,20480.0,"Hammer"
+Defaults["N"],Defaults["T"],Defaults["Sf"],Defaults["Excite"] = 1, 5.0, 2048, "Hammer"
 Defaults["M"],Defaults["K"],Defaults["C"]=[M_INP_1,M_INP_2,M_INP_3],[K_INP_1,K_INP_2,K_INP_3],[C_INP_1,C_INP_2,C_INP_3]
 Defaults["Ix"],Defaults["Iv"]=[0.0,0.0,0.0],[0.0,0.0,0.0]
-Defaults["Disp"],Defaults["D_init"]=[1.0,1.0,1.0],[0.0,0.0]
+Defaults["Disp"],Defaults["D_init"]=[0.0,0.0,0.0],[0.0,0.0]
 
 
 
@@ -124,11 +124,12 @@ def simula(): # Properties displayed on landing
         INIT_V=[0.0,0.0,0.0]
         Disp=[1.0,1.0,1.0]
         D_init=[0.0,0.0]
+        Sf = Defaults['Sf']
         for key,val in request.form.items():
             if key == "MC_samples":N,Defaults["N"] = int(val) , int(val)
             if key == "Excite": Ex,Defaults["Excite"] = val,val
             if key == "Time":  T,Defaults["T"] = float(val), float(val)
-            if key == "SFreq":  Sf,Defaults["Sf"] = float(val), float(val)
+            if key == "SFreq":  Sf = int(val)
             if key == "mass1":  M[0] = float(val)
             if key == "mass2":  M[1] = float(val)
             if key == "mass3":  M[2] = float(val)
@@ -156,7 +157,7 @@ def simula(): # Properties displayed on landing
         # assign values to produce plots anyway
         tt,xx = threedof.simulator(Defaults)
         # tt,xx = threedof.simulator(N=N,t_length=T,t_samps=S,Ex=Ex,Mi=M,Ki=K,Ci=C,Xi=INIT_X,Vi=INIT_V,disp=Disp,d_init=D_init)
-        fr,Pxx = threedof.fourier_transform(tt,xx)
+        fr,Pxx = threedof.fourier_transform(tt,xx,samps=Sf)
     
         for i in range(N):
             fig.add_trace(go.Scatter(name='',x=tt, y=xx[i, 1, :],    
@@ -177,19 +178,19 @@ def simula(): # Properties displayed on landing
                             line_color='indigo',
                             opacity = .3,
                             showlegend=False),row=3,col=1)
-            fig2.add_trace(go.Scatter(name='',x=fr[i,0,:], y=numpy.sqrt(Pxx[i, 0, :]),    
+            fig2.add_trace(go.Scatter(name='',x=fr[i,0,:], y=numpy.log10(numpy.sqrt(Pxx[i, 0, :])),    
                             fill=None,
                             mode='lines',
                             line_color='indigo',
                             opacity = .3,
                             showlegend=False),row=1,col=1)
-            fig2.add_trace(go.Scatter(name='',x=fr[i,1,:], y=numpy.sqrt(Pxx[i, 1, :]),
+            fig2.add_trace(go.Scatter(name='',x=fr[i,1,:], y=numpy.log10(numpy.sqrt(Pxx[i, 1, :])),
                             fill=None,
                             mode='lines',
                             line_color='indigo',
                             opacity = .3,
                             showlegend=False),row=2,col=1)
-            fig2.add_trace(go.Scatter(name='',x=fr[i,2,:], y=numpy.sqrt(Pxx[i, 2, :]),
+            fig2.add_trace(go.Scatter(name='',x=fr[i,2,:], y=numpy.log10(numpy.sqrt(Pxx[i, 2, :])),
                             fill=None,
                             mode='lines',
                             line_color='indigo',
@@ -212,12 +213,13 @@ def simula(): # Properties displayed on landing
             plot_bgcolor= 'rgba(0, 0, 0, 0.1)',paper_bgcolor= 'rgba(0, 0, 0, 0)') #paper_bgcolor= 'rgba(0, 0, 0, 0.05)'
     
         fig2.update_xaxes(title_text='Frequency (Hz)',title_font={"size":11})
-        fig2.update_yaxes(title_text='PSD',title_font={"size":11},type="log")
+        # fig2.update_yaxes(title_text='Spectral density (DB)',title_font={"size":11},type="log")
+        fig2.update_yaxes(title_text='Spectral density (DB)',title_font={"size":11})
     
         freqplot = json.dumps(fig2, cls=plotly.utils.PlotlyJSONEncoder)
     
-        return render_template("simulator.html",Defaults=Defaults,timeplot=timeplot,freqplot=freqplot)
+        return render_template("simulator.html",Defaults=Defaults,timeplot=timeplot,freqplot=freqplot,Sf=Sf)
     else:
         timeplot = json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)
         freqplot = json.dumps(fig2, cls=plotly.utils.PlotlyJSONEncoder)
-        return render_template("simulator.html",Defaults=Defaults,timeplot=timeplot,freqplot=freqplot)
+        return render_template("simulator.html",Defaults=Defaults,timeplot=timeplot,freqplot=freqplot,Sf=0)
