@@ -100,7 +100,7 @@ def DisplayProfiles():
     fig.update_layout(showlegend=True, font=dict(size=15))
     fig.update_xaxes(range=[2,40])
     fig.update_xaxes(title_text='Frequency [Hz]',titlefont=dict(size=15),row=1,col=1)
-    fig.update_yaxes(title_text='Magnitute of Accelerance',titlefont=dict(size=15),row=1,col=1)
+    fig.update_yaxes(title_text='Magnitute of Accelerance',type="log",titlefont=dict(size=15),row=1,col=1)
     fig.update_layout(title={'y':0.99,'x':0.48,'xanchor': 'center'})
     graphFRF= json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)
     
@@ -108,23 +108,23 @@ def DisplayProfiles():
     fig1 = make_subplots(rows=1, cols=3,vertical_spacing=0.15, shared_xaxes=True,subplot_titles=("<b>Mode 1<b>","<b>Mode 2<b>", "<b>Mode 3<b>"))
     y=np.array([0,1,2,3])
     # Fig1.a
-    fig1.add_scatter(x=form1['mode1'],y=y, name='Profile 1', mode = 'lines', row=1, col=1,line={'color':'black'})
-    fig1.add_scatter(x=form2['mode1'],y=y, name='Profile 2', mode = 'lines', row=1, col=1,line={'color':'red'})
-    fig1.add_scatter(x=form3['mode1'],y=y, name='Profile 3', mode = 'lines', row=1, col=1,line={'color':'green'})    
+    fig1.add_scatter(x=-np.array(form1['mode1']),y=y, name='Profile 1', mode = 'lines', row=1, col=1,line={'color':'black','dash':'solid'})
+    fig1.add_scatter(x=form2['mode1'],y=y, name='Profile 2', mode = 'lines', row=1, col=1,line={'color':'red','dash':'dashdot'})
+    fig1.add_scatter(x=form3['mode1'],y=y, name='Profile 3', mode = 'lines', row=1, col=1,line={'color':'green','dash':'dash'})    
     # Update yaxis properties
     fig1.update_yaxes(title_text="Floor Number", titlefont=dict(size=15), row=1, col=1)
 
     # Fig1.b
-    fig1.add_scatter(x=form1['mode2'],y=y, name='Profile 1', mode = 'lines', row=1, col=2,line={'color':'black'})
-    fig1.add_scatter(x=form2['mode2'],y=y, name='Profile 2', mode = 'lines', row=1, col=2,line={'color':'red'})
-    fig1.add_scatter(x=form3['mode2'],y=y, name='Profile 3', mode = 'lines', row=1, col=2,line={'color':'green'})
+    fig1.add_scatter(x=-np.array(form1['mode2']),y=y, name='', mode = 'lines', row=1, col=2,line={'color':'black','dash':'solid'})
+    fig1.add_scatter(x=form2['mode2'],y=y, name='', mode = 'lines', row=1, col=2,line={'color':'red','dash':'dashdot'})
+    fig1.add_scatter(x=form3['mode2'],y=y, name='', mode = 'lines', row=1, col=2,line={'color':'green','dash':'dash'})
     # Update xaxis properties
     fig1.update_xaxes(title_text="Normalized Mode Shape", titlefont=dict(size=15), row=1, col=2)
 
     #Fig1.c
-    fig1.add_scatter(x=form1['mode3'],y=y, name='Profile 1', mode = 'lines', row=1, col=3,line={'color':'black'})
-    fig1.add_scatter(x=form2['mode3'],y=y, name='Profile 2', mode = 'lines', row=1, col=3,line={'color':'red'})
-    fig1.add_scatter(x=form3['mode3'],y=y, name='Profile 3', mode = 'lines', row=1, col=3,line={'color':'green'})
+    fig1.add_scatter(x=-np.array(form1['mode3']),y=y, name='', mode = 'lines', row=1, col=3,line={'color':'black','dash':'solid'})
+    fig1.add_scatter(x=form2['mode3'],y=y, name='', mode = 'lines', row=1, col=3,line={'color':'red','dash':'dashdot'})
+    fig1.add_scatter(x=form3['mode3'],y=y, name='', mode = 'lines', row=1, col=3,line={'color':'green','dash':'dash'})
 
     # Update Figure properties
     fig1.update_layout(title_text="<b>--- Mode Shape Comparison ---<b>", font=dict(size=20), width=1650, height=600)

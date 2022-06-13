@@ -53,7 +53,6 @@ If not otherwise specified:
 """
 
 import numpy
-# from matplotlib import pyplot
 from scipy import stats
 from scipy.signal import savgol_filter
 
@@ -324,3 +323,4 @@ def fourier_transform(t,x,samps=2048):
 #     fr,Pxx = fourier_transform(tt,xx)
 #     plot(tt,xx,fr,Pxx)
 #     pyplot.show()
+
