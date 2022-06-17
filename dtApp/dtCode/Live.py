@@ -507,7 +507,7 @@ def ReaderCF():
     #%% User Parameters
     # path='MAST_tests_25-03-2022/5Hz_70Hz_0.1ms-2_300mm_beam_2.csv'
     # # ModeRanges=[[10,25],[38,42],[55,65]] # Scenario 1
-    ModeRanges=[[15,18]] # Scenario 2.5
+    ModeRanges=[[15,18],[38,42],[55,65]] # Scenario 2.5
     # ModeRanges=[[9.25,9.75],[29,32],[33,37]]# Scenario 2.5
     # scenario=2.5
     # HitNum=1
