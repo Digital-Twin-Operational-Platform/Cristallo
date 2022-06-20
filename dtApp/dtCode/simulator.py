@@ -1,6 +1,6 @@
 '''
 
-`dtApp/dtCode/threedof.py`
+`dtApp/dtCode/simulator.py`
 
 
 :Authors: 

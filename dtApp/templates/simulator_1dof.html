@@ -1,0 +1,95 @@
+{% extends "base.html" %}
+{% block title %}{% endblock %}
+{% block head %}
+{{ super() }}
+{% endblock %}
+{% block content %}
+<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.6/d3.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+
+
+<!-- <h2><button onclick="myFunction()" style="margin: 10px;">+</button>Hammer test simulator </h2> -->
+<h2 style="padding-left: 15px;">Hammer test simulator </h2>
+
+
+<form action="/simulator_1dof" method="POST" id="form">
+    <div class="onepagecontainer">
+    <table style="padding-left: 20px; padding-bottom: 20px;">
+        <!-- Determine Excitiation -->
+        <tr>
+            <td style="padding-left:15px; padding-bottom: 10px; padding-right: 100px;">Impact hammer excitation: </td>
+            <td style="padding-left:15px;"><label for="force">Intensity [N] </label><input type="number" class="input" id="force" name="force" value="{{Data['F']}}" min="0" step="0.5"></td>
+            <td style="padding-left:15px;"><label for="at">At [s] </label><input type="number" class="input" id="at" name="at" value="{{Data['AT']}}" min="0" step="0.01"></td>
+            <td style="padding-left:15px;"><label for="duration">Duration [s] </label><input type="number" class="input" id="duration" name="duration" value="{{Data['DURATION']}}" min="0" step="0.01"></td>
+        </tr>
+    </table>
+    <table style="padding-left: 20px; padding-bottom: 20px;">
+        <tr>
+            <td style="padding-left:15px; padding-bottom: 10px; padding-right: 20px;">Simulation properties: </td>
+            <td style="padding-left:15px; padding-bottom: 10px;"><label for="Time">Total time [s] </label><input type="number" class="input" maxlength="6" id="Time" name="Time" value="{{Data['T']}}" min="0" step=".1"></td>
+            <td style="padding-left:15px; padding-bottom: 10px;"><label for="step_size">Step size [ms] </label><input type="number" class="input" maxlength="6" id="step_size" name="step_size" value="{{Data['STEP_SIZE']}}" min="0" step="0.00001"></td>
+        </tr>
+    </table>
+
+
+    <table style="padding-left: 20px; padding-bottom: 20px;">
+        <!-- Header -->
+        <th>
+            <td style="padding:15px;">Mass [kg]</td>
+            <td style="padding:15px;">Stiffness [N/m]</td>
+            <td style="padding:15px;">Damping [Ns/m]</td>
+            <td style="padding:15px;">Initial disp. [m]</td>
+            <td style="padding:15px;">Initial vel. [m/s]</td>
+        </th>
+         <!-- One mass -->
+         <tr>
+            <td style="padding-left:15px;">Parameters: </td>
+            <td style="padding-left:15px;"><label for="mass"></label><input type="number" class="input" id="mass" name="mass" value="{{Data['M']}}" min="0" step="0.5"></td>
+            <td style="padding-left:15px;"><label for="stiff"></label><input type="number" class="input" id="stiff" name="stiff" value="{{Data['K']}}" min="0" step="10"></td>
+            <td style="padding-left:15px;"><label for="damp"></label><input type="number" class="input" id="damp" name="damp" value="{{Data['C']}}" min="0" step="0.01"></td>
+            <td style="padding-left:15px;"><label for="x"></label><input type="number" class="input" id="x" name="x" value="{{Data['DISP_init']}}" min="0" step="0.01"></td>
+            <td style="padding-left:15px;"><label for="v"></label><input type="number" class="input" id="v" name="v" value="{{Data['VELO_init']}}" min="0" step="0.01"></td>
+        </tr>
+    </table>
+
+    <p style="padding-left: 20px;"><input style="font-size:11pt;padding: 10px;margin: 10px;" type="submit" value="Recompute" /></p>
+
+
+<div id="left" style="float:left; width:600px;">
+    <div class="chart" id="areaplot1">
+        <script>
+            var graphs = {{timeplot | safe}};
+            Plotly.plot('areaplot1', graphs, {});
+        </script>
+    </div>
+</div>
+<div id="right" style="float:left; width:600px;">
+    <div class="chart" id="areaplot2">
+        <script>
+            var graphs = {{freqplot | safe}};
+            Plotly.plot('areaplot2', graphs, {});
+        </script>
+    </div>
+</div>
+<!--    <canvas id="myChart" width="650" height="500"></canvas>-->
+</div>
+
+<div class="Clear" style="clear:both"></div>
+
+</form>
+{% block javascript %}
+<script type="text/javascript" charset="utf-8">
+    
+function myFunction() {
+  var x = document.getElementById("hideshow");
+  if (x.style.display === "none") {
+    x.style.display = "block";
+  } else {
+    x.style.display = "none";
+  }
+}
+
+</script>
+{% endblock %}
+{% endblock %} <!-- end html block -->

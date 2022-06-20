@@ -24,6 +24,7 @@ from .dtCode import simulator
 from .dtCode import lpm_update
 from .dtCode import Profile_hub
 from .dtCode import Profile_Compare
+from .dtCode import simulator_1dof
 
 @app.route('/')
 @app.route('/home')
