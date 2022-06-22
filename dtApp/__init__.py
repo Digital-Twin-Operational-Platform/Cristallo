@@ -9,8 +9,14 @@ app = Flask(__name__)
 app.config.from_object(Config)
 
 import subprocess
-proc = subprocess.Popen('git log -1 --format=%cd', shell=True, stdout=subprocess.PIPE, )
-date1 = proc.communicate()[0]
+proc_date = subprocess.Popen('git log -1 --format=%cd', shell=True, stdout=subprocess.PIPE, )
+if len(proc_date.communicate()[0])==0:
+    result = subprocess.run('git init', shell=True) # use 'run' here because sequential execution is needed
+    result = subprocess.run('git add config.py', shell=True)
+    result = subprocess.run('git commit -m "enable date commit"', shell=True) 
+    proc_date = subprocess.Popen('git log -1 --format=%cd', shell=True, stdout=subprocess.PIPE, )
+
+date1 = proc_date.communicate()[0]
 date2 = date1.decode().split(' ')
 date = date2[2]+' '+date2[1]+' '+date2[4] 
 
