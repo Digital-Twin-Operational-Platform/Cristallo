@@ -94,8 +94,8 @@ def DisplayProfiles():
     # Display FRFs
     fig = make_subplots(rows=1,cols=1,vertical_spacing=0.15)
     fig.add_scatter(x=FRF1['freq'],y=np.abs(FRF1['F3']), name='Profile 1', mode = 'lines', row=1,col=1, line={'color':'black'})
-    fig.add_scatter(x=FRF2['freq'],y=np.abs(FRF2['F3']), name='Profile 2', mode = 'lines', row=1,col=1, line={'color':'red'})
-    fig.add_scatter(x=FRF3['freq'],y=np.abs(FRF3['F3']), name='Profile 3', mode = 'lines', row=1,col=1, line={'color':'green'})
+    fig.add_scatter(x=FRF2['freq'],y=np.abs(FRF2['F3']), name='Profile 2', mode = 'lines', row=1,col=1, line={'color':'red','dash':'dashdot'})
+    fig.add_scatter(x=FRF3['freq'],y=np.abs(FRF3['F3']), name='Profile 3', mode = 'lines', row=1,col=1, line={'color':'green','dash':'dash'})
     fig.update_layout(title_text="<b>--- Frequency Response Functions of 3rd Floor ---<b>", font=dict(size=20), width=1650,height=600)
     fig.update_layout(showlegend=True, font=dict(size=15))
     fig.update_xaxes(range=[2,40])
