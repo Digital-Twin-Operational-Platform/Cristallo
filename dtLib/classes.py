@@ -4,6 +4,7 @@ import json
 import plotly
 import matplotlib.pyplot as plt
 from scipy import signal
+import os
 
 
 class TimeHistory():
@@ -161,3 +162,110 @@ class TimeHistory():
             plt.show()
         except:
             print("PSD is not generated, please generate PSD data")
+
+
+class MODEL3DOF():
+    def __repr__(self):  # return
+        msg = f"3DOF model generated from {self.source}"
+        return(msg)
+
+    def __str__(self):  # Print
+        msg = f"3DOF model generated from {self.source}"
+        return(msg)
+
+    def __init__(self, M=[5, 5, 5], mass_units: str = "kg", K=[10, 10, 10], stiff_units: str = "N/m", C=[3, 3, 3], damp_units: str = "Nm/s", dispersion=[0, 0, 0], disp_units: str = "", source='user'):
+        self.m1 = M[0]
+        self.m2 = M[1]
+        self.m3 = M[2]
+        self.mass_units = mass_units
+        self.k1 = K[0]
+        self.k2 = K[1]
+        self.k3 = K[2]
+        self.stiff_units = stiff_units
+        self.c1 = C[0]
+        self.c2 = C[1]
+        self.c3 = C[2]
+        self.damp_units = damp_units
+        self.disp_m = dispersion[0]
+        self.disp_k = dispersion[1]
+        self.disp_c = dispersion[2]
+        self.disp_units = disp_units
+        self.source = source
+
+    def matrix(self):  # return matrices
+        """
+        Generates 3x3 matrix representation of system. Output = M,K,C
+        """
+        M = np.array([[self.m1, 0, 0], [0, self.m2, 0], [self.m3, 0, 0]])
+        K = np.array([[self.k1+self.k2, -self.k2, 0], [-self.k2,
+                     self.k2+self.k3, -self.k3], [0, -self.k3, self.k3]])
+        C = np.array([[self.c1+self.c2, -self.c2, 0], [-self.c2,
+                     self.c2+self.c3, -self.c3], [0, -self.c3, self.c3]])
+        return(M, K, C)
+
+    def scalar(self):  # return scalar values
+        """
+        Returns scalar modular values, output = [m1,m2,m3], [k1,k2,k3], [c1,c2,c3]
+        """
+        M = [self.m1, self.m2, self.m3]
+        K = [self.k1, self.k2, self.k3]
+        C = [self.c1, self.c2, self.c3]
+        return(M, K, C)
+
+    def sample(self, N=1):  # generate sampled random properties
+        return()
+
+    def toJSON(self, path=""):
+        """
+        Converts object to JSON format. If path is empty, returns to memory, 
+        otherwise, saves to file
+        """
+        try:
+            parse = path.rsplit('.', 1)[1]
+        except:
+            parse = path
+        if parse == "":  # create json object to memory
+            file = json.dumps(self, default=lambda o: o.__dict__,
+                              sort_keys=True, indent=4)
+            return(file)
+        elif path == "prompt":  # prompt user
+            path = input(prompt="Enter in File Path \n")
+            try:
+                parse = path.rsplit('.', 1)[1]
+            except:
+                parse = path
+            if  parse == "json":
+                os.makedirs(os.path.dirname(path), exist_ok=True)
+                with open(path, 'w') as fp:
+                    json.dump(self, fp, default=lambda o: o.__dict__, indent=4, separators=",:")
+            else:
+                filename = os.path.join(path, "Model.json")
+                os.makedirs(os.path.dirname(filename), exist_ok=True)
+                with open(filename, 'w') as fp:
+                    json.dump(self, fp, default=lambda o: o.__dict__, indent=4, separators=",:")
+        elif parse == "json": # file is specified, write json to specified file
+            os.makedirs(os.path.dirname(path), exist_ok=True)
+            with open(path, 'w') as fp:
+                json.dump(self, fp, default=lambda o: o.__dict__, indent=4, separators=",:")
+        else:  # file is not specified but folder is specified, create json file and write
+            filename = os.path.join(path, "Model.json")
+            os.makedirs(os.path.dirname(filename), exist_ok=True)
+            with open(filename, 'w') as fp:
+                json.dump(self, fp, default=lambda o: o.__dict__, indent=4, separators=",:")
+
+    def fromJSON(self, filepath=''):
+        """
+        Converts JSON file to 3DOF model
+        """
+        # Gather JSON file information
+        if filepath == "":
+            path = input(prompt="Enter in File Path \n")
+            with open(path,'r') as fp:
+                File = json.load(fp)
+        else:
+            with open(filepath,'r') as fp:
+                File = json.load(fp)
+        # Update Model from JSON
+        keys = File.keys()
+        for i in keys:
+            setattr(self,i,File[i])
