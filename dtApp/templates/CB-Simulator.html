@@ -14,7 +14,16 @@
 
 <p style="padding: 20px;">Impact hammer force acts at 0.5 s on 1st mass</p>
 
-<form action="/simulator" method="POST" id="form">
+<form action="/CBsimulator" method="POST" enctype = "multipart/form-data">
+    <div class="onepagecontainer">
+        <filedset>
+            <input type="file" name="JSON" accept=".json" >
+        </filedset>
+        <input type="submit" value="Load JSON File">
+    </div>
+</form>
+
+<form action="/CBsimulator" method="POST" id="form">
     <div class="onepagecontainer">
         <table style="padding-left: 20px; padding-bottom: 20px;">
             <!-- Determine Excitiation -->

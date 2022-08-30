@@ -11,6 +11,11 @@ from flask import render_template, request, redirect, Response, url_for, send_fi
 from dtApp import app
 from dtApp import date
 import os
+from config import Config
+
+app.config.from_object(Config)
+PROFILE_FOLDER = os.path.join('dtData','profiles')
+app.config['PROFILE_FOLDER']= PROFILE_FOLDER
 
 # Each route file needs to be imported separately
 from .dtCode import unquant
@@ -24,6 +29,7 @@ from .dtCode import simulator
 from .dtCode import lpm_update
 from .dtCode import Profile_hub
 from .dtCode import Profile_Compare
+from .dtCode import CBsimulator
 
 @app.route('/')
 @app.route('/home')

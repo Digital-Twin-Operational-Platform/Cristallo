@@ -1,0 +1,19 @@
+{
+    "m1":5,
+    "m2":5,
+    "m3":5,
+    "mass_units":"kg",
+    "k1":40000.0,
+    "k2":40000.0,
+    "k3":40000.0,
+    "stiff_units":"N/m",
+    "c1":6,
+    "c2":6,
+    "c3":6,
+    "damp_units":"Nm/s",
+    "disp_m":0,
+    "disp_k":0,
+    "disp_c":0,
+    "disp_units":"",
+    "source":"Default Values"
+}

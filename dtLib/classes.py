@@ -173,7 +173,7 @@ class MODEL3DOF():
         msg = f"3DOF model generated from {self.source}"
         return(msg)
 
-    def __init__(self, M=[5, 5, 5], mass_units: str = "kg", K=[10, 10, 10], stiff_units: str = "N/m", C=[3, 3, 3], damp_units: str = "Nm/s", dispersion=[0, 0, 0], disp_units: str = "", source='user'):
+    def __init__(self, M=[5, 5, 5], mass_units: str = "kg", K=[40e3, 40e3, 40e3], stiff_units: str = "N/m", C=[6, 6, 6], damp_units: str = "Nm/s", dispersion=[0, 0, 0], disp_units: str = "", source='user'):
         self.m1 = M[0]
         self.m2 = M[1]
         self.m3 = M[2]
@@ -229,7 +229,8 @@ class MODEL3DOF():
                               sort_keys=True, indent=4)
             return(file)
         elif path == "prompt":  # prompt user
-            path = input(prompt="Enter in File Path \n")
+            print("Enter in File Path")
+            path = input()
             try:
                 parse = path.rsplit('.', 1)[1]
             except:
@@ -259,7 +260,8 @@ class MODEL3DOF():
         """
         # Gather JSON file information
         if filepath == "":
-            path = input(prompt="Enter in File Path \n")
+            print("Enter in File Path")
+            path = input()
             with open(path,'r') as fp:
                 File = json.load(fp)
         else:
