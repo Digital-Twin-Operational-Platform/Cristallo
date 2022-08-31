@@ -3,7 +3,7 @@ from plotly.subplots import make_subplots
 import json
 import plotly
 import matplotlib.pyplot as plt
-from scipy import signal
+from scipy import signal, stats
 import os
 
 
@@ -173,7 +173,7 @@ class MODEL3DOF():
         msg = f"3DOF model generated from {self.source}"
         return(msg)
 
-    def __init__(self, M=[5, 5, 5], mass_units: str = "kg", K=[40e3, 40e3, 40e3], stiff_units: str = "N/m", C=[6, 6, 6], damp_units: str = "Nm/s", dispersion=[0, 0, 0], disp_units: str = "", source='user'):
+    def __init__(self, M=[5, 5, 5], mass_units: str = "kg", K=[40e3, 40e3, 40e3], stiff_units: str = "N/m", C=[6, 6, 6], damp_units: str = "Nm/s", dispersion=[0, 0, 0], dist:str = "normal", disp_units: str = "", source='user'):
         self.m1 = M[0]
         self.m2 = M[1]
         self.m3 = M[2]
@@ -190,6 +190,7 @@ class MODEL3DOF():
         self.disp_k = dispersion[1]
         self.disp_c = dispersion[2]
         self.disp_units = disp_units
+        self.dist = dist
         self.source = source
 
     def matrix(self):  # return matrices
@@ -212,8 +213,18 @@ class MODEL3DOF():
         C = [self.c1, self.c2, self.c3]
         return(M, K, C)
 
-    def sample(self, N=1):  # generate sampled random properties
-        return()
+    def distribution(self):
+        if self.dist == 'normal':
+            m,k,c = self.scalar()
+            M = stats.norm(loc=m, scale=3*[self.disp_m])
+            K = stats.norm(loc=k, scale=3*[self.disp_k])
+            C = stats.norm(loc=c, scale=3*[self.disp_c])
+            return(M,K,C)
+    def sample(self,N=10,seed=None):
+        if seed is not None:
+            np.random.seed(seed)
+        M,K,C = self.distribution()
+        return(M.rvs((N,3)),K.rvs((N,3)),C.rvs((N,3)))
 
     def toJSON(self, path=""):
         """
