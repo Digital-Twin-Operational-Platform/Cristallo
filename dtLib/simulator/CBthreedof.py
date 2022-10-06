@@ -165,6 +165,6 @@ def CBsimulator(model:classes.MODEL3DOF, param:dict):
         T1 = classes.TimeHistory(t=ts,t_u="seconds",x=Xs[:,0],x_u="m",source="Simulated")
         T2 = classes.TimeHistory(t=ts,t_u="seconds",x=Xs[:,1],x_u="m",source="Simulated")
         T3 = classes.TimeHistory(t=ts,t_u="seconds",x=Xs[:,2],x_u="m",source="Simulated")
-        F = classes.TimeHistory(t=ts,t_u="seconds",x=f.value(t=ts),x_u="N",source="Simulated")
+        F = classes.TimeHistory(t=ts,t_u="seconds",x=f.value(t=ts),x_u=f.units,source="Simulated")
         xs.append([T1,T2,T3,F])
     return(xs)
