@@ -152,7 +152,7 @@ def simula(): # Properties displayed on landing
             if key == "vD":  D_init[1] = float(val)
         S=int(T*Sf)
         # Update Dictionary/JSON
-        Defaults["S"],Defaults["M"],Defaults["K"],Defaults["C"]=S,M,K,C
+        Defaults["S"],Defaults["M"],Defaults["K"],Defaults["C"],Defaults["Sf"]=S,M,K,C,Sf
         Defaults["Disp"],Defaults["Ix"],Defaults["Iv"],Defaults["D_init"]=Disp,INIT_X,INIT_V,D_init
         # assign values to produce plots anyway
         tt,xx = threedof.simulator(Defaults)

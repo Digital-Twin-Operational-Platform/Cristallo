@@ -36,11 +36,11 @@
                         class="input" maxlength="6" id="Time" name="Time" value="{{Defaults['T']}}" min="0" step=".1">
                 </td>
                 <td style="padding-left:55px; padding-bottom: 10px; padding-right:10px">Sample Frequency [Hz]</td>
-                <td><label for="S_256">256</label><input type="radio" value="256" id="256" name="SFreq"></td>
-                <td><label for="S_512">512</label><input type="radio" value="512" id="512" name="SFreq"></td>
-                <td><label for="S_1024">1024</label><input type="radio" value="1024" id="1024" name="SFreq"></td>
-                <td><label for="S_2048">2048</label><input type="radio" value="2048" id="2048" name="SFreq"></td>
-                <td><label for="S_4096">4096</label><input type="radio" value="4096" id="4096" name="SFreq"></td>
+                <td><label for="S_256">256</label><input type="radio" value="256" id="S_256" name="SFreq"></td>
+                <td><label for="S_512">512</label><input type="radio" value="512" id="S_512" name="SFreq"></td>
+                <td><label for="S_1024">1024</label><input type="radio" value="1024" id="S_1024" name="SFreq"></td>
+                <td><label for="S_2048">2048</label><input type="radio" value="2048" id="S_2048" name="SFreq"></td>
+                <td><label for="S_4096">4096</label><input type="radio" value="4096" id="S_4096" name="SFreq"></td>
                 <!-- <td style="padding-left:15px; padding-bottom: 10px;"><label for="SFreq"></label><input type="number" class="input" maxlength="6" id="SFreq" name="SFreq" value="{{Defaults['Sf']}}" min="0" step="0.1"></td> -->
             </tr>
         </table>
@@ -178,11 +178,11 @@
     if ("{{Defaults['N']}}" === "20") { document.getElementById("MC_20").checked = true; }
     if ("{{Defaults['N']}}" === "30") { document.getElementById("MC_30").checked = true; }
     if ("{{Defaults['N']}}" === "50") { document.getElementById("MC_50").checked = true; }
-    if ("{{Sf}}" === "256") { document.getElementById("256").checked = true; }
-    if ("{{Sf}}" === "512") { document.getElementById("512").checked = true; }
-    if ("{{Sf}}" === "1024") { document.getElementById("1024").checked = true; }
-    if ("{{Sf}}" === "2048") { document.getElementById("2048").checked = true; }
-    if ("{{Sf}}" === "4096") { document.getElementById("4096").checked = true; }
+    if ("{{Defaults['Sf']}}" === "256") { document.getElementById("S_256").checked = true; }
+    if ("{{Defaults['Sf']}}" === "512") { document.getElementById("S_512").checked = true; }
+    if ("{{Defaults['Sf']}}" === "1024") { document.getElementById("S_1024").checked = true; }
+    if ("{{Defaults['Sf']}}" === "2048") { document.getElementById("S_2048").checked = true; }
+    if ("{{Defaults['Sf']}}" === "4096") { document.getElementById("S_4096").checked = true; }
 </script>
 {% endblock %}
 {% endblock %}
