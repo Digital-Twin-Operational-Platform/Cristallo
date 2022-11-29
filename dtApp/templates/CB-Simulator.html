@@ -14,7 +14,16 @@
 
 <p style="padding: 20px;">Impact hammer force acts at 0.5 s on 1st mass</p>
 
-<form action="/simulator" method="POST" id="form">
+<form action="/CBsimulator" method="POST" enctype = "multipart/form-data">
+    <div class="onepagecontainer">
+        <filedset>
+            <input type="file" name="JSON" accept=".json" >
+        </filedset>
+        <input type="submit" value="Load JSON File">
+    </div>
+</form>
+
+<form action="/CBsimulator" method="POST" id="form">
     <div class="onepagecontainer">
         <table style="padding-left: 20px; padding-bottom: 20px;">
             <!-- Determine Excitiation -->
@@ -78,25 +87,25 @@
             <tr>
                 <td style="padding-left:15px;">Third storey: </td>
                 <td style="padding-left:15px;"><label for="mass3"></label><input type="number" class="input" id="mass3"
-                        name="mass3" value="{{Defaults['M'][2]}}" min="0" step="any"></td>
+                        name="mass3" value="{{model.m3}}" min="0" step="any"></td>
                 <td style="padding-left:15px;"><label for="stiff3"></label><input type="number" class="input"
-                        id="stiff3" name="stiff1" value="{{Defaults['K'][2]}}" min="0" step="any"></td>
+                        id="stiff3" name="stiff3" value="{{model.k3}}" min="0" step="any"></td>
                 <td style="padding-left:15px;"><label for="damp3"></label><input type="number" class="input" id="damp3"
-                        name="damp3" value="{{Defaults['C'][2]}}" min="0" step="any"></td>
+                        name="damp3" value="{{model.c3}}" min="0" step="any"></td>
                 <td style="padding-left:15px;"><label for="x3"></label><input type="number" class="input" id="x3"
                         name="x3" value="{{Defaults['Ix'][2]}}" min="0" step="0.01"></td>
-                <td style="padding-left:15px;"><label for="v3"></label><input type="number" class="input" id="v2"
-                        name="v2" value="{{Defaults['Iv'][2]}}" min="0" step="0.01"></td>
+                <td style="padding-left:15px;"><label for="v3"></label><input type="number" class="input" id="v3"
+                        name="v3" value="{{Defaults['Iv'][2]}}" min="0" step="0.01"></td>
             </tr>
             <!-- Second storey -->
             <tr>
                 <td style="padding-left:15px;">Second storey: </td>
                 <td style="padding-left:15px;"><label for="mass2"></label><input type="number" class="input" id="mass2"
-                        name="mass2" value="{{Defaults['M'][1]}}" min="0" step="any"></td>
+                        name="mass2" value="{{model.m2}}" min="0" step="any"></td>
                 <td style="padding-left:15px;"><label for="stiff2"></label><input type="number" class="input"
-                        id="stiff2" name="stiff2" value="{{Defaults['K'][1]}}" min="0" step="any"></td>
+                        id="stiff2" name="stiff2" value="{{model.k2}}" min="0" step="any"></td>
                 <td style="padding-left:15px;"><label for="damp2"></label><input type="number" class="input" id="damp2"
-                        name="damp2" value="{{Defaults['C'][1]}}" min="0" step="any"></td>
+                        name="damp2" value="{{model.c2}}" min="0" step="any"></td>
                 <td style="padding-left:15px;"><label for="x2"></label><input type="number" class="input" id="x2"
                         name="x2" value="{{Defaults['Ix'][1]}}" min="0" step="0.01"></td>
                 <td style="padding-left:15px;"><label for="v2"></label><input type="number" class="input" id="v2"
@@ -106,11 +115,11 @@
             <tr>
                 <td style="padding-left:15px;"> First storey: </td>
                 <td style="padding-left:15px;"><label for="mass1"></label><input type="number" class="input" id="mass1"
-                        name="mass1" value="{{Defaults['M'][0]}}" min="0" step="any"></td>
+                        name="mass1" value="{{model.m1}}" min="0" step="any"></td>
                 <td style="padding-left:15px;"><label for="stiff1"></label><input type="number" class="input"
-                        id="stiff1" name="stiff1" value="{{Defaults['K'][0]}}" min="0" step="any"></td>
+                        id="stiff1" name="stiff1" value="{{model.k1}}" min="0" step="any"></td>
                 <td style="padding-left:15px;"><label for="damp1"></label><input type="number" class="input" id="damp1"
-                        name="damp1" value="{{Defaults['C'][0]}}" min="0" step="any"></td>
+                        name="damp1" value="{{model.c1}}" min="0" step="any"></td>
                 <td style="padding-left:15px;"><label for="x1"></label><input type="number" class="input" id="x1"
                         name="x1" value="{{Defaults['Ix'][0]}}" min="0" step="0.01"></td>
                 <td style="padding-left:15px;"><label for="v1"></label><input type="number" class="input" id="v1"
@@ -120,11 +129,11 @@
             <tr>
                 <td style="padding-left:15px; padding-top: 15px;"> Statistical dispersion: </td>
                 <td style="padding-left:15px; padding-top: 15px;"><label for="massD"></label><input type="number"
-                        class="input" id="massD" name="massD" value="{{Defaults['Disp'][0]}}" min="0" step="any"></td>
+                        class="input" id="massD" name="massD" value="{{model.disp_m}}" min="0" step="any"></td>
                 <td style="padding-left:15px; padding-top: 15px;"><label for="stiffD"></label><input type="number"
-                        class="input" id="stiff1" name="stiffD" value="{{Defaults['Disp'][1]}}" min="0" step="any"></td>
+                        class="input" id="stiffD" name="stiffD" value="{{model.disp_k}}" min="0" step="any"></td>
                 <td style="padding-left:15px; padding-top: 15px;"><label for="dampD"></label><input type="number"
-                        class="input" id="damp1" name="dampD" value="{{Defaults['Disp'][2]}}" min="0" step="any"></td>
+                        class="input" id="dampD" name="dampD" value="{{model.disp_c}}" min="0" step="any"></td>
                 <td style="padding-left:15px; padding-top: 15px;"><label for="xD"></label><input type="number"
                         class="input" id="xD" name="xD" value="{{Defaults['D_init'][0]}}" min="0" step="0.01"></td>
                 <td style="padding-left:15px; padding-top: 15px;"><label for="vD"></label><input type="number"
