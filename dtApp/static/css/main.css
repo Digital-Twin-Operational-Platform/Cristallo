@@ -1,114 +1,119 @@
-html{
-  width:100%;
-  height:100%;
+html {
+  width: 100%;
+  height: 100%;
 }
-body{
-  width:99%;
+
+body {
+  width: 99%;
   min-width: 600px;
   font-family: Georgia, "Times New Roman", Times, serif;
   color: #4d4dff;
   background-color: #f6f9fc;
 }
-h1 {font-family: Helvetica, Geneva, Arial, SunSans-Regular, sans-serif }
+
+h1 {
+  font-family: Helvetica, Geneva, Arial, SunSans-Regular, sans-serif
+}
 
 
-	/* Head banner team */
-	.banner {
-		text-align: center;
-		/* width: ; */
-	}
-		
+/* Head banner team */
+.banner {
+  text-align: center;
+  /* width: ; */
+}
 
-	/* styling sidebar */
-	.sidehoverbar a {
-		/* background-color: grey; */
-		position: absolute;
-		font-size: 16px;
-		text-decoration: none;
-		Color: white;
-		padding: 10px;
-    padding-left: 10px;
-		border-radius: 0px 25px 25px 0px;
-		left: -190px;
-		transition: 0.5s;
-		opacity: 0.5;
-	}
-		
-	/* Hover effect on sidebar */
-	.sidehoverbar a:hover {
-		left: 0px;
-		opacity: 1;
-		background-color: #4CAF50;
-	}
-		
-	/* float icons*/
-	.sidehoverbar i {
-		float: right;
-	}
-		
-	/* definig position of each nav bar */
-	.Home {
-		top: 50px;
-		width: 220px;
-		height: 30px;
-	}
-		
-	.Documentation {
-		top: 110px;
-		width: 220px;
-		height: 30px;
-	}
-		
-	.CAD {
-		top: 170px;
-		width: 220px;
-		height: 30px;
-	}
-		
-	.Design {
-		top: 230px;
-		width: 220px;
-		height: 30px;
-	}
-		
-	.Control {
-		top: 290px;
-		width: 220px;
-		height: 30px;
-	}
 
-  .Uncertainty {
-		top: 350px;
-		width: 220px;
-		height: 30px;
-	}
+/* styling sidebar */
+.sidehoverbar a {
+  /* background-color: grey; */
+  position: absolute;
+  font-size: 16px;
+  text-decoration: none;
+  Color: white;
+  padding: 10px;
+  padding-left: 10px;
+  border-radius: 0px 25px 25px 0px;
+  left: -190px;
+  transition: 0.5s;
+  opacity: 0.5;
+}
 
-  .FEA {
-		top: 410px;
-		width: 220px;
-		height: 30px;
-	}
+/* Hover effect on sidebar */
+.sidehoverbar a:hover {
+  left: 0px;
+  opacity: 1;
+  background-color: #4CAF50;
+}
 
-  .NCBC {
-		top: 470px;
-		width: 220px;
-		height: 30px;
-	}
+/* float icons*/
+.sidehoverbar i {
+  float: right;
+}
 
-  .Crossval {
-		top: 530px;
-		width: 220px;
-		height: 30px;
-	}
+/* definig position of each nav bar */
+.Home {
+  top: 50px;
+  width: 220px;
+  height: 30px;
+}
 
-  .LPMupdate {
-		top: 590px;
-		width: 220px;
-		height: 30px;
-	}
-		
-	/* content margin */
-	/* .hoverable-topic {
+.Documentation {
+  top: 110px;
+  width: 220px;
+  height: 30px;
+}
+
+.CAD {
+  top: 170px;
+  width: 220px;
+  height: 30px;
+}
+
+
+.Control {
+  top: 230px;
+  width: 220px;
+  height: 30px;
+}
+
+.Uncertainty {
+  top: 290px;
+  width: 220px;
+  height: 30px;
+}
+
+.FEA {
+  top: 350px;
+  width: 220px;
+  height: 30px;
+}
+
+.Crossval {
+  top: 410px;
+  width: 220px;
+  height: 30px;
+}
+
+.CBsimulator {
+  top: 470px;
+  width: 220px;
+  height: 30px;
+}
+
+.LPMupdate {
+  top: 530px;
+  width: 220px;
+  height: 30px;
+}
+
+.ProfileHub {
+  top: 590px;
+  width: 220px;
+  height: 30px;
+}
+
+/* content margin */
+/* .hoverable-topic {
 		margin-left: 55px;
 	} */
 
@@ -116,21 +121,24 @@ h1 {font-family: Helvetica, Geneva, Arial, SunSans-Regular, sans-serif }
 
 
 
-div.leftsidebar{
-  width: 30px; 
+div.leftsidebar {
+  width: 30px;
   padding-left: 5px;
   float: left;
 }
-div.body{
+
+div.body {
   margin-left: 60px;
 }
+
 .tooltip {
   position: relative;
   display: inline-block;
 }
+
 .tooltip .tooltiptext {
   left: 120%;
-  opacity:0;
+  opacity: 0;
   /* visibility:hidden; */
   width: 30px;
   height: 20px;
@@ -139,19 +147,21 @@ div.body{
   transition: width .2s;
   /* Position the tooltip */
   position: absolute;
-  z-index:1;
+  z-index: 1;
 }
+
 .tooltip:hover .tooltiptext {
   /* visibility: visible; */
-  opacity:1;
+  opacity: 1;
   width: 300px;
   height: 20px;
-  font-size:20px;
+  font-size: 20px;
   padding: 3px;
   border-style: solid;
   border-color: #4d4dff;
   color: darkblue;
 }
+
 /* Popup container - can be anything you want */
 .popup {
   position: relative;
@@ -161,11 +171,12 @@ div.body{
   -ms-user-select: none;
   user-select: none;
 }
+
 /* The actual popup */
 .popup .popuptext {
   visibility: hidden;
   width: 300;
-  font-size:20px;
+  font-size: 20px;
   background-color: #4d4dff;
   color: #fff;
   text-align: center;
@@ -174,12 +185,14 @@ div.body{
   z-index: 1;
   left: 110%;
 }
+
 /* Toggle this class - hide and show the popup */
 .popup .show {
   visibility: visible;
   -webkit-animation: fadeIn 0.5s;
   animation: fadeIn 0.5s;
 }
+
 /* Add animation (fade in the popup)
 @-webkit-keyframes fadeIn {
   from {opacity: 0;} 
@@ -189,34 +202,45 @@ div.body{
   from {opacity: 0;}
   to {opacity:1 ;}
 } */
-.fonticon:hover{
-  color:tomato;
+.fonticon:hover {
+  color: tomato;
 }
+
 a:link {
-  color: blue }
+  color: blue
+}
+
 a:visited {
-  color: blue } /* purple */
+  color: blue
+}
+
+/* purple */
 address {
   margin-top: 1em;
   padding-top: 1em;
-  border-top: thin dotted }
+  border-top: thin dotted
+}
+
 .footer {
   position: relative;
   left: 1;
   bottom: 0;
   width: 80%;
-/*  background-color: #f6f9fc;*/
+  /*  background-color: #f6f9fc;*/
   color: #4d4dff;
   text-align: left;
 }
+
 .div1 {
   float: left;
   width: 50%;
 }
+
 .div2 {
   float: right;
   width: 45%;
 }
+
 .div3 {
   clear: both;
 }
