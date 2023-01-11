@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% block title %}{% endblock %}
+{% block head %}
+{{ super() }}
+{% endblock %}
+{% block content %}
+
+<p>
+    Welcome to the <i>Knowledge graph</i> page.
+</p>
+<h2>Knowledge graph for the three-storey structure</h2>
+
+<p>
+    In this page, the bill of materials (BoM) is imported and displayed. On this page the Bill of Materials is
+    displayed. The definitions for
+    the Bill of Materials are given in the Excel file BoM.xlsx which can be found in the `static' folder of the App. To
+    make changes
+    to the Bill of Materials you should edit the Excel file BoM.xlsx directly.</p>
+<p> To visualise the knowledge graph you will need to have neo4j installed and running on your local machine and then
+    follow
+    this link <a href="http://localhost:7474">Neo4j browser interface page.
+    </a>
+</p>
+
+<p>
+    The tables below show the data used in the entities and relations of the knowledge graph
+</p>
+<br>
+<!-- <table>
+    <tr>
+        <td><a href="http://localhost:7474"><span class="fonticon"
+                    style="font-size: 30px; padding: 1mm; padding-left: 2mm;"><i
+                        class="fas fa-network-wired"></i></span></a></td>
+        <td> &nbsp; &nbsp; Neo4j Knowledge Graph webpage interface</td>
+    </tr>
+</table>-->
+
+
+{% for table in tables %}
+{{titles[loop.index]}}
+{{ table|safe }}
+{% endfor %}
+{% endblock %}
+
+<div class="Clear" style="clear:both">
+</div>

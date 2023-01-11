@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+{% block title %}{% endblock %}
+{% block head %}
+{{ super() }}
+{% endblock %}
+{% block content %}
+
+<p>
+    Welcome to the <i>Bill of Materials</i> page.
+</p>
+<h2>Bill of materials for the three-storey structure</h2>
+
+<p>
+    In this page, the bill of materials (BoM) is imported and displayed. On this page the Bill of Materials is
+    displayed. The definitions for
+    the Bill of Materials are given in the Excel file BoM.xlsx which can be found in the `static' folder of the App. To
+    make changes
+    to the Bill of Materials you should edit the Excel file BoM.xlsx directly.
+
+</p>
+<br>
+{% for sheet in sheets %}
+<table id="demo" border="1" padding="15px">
+    <!-- HEADER ROW -->
+    <thead>
+        <tr><strong> {{sheetnames[loop.index0]}} </strong></tr>
+        <tr>
+            {% for col in range(1, sheet.max_column + 1): %}
+            <th>{{ sheet.cell(1, col).value }}</th>
+            {% endfor %}
+        </tr>
+    </thead>
+    <!-- DATA ROWS -->
+    <tbody>
+        {% for row in range(2, sheet.max_row + 1) %}
+        <tr>
+            {% for col in range(1, sheet.max_column + 1): %}
+            <td>{{ sheet.cell(row, col).value }}</td>
+            {% endfor %}
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+<br>
+{% endfor %}
+
+<!-- <div id="left" style="margin:auto; width:70%;">
+    <div class='expValidationImagesHeader'>
+        <img src="{{ url_for('static', filename='img/Model.png') }}" , alt="HTML5 Icon" width="200" height="300">
+        <img src="{{ url_for('static', filename='css/fontawesome/svgs/solid/exchange.svg') }}" , alt="uncertainty"
+            width="30" height="30" class="expValidationImageCenter">
+        <img src="{{ url_for('static', filename='img/Structure.jpg') }}" , alt="HTML5 Icon" width="200" height="300">
+    </div>
+    <div class="left">
+        <table class="expValidationTable" style="border-spacing: 70px 3px;">
+            <tr>
+                <td><img src="{{ url_for('static', filename='css/fontawesome/svgs/solid/hammer.svg') }}" ,
+                        alt="Exp_Data"></td>
+                <td><a href="crossval_1"> Experimental data </a></td>
+            </tr>
+            <tr>
+                <td><img src="{{ url_for('static', filename='css/fontawesome/svgs/solid/laptop-code.svg') }}" ,
+                        alt="Num_Data"></td>
+                <td><a href="crossval_3"> Numerical data </a></td>
+            </tr>
+            <tr>
+                <td><img src="{{ url_for('static', filename='css/fontawesome/svgs/solid/handshake.svg') }}" ,
+                        alt="Exp_Num_Data"></td>
+                <td><a href="crossval_2"> Cross validation prototype </a></td>
+            </tr>
+            <tr>
+                <td><img src="{{ url_for('static', filename='css/fontawesome/svgs/solid/compress-arrows.svg') }}" ,
+                        alt="Exp_Exp_Data"></td>
+                <td><a href="crossval_4"> Cross prototypes comparision </a></td>
+            </tr>
+        </table>
+    </div>
+</div> -->
+
+<div class="Clear" style="clear:both">
+</div>
+{% endblock %}

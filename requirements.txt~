@@ -2,7 +2,6 @@ alembic==1.3.3
 astroid==2.3.3
 autopep8==1.5
 Click==7.0
-control==0.9.0
 coverage==5.0.3
 cycler==0.10.0
 Flask==1.1.1
@@ -17,12 +16,7 @@ Mako==1.1.1
 MarkupSafe==1.1.1
 #matplotlib==3.2.1
 mccabe==0.6.1
-neo4j==4.4.10
 #numpy==1.20.1
-openpyxl==3.0.10
-pandas==1.4.4
-plotly==4.8.0
-py2neo==2021.1
 pycodestyle==2.5.0
 pylint==2.4.4
 pyparsing==2.4.7
@@ -31,10 +25,11 @@ python-dotenv==0.10.5
 python-editor==1.0.4
 scipy
 seaborn==0.10.1
-six==1.15.0
+six==1.12.0
 SQLAlchemy==1.3.13
 typed-ast
 Werkzeug==0.16.1
 wrapt==1.11.2
 WTForms==2.3.1
-python-dotenv==0.14.0
+control==0.9.0
+plotly==4.8.0
