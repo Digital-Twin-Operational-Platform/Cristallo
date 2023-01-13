@@ -11,7 +11,7 @@ This section will guide you through a few main steps to install Cristallo on you
 > Best performance with python 3.8+
 
 ## Download
-Download or clone this repository on your local machine. 
+Download or clone this repository on your local machine. For a visual walkthrough on how to download and run, visit https://www.youtube.com/watch?v=-l04b4dEypo
 
 > Skip the following instructions if you are familiar with GitHub.
 
