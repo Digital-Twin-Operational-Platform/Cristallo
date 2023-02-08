@@ -1,5 +1,5 @@
-from flask import render_template, request, redirect, url_for
-import numpy as np, os, csv
+from flask import render_template, request
+import os, csv
 from dtApp import app
 from dtApp import date
 
@@ -30,7 +30,8 @@ def Hub():
 def Display():
     uploaded_files = request.files["file"]
     filename = uploaded_files.filename
-    filename='dtApp/dtData/profiles/' + filename
+    filename = os.path.join("dtApp","dtData","profiles",filename)
+    # filename='dtApp/dtData/profiles/' + filename
     # Read in CSV for model parameters
     form=read_profile(filename)
     return render_template("Profile_disp.html", date=date,form=form)
@@ -39,7 +40,8 @@ def Display():
 def Pro_CBC():
     uploaded_files = request.files["file"]
     filename = uploaded_files.filename
-    filename='dtApp/dtData/profiles/' + filename
+    filename = os.path.join("dtApp","dtData","profiles",filename)
+    # filename='dtApp/dtData/profiles/' + filename
     # Read in CSV for model parameters
     form=read_profile(filename)
     return render_template("Pro_CBC.html", date=date,form=form)  

@@ -59,8 +59,7 @@ If not otherwise specified:
 '''
 
 # Import external packages
-from flask import render_template, request, redirect, Response, url_for
-import importlib.util
+from flask import render_template, request
 import numpy
 import plotly
 import plotly.graph_objects as go
@@ -218,8 +217,8 @@ def simula(): # Properties displayed on landing
     
         freqplot = json.dumps(fig2, cls=plotly.utils.PlotlyJSONEncoder)
     
-        return render_template("simulator.html",Defaults=Defaults,timeplot=timeplot,freqplot=freqplot,Sf=Sf)
+        return render_template("simulator.html",Defaults=Defaults,timeplot=timeplot,freqplot=freqplot,Sf=Sf,date=date)
     else:
         timeplot = json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)
         freqplot = json.dumps(fig2, cls=plotly.utils.PlotlyJSONEncoder)
-        return render_template("simulator.html",Defaults=Defaults,timeplot=timeplot,freqplot=freqplot,Sf=0)
+        return render_template("simulator.html",Defaults=Defaults,timeplot=timeplot,freqplot=freqplot,Sf=0,date=date)

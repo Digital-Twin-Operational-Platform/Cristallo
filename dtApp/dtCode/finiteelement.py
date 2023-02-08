@@ -17,8 +17,8 @@ prompt. This requires the host machine to have ABAQUS installed and callable
 via the prompt 'abaqus cae'. Check the terminal to verify that ABAQUS was called
 correctly and there are no errors.
 '''
-from flask import render_template, request, redirect, url_for
-import numpy as np, os
+from flask import render_template, request
+import os
 from dtApp import app
 from dtApp import date
 
@@ -60,10 +60,11 @@ def Submit():
     mt_mesh=req.get('mt_mesh')
     ft_mesh=req.get('ft_mesh')
     # Write Script
+    path = os.path.join("dtApp","dtData","ABAQUS_Scratch","RunScript.py")
     try:
-        f=open('dtApp/dtData/ABAQUS_Scratch/RunScript.py','w')
+        f=open(path,'w')
     except:
-        f=open('dtApp/dtData/ABAQUS_Scratch/RunScript.py','x')
+        f=open(path,'x')
     f.write('jname = "'+str(job)+'"\n')
     f.write('Young = '+str(Young)+'\n')
     f.write('density = '+str(Dens)+'\n')
@@ -75,14 +76,16 @@ def Submit():
     f.write('mt_mesh = '+str(mt_mesh)+'\n')
     f.close()
     # Add verbose
-    f=open('dtApp/dtData/ABAQUS_Scratch/RunScript.py','a')
-    g=open('dtApp/dtData/FEAVerbose.txt','r')
+    f=open(path,'a')
+    pathg = os.path.join("dtApp","dtData","FEAVerbose.txt")
+    g=open(pathg,'r')
     f.write(g.read())
     g.close()
     f.close()
     
     # Run Abaqus
-    os.chdir('dtApp/dtData/ABAQUS_Scratch')
+    dirname= os.path.join("dtApp","dtData","ABAQUS_Scratch")
+    os.chdir(dirname)
     os.system('abaqus cae -mesa -noGUI RunScript.py')
     os.chdir('..')
     os.chdir('..')

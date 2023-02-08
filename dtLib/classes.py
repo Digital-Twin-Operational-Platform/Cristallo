@@ -2,7 +2,6 @@ import numpy as np
 from plotly.subplots import make_subplots
 import json
 import plotly
-import matplotlib.pyplot as plt
 from scipy import signal, stats
 import os
 
@@ -117,52 +116,6 @@ class TimeHistory():
             return(json_fig)
         except:
             print("PSD is not generated, please generate PSD data")
-    """
-    
-    Break for Temperary Modules
-    
-    
-    
-    """
-
-    def plot_pyplot(self):
-        """
-        Temporary for Diagnostics - Shows pyplot version of the data
-        """
-        fig = plt.figure()
-        plt.plot(self.time, self.response, 'k-x')
-        plt.xlabel(f"Time in {self.time_units}")
-        plt.ylabel(f"Response in {self.response_units}")
-        plt.show()
-
-    def plot_pyplot_fft(self):
-        """
-        Temporary for Diagnostics - Checks to see if fft exists, then plots
-        """
-        try:
-            resp = np.abs(self.fft_resp)
-            fig = plt.figure()
-            plt.semilogy(self.fft_freq, resp, 'k-x')
-            plt.xlabel(f"Frequency in 1/{self.time_units}")
-            plt.ylabel(f"Magnitude of Response in |{self.response_units}|")
-            plt.show()
-        except:
-            print("FFT is not generated, please generate FFT data")
-
-    def plot_pyplot_psd(self):
-        """
-        Temporary for Diagnostics - Checks to see if psd exists, then plots
-        """
-        try:
-            resp = self.psd_resp
-            fig = plt.figure()
-            plt.plot(self.psd_freq, resp, 'k-x')
-            plt.xlabel(f"Frequency in 1/{self.time_units}")
-            plt.ylabel(f"Power Spectral Density in {self.response_units}^2")
-            plt.show()
-        except:
-            print("PSD is not generated, please generate PSD data")
-
 
 class MODEL3DOF():
     def __repr__(self):  # return

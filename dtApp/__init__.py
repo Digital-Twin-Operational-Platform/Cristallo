@@ -12,15 +12,21 @@ import subprocess
 proc_date = subprocess.Popen('git log -1 --format=%cd', shell=True, stdout=subprocess.PIPE, )
 stdout = proc_date.communicate()[0]
 if len(stdout)==0:
-    result = subprocess.run('git init', shell=True) # use 'run' here because sequential execution is needed
-    result = subprocess.run('git add config.py', shell=True)
-    result = subprocess.run('git commit -m "enable date commit"', shell=True) 
-    proc_date = subprocess.Popen('git log -1 --format=%cd', shell=True, stdout=subprocess.PIPE, )
-    stdout = proc_date.communicate()[0]
-
-date1 = stdout
-date2 = date1.decode().split(' ')
-date = date2[2]+' '+date2[1]+' '+date2[4] 
+    print('No .GIT')
+    date = "Unable to gather date"
+    # result = subprocess.run('git init', shell=True) # use 'run' here because sequential execution is needed
+    # result = subprocess.run('git add config.py', shell=True)
+    # result = subprocess.run('git commit -m "enable date commit"', shell=True) 
+    # proc_date = subprocess.Popen('git log -1 --format=%cd', shell=True, stdout=subprocess.PIPE, )
+    # stdout = proc_date.communicate()[0]
+else:
+    try:
+        date1 = stdout
+        date2 = date1.decode().split(' ')
+        date = date2[2]+' '+date2[1]+' '+date2[4] 
+    except:
+        print('Wrong GIT folder')
+        date = "Unable to gather date"
 
 # This imports routes and defines the context
 from dtApp import routes

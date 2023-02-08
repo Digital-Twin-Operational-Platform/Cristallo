@@ -1,4 +1,4 @@
-from flask import render_template, request, redirect, url_for
+from flask import render_template, request
 import numpy as np, os, csv
 from dtApp import app
 from dtApp import date
@@ -68,27 +68,33 @@ def DisplayProfiles():
     # Profile 1
     uploaded_files = request.files["Profile1"]
     filename1 = uploaded_files.filename
-    filename='dtApp/dtData/profiles/' + filename1
+    filename = os.path.join("dtApp","dtData","profiles",filename1)
+    # filename='dtApp/dtData/profiles/' + filename1
     form1=read_profile_Comp(filename)
     # Profile 2
     uploaded_files = request.files["Profile2"]
     filename2 = uploaded_files.filename
-    filename='dtApp/dtData/profiles/' + filename2
+    filename = os.path.join("dtApp","dtData","profiles",filename2)
+    # filename='dtApp/dtData/profiles/' + filename2
     form2=read_profile_Comp(filename)
     # Profile 3
     uploaded_files = request.files["Profile3"]
     filename3 = uploaded_files.filename
-    filename='dtApp/dtData/profiles/' + filename3
+    filename = os.path.join("dtApp","dtData","profiles",filename3)
+    # filename='dtApp/dtData/profiles/' + filename3
     form3=read_profile_Comp(filename)
     # Gather Frequency Domain
     # Profile 1 FRF
-    filename='dtApp/dtData/frfs/' + filename1[8:]
+    filename = os.path.join("dtApp","dtData","profiles",filename1[8:])
+    # filename='dtApp/dtData/frfs/' + filename1[8:]
     FRF1=read_FRF(filename)
     # Profile 2 FRF
-    filename='dtApp/dtData/frfs/' + filename2[8:]
+    filename = os.path.join("dtApp","dtData","profiles",filename2[8:])
+    # filename='dtApp/dtData/frfs/' + filename2[8:]
     FRF2=read_FRF(filename)
     # Profile 3 FRF
-    filename='dtApp/dtData/frfs/' + filename3[8:]
+    filename = os.path.join("dtApp","dtData","profiles",filename3[8:])
+    # filename='dtApp/dtData/frfs/' + filename3[8:]
     FRF3=read_FRF(filename)
     
     # Display FRFs
