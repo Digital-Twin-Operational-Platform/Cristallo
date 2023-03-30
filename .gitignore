@@ -37,8 +37,8 @@ _build/html/
  *.rec
  *.inp
  *.SMAmanifest
-dtApp/dtData/ABAQUS_Scratch/*.py
-dtApp/dtData/profiles/profile_*.csv
+digitaltwin/dtData/ABAQUS_Scratch/*.py
+digitaltwin/dtData/profiles/profile_*.csv
 
 
 
@@ -325,7 +325,9 @@ TSWLatexianTemp*
 *.odb
 *.prt
 *.sim
-dtApp/dtData/CBC/*.npy
+digitaltwin/dtData/CBC/*.npy
+digitaltwin/dtData/frfs/*.csv
+digitaltwin/dtData/profile/*.csv
 
 # Environments
 .env
@@ -335,4 +337,4 @@ venv/
 ENV/
 env.bak/
 venv.bak/
-dtApp/dtData/profiles/*.csv
+digitaltwin/dtData/profiles/*.csv

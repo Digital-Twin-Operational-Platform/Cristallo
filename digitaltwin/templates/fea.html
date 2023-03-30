@@ -1,0 +1,156 @@
+{% extends "base.html" %}
+{% block title %}{% endblock %}
+{% block head %}
+{{ super() }}
+{% endblock %}
+{% block content %}
+
+<!-- Site navigation menu -->
+
+<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+<script id="MathJax-script" async
+          src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+</script>
+
+<p> <button onclick="myFunction()">+</button> ABAQUS FEA Generation General Info</p>
+<div id="hideshow" style="display: none">
+<p>In this page you can modify FEA properties of the 3 storey structure.
+    <br>
+    This uses ABAQUS scripting language to generate a .py file that is ran via ABAQUS noGUI.
+    From testing, the elements used are C3D10 (second-order tetrahedral element, quadradic triangular pyramid) as opposed to quadralateral brick elements.
+    Each part is meshed independently and is joined into the assembly through a rigid surface tie connection. 
+    The FEA is based on imperial units of inches to match the blueprint dimensions. SI units for Young's modulus and density are auto generated as verification.
+    The bottom of the feet are pinned in the 3 dimensions and the linear perturbation Frequency analysis is performed.
+    The frequency analysis utilizes the Lanczos algorithm and calculates all the frequencies below the selected maximum frequency.
+    <br><br>
+    The current implementation only submits/run the job but does not do any post-processing. This is yet to come
+    Results from this analysis can be found in "dtApp/dtData/ABAQUS_Scratch".
+    The main results can be found either through the ".dat" text file or the ".odb" ABAQUS cae file. The ".odb" file provides visualization of the results while the ".dat" file can provide easy file parsing for future analyses.
+</p>
+</div>
+
+<hr> 
+
+<div>
+    <div class="div1">
+    <h2 id="a">Generate FEA Model</h2>
+    <form action="/FEA_sub" method="POST">
+        <fieldset>
+            <legend>General Properties:</legend>
+            <table>
+                <tr>
+                    <td>Maximum Frequency</td>
+                    <td style="text-align:right">\(\omega_{max}=\)</td>
+                    <td><input type="number" id="freq" name="freq" min="0"  step=any value="{{form['freq']}}"></td>
+                    <td>[Hz]</td>
+                </tr>
+                <tr>
+                    <td>Job Name</td>
+                    <td style="text-align:right">\(Name=\)</td>
+                    <td><input type="text" id="job" name="job" min="0"  step=any value="{{form['job']}}"></td>
+                    <td></td>
+                </tr>
+            </table>
+        </fieldset>
+        <fieldset>
+            <legend>Material Properties:</legend>
+            <table>
+                <tr>
+                    <td>Young's Modulus</td>
+                    <td style="text-align:right">\(E=\)</td>
+                    <td><input type="number" id="E" name="E" min="0" step=any value="{{form['Young']}}" oninput="Youngs(this.value)"></td>
+                    <td>[psi]</td>
+		    <td> ---------></td>
+		    <td><p id="ESI"></p></td>
+		    <td>[MPa]</td>
+                </tr>
+                <tr>
+                    <td>Poisson's Ratio</td>
+                    <td style="text-align:right">\(\nu=\)</td>
+                    <td><input type="number" id="Nu" name="Nu" min="0" step=any value="{{form['Nu']}}"></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>Density</td>
+                    <td style="text-align:right">\(\rho=\)</td>
+                    <td><input type="number" id="rho" name="rho" min="0" step=any value="{{form['Dens']}}" oninput="Dense(this.value)"></td>
+                    <td>[slinch/in<sup>3</sup>]</td>
+		    <td> ---------></td>
+		    <td><p id="RhoSI"></p></td>
+		    <td>[kg/m<sup>3</sup>]</td>
+                </tr>
+            </table>
+        </fieldset>
+        <fieldset>
+            <legend>Mesh Properties:</legend>
+            <table>
+                <tr>
+                    <td>Floor Pannel</td>
+                    <td style="text-align:right">Mesh Seed</td>
+                    <td><input type="number" id="fl_mesh" name="fl_mesh" min="0" step=any value="{{form['fl_mesh']}}"></td>
+                    <td>[in]</td>
+                </tr>
+                <tr>
+                    <td>Verticle Support</td>
+                    <td style="text-align:right">Mesh Seed</td>
+                    <td><input type="number" id="lg_mesh" name="lg_mesh" min="0" step=any value="{{form['lg_mesh']}}"></td>
+                    <td>[in]</td>
+                </tr>
+                <tr>
+                    <td>Mounting Plate</td>
+                    <td style="text-align:right">Mesh Seed</td>
+                    <td><input type="number" id="mt_mesh" name="mt_mesh" min="0" step=any value="{{form['mt_mesh']}}"></td>
+                    <td>[in]</td>
+                </tr>
+                <tr>
+                    <td>Foot Connector</td>
+                    <td style="text-align:right">Mesh Seed</td>
+                    <td><input type="number" id="ft_mesh" name="ft_mesh" min="0" step=any value="{{form['ft_mesh']}}"></td>
+                    <td>[in]</td>
+                </tr>
+            </table>
+        </fieldset>
+        <br>
+        <button type="submit" disabled>Run on ABAQUS</button>
+        <button type="submit" formaction="/script_save">Save Run Script</button>
+    </form>
+    </div>
+
+    <div class="div2">
+    <h2 id="a">Default Mesh Visualization</h2>
+        <img src="{{ url_for('static', filename='img/DefaultMesh.png') }}" alt="Visualized Model with Default Mesh" width="750" height="450">
+    </div> 
+    <br>
+</div>
+
+
+<div class="div3">
+<br>
+</div>
+
+<script>
+function Youngs(val) {
+  document.getElementById("ESI").innerHTML = (val / 145.038).toFixed(2) ; 
+}
+</script>
+<script>
+function Dense(val) {
+  document.getElementById("RhoSI").innerHTML = (val*10686910.34).toFixed(1) ; 
+}
+</script>
+
+{% block javascript %}
+<script type="text/javascript" charset="utf-8">
+    
+function myFunction() {
+  var x = document.getElementById("hideshow");
+  if (x.style.display === "none") {
+    x.style.display = "block";
+  } else {
+    x.style.display = "none";
+  }
+}
+    
+</script>
+{% endblock %}
+{% endblock %}

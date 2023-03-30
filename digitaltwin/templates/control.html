@@ -1,0 +1,287 @@
+{% extends "base.html" %}
+{% block title %}{% endblock %}
+{% block head %}
+<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+{{ super() }}
+{% endblock %}
+{% block content %}
+<!-- Site navigation menu -->
+
+<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+<script id="MathJax-script" async
+          src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+</script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+
+<p><button onclick="myFunction()">+</button> Welcome to the <i>Structural Vibration Control</i> page. </p>
+<div id="hideshow" style="display: none">
+    <p>In this page you can design and simulate a controller for the three-storey structure vibration attenuation.
+        <br>
+        The structure is set into motion by an external force \(f_p\) acting on the first floor.
+        <br>
+        The control force is given by either passive or active control strategies on a floor location of choice.</p>
+        <ul>
+            <li>
+                A Tuned Mass Damper (TMD) is used as the passive control strategy. The parameters of the TMD, such as the base mass \(m_b\),
+                <br>
+                the moving mass \(m_p\), the stiffness \(k_p\) and the damping \(c_p\) can be tuned to achieve the desired behaviour.
+            </li>
+            <li>
+                A Direct Velocity Feedback (DVF) is used as an active control strategy. The active control force \(f_c\) is provided by
+                <br>
+                an electromagnetic inertial actuator, whose mechanical parameters are \(m_b\), \(m_p\), \(k_p\) and \(c_p\) for base mass, proof mass, 
+                <br>
+                suspension stiffness and internal damping, respectively. The transduction coefficient is \(Bl\), whereas the voice-coil's electrical
+                <br>
+                impedance is \(Z_e\) and the tunable feedback gain is denoted as \(h\).
+            </li>
+            <li>
+                A modified Direct Velocity Feedback with an Electronic Compensator (DVF+EC) is used as an alternative active control algorithm. In this case,
+                <br>
+                an electronic compensator \(C_p(j&omega;)\) is added to the feedback loop. The compensator is a second order proper frequency response function.
+                <br>
+                The numerator parameters of the compensator are the estimated natural frequency of the actuator \(&omega;&#770;_p\) and the estimated damping ratio
+                <br>
+                \(&xi;&#770;_p\). The denominator parameters are the compensated natural frequency \(&omega;_c\) and the compensated damping ratio \(&xi;_c\).
+            </li>
+            <li>
+                A Linear-Quadratic Gaussian regulator (LQG) is used as a model based active control method. The optimal feedback gain matrix is calculated in order to
+                <br>
+                minimise the classical quadratic cost function where \(q\) is the state weight and \(r\) is the cost weight. The Kalman filter gain, instead,
+                <br>
+                is calculated usign the process disturbance covariance \(Q_n\) and measurement noise covariance \(R_n\).
+            </li>
+        </ul>
+        <p>Further details on the control strategies and formulation are available in the following paper:
+        <br>
+        Dal Borgo, M., Gardner, P., Zhu, Y., Wagg, D.J., Au, S.K. and Elliott, S.J., (2020).
+        <br>
+        <a href='https://www.researchgate.net/publication/344214396_On_the_development_of_a_digital_twin_for_the_active_vibration_control_of_a_three-storey_structure'>On the development of a digital twin for the active vibration control of a three-storey structure.</a>
+        <br>
+        In <i>ISMA2020-USD2020 Proceedings. KU Leuven.</i> 14 pp.
+        <br>
+        <p>The vibration attenuation performance is measured in terms of time-averaged kinetic energy reduction with respect to the uncontrolled scenario.
+        <br>
+        The stability of the active control loop is studied with the Nyquist criterion and the power requirement to deliver the control force is also displayed.</p>    
+</div>
+
+<div>
+    <h2 id="a">Simulate controller</h2>
+    <div class="div1">
+    <form action="/control#ke" method="POST" oninput="wp.value=((1/(2*Math.PI))*(parseFloat(stiffness.value) / parseFloat(proofmass.value))**(1/2)).toFixed(2); xip.value=(100*parseFloat(damping.value) / (2*(parseFloat(stiffness.value)*parseFloat(proofmass.value))**(1/2))).toFixed(2); VFCgain.value=(parseFloat(gain.value)).toFixed(2); LQGstateweight.value=(parseFloat(stateweight.value)).toFixed(2); LQGinputweight.value=(parseFloat(inputweight.value)).toFixed(2); KFprocesscov.value=(parseFloat(processcov.value)).toFixed(2); KFmeasurementcov.value=(parseFloat(measurementcov.value)).toExponential()">
+        <fieldset>
+            <legend>Control strategy:</legend>
+            <input type="radio" id="passive" name="controltype" value="passive" {% if controltype == "passive" %} checked {% endif %}>
+            <label for="passive">Passive --> Tuned Mass Damper</label><br>
+            <input type="radio" id="active" name="controltype" value="active" {% if controltype == "active" %} checked {% endif %}>
+            <label for="active">Active --> Direct Velocity Feedback</label><br>
+            <input type="radio" id="active_dvf_mod" name="controltype" value="active_dvf_mod" {% if controltype == "active_dvf_mod" %} checked {% endif %}>
+            <label for="active_dvf_mod">Active --> Direct Velocity Feedback + Electronic Compensator</label><br>
+        </fieldset>
+        <fieldset>
+            <legend>Location of control action:</legend>
+            <input type="radio" id="1" name="controllocation" value="1" {% if controllocation == "1" %} checked {% endif %}>
+            <label for="1">Floor 1</label><br>
+            <input type="radio" id="2" name="controllocation" value="2" {% if controllocation == "2" %} checked {% endif %}>
+            <label for="2">Floor 2</label><br>
+            <input type="radio" id="3" name="controllocation" value="3" {% if controllocation == "3" %} checked {% endif %}>
+            <label for="3">Floor 3</label><br>
+        </fieldset>
+        <fieldset>
+            <legend>Design Tuned Mass Damper:</legend>
+            <table>
+                <tr>
+                    <td>Base mass</td>
+                    <td>\(m_b=\)</td>
+                    <td><input type="number" id="basemass" name="basemass" min="0" max="10" step=any value="{{mb}}"></td>
+                    <td>[kg]</td>
+                </tr>
+                <tr>
+                    <td>Moving mass</td>
+                    <td>\(m_p=\)</td>
+                    <td><input type="number" id="proofmass" name="proofmass" min="0" max="10" step=any value="{{mp}}"></td>
+                    <td>[kg]</td>
+                </tr>
+                <tr>
+                    <td>Suspension stiffness</td>
+                    <td>\(k_p=\)</td>
+                    <td><input type="number" id="stiffness" name="stiffness" min="0" max="1000000" step=any value="{{kp}}"></td>
+                    <td>[N/m]</td>
+                    <td> --> Natural frequency = </td>
+                    <td><output name="wp" for="proofmass stiffness">{{wp}}</output></td>
+                    <td>[Hz]</td>
+                </tr>
+                <tr>
+                    <td>Internal damping</td>
+                    <td>\(c_p=\)</td>
+                    <td><input type="number" id="damping" name="damping" min="0" max="1000" step=any value="{{cp}}"></td>
+                    <td>[Ns/m]</td>
+                    <td>--> Damping ratio = </td>
+                    <td><output name="xip" for="proofmass stiffness damping">{{xip}}</output></td>
+                    <td>[%]</td>
+                </tr>
+            </table>
+        </fieldset>
+        <fieldset>
+            <legend>Design transducer parameters:</legend>
+            <table>
+                <tr>
+                    <td>Force factor</td>
+                    <td>\(Bl=\)</td>
+                    <td><input type="number" id="forcefactor" name="forcefactor" min="0" max="50" step=any value="{{Bl}}"></td>
+                    <td>[N/A]</td>
+                </tr>
+                <tr>
+                    <td>Electrical impedance</td>
+                    <td>\(Z_e=\)</td>
+                    <td><input type="number" id="elimpedance" name="elimpedance" min="0" max="50" step=any value="{{Ze}}"></td>
+                    <td>[&#8486]</td>
+                </tr>
+            </table>
+        </fieldset>
+            <fieldset id="field1">
+                <legend>Tune feedback gain:</legend>
+                <table>
+                    <tr>
+                        <td>Control gain</td>
+                        <td>\(h=\)</td>
+                        <td><input type="range" id="gain" name="gain" min="0" max="50" step=0.01 value="{{h}}"></td>
+                        <td><output name="VFCgain" for="gain">{{h}}</output></td>
+                        <td>[-]</td>
+                    </tr>
+                </table>
+            </fieldset>
+        <fieldset>
+            <legend>Electronic compensator settings:</legend>
+            <table>
+                <tr>
+                    <td>Estimated natural frequency TMD</td>
+                    <td>\(&omega;&#770;_p=\)</td>
+                    <td><input type="number" id="natfreqest" name="natfreqest" min="0.1" max="20" step=any value="{{wpest}}"></td>
+                    <td>[Hz]</td>
+                </tr>
+                <tr>
+                    <td>Estimated damping ratio TMD</td>
+                    <td>\(&xi;&#770;_p=\)</td>
+                    <td><input type="number" id="dampratioest" name="dampratioest" min="0" max="100" step=any value="{{xipest}}"></td>
+                    <td>[%]</td>
+                </tr>
+                <tr>
+                    <td>Compensated natural frequency</td>
+                    <td>\(&omega;_c=\)</td>
+                    <td><input type="number" id="natfreqcomp" name="natfreqcomp" min="0.1" max="20" step=any value="{{wc}}"></td>
+                    <td>[Hz]</td>
+                </tr>
+                <tr>
+                    <td>Compensated damping ratio</td>
+                    <td>\(&xi;_c=\)</td>
+                    <td><input type="number" id="dampratiocomp" name="dampratiocomp" min="0" max="100" step=any value="{{xic}}"></td>
+                    <td>[%]</td>
+                </tr>
+            </table>
+        </fieldset>        
+        <br>
+        <input type="submit" value="Simulate">
+    </form>
+    </div>
+
+    <div class="div2">
+        <img src="{{ url_for('static', filename='controlschematic.png') }}" alt="structural vibration control schematic" width="400" height="300">
+        <br>
+        <img src="{{ url_for('static', filename='DVF.png') }}" alt="direct velocity feedback" width="400" height="150">
+        <br>
+        <img src="{{ url_for('static', filename='DVF_EC.png') }}" alt="modified direct velocity feedback" width="400" height="150">
+        <br>
+        <img src="{{ url_for('static', filename='LQG.png') }}" alt="Linear-quadratic Gaussian regulator" width="400" height="150">
+    </div>
+
+        <div class="div3">
+        <br>
+    </div>
+
+    <div class="div1">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="chart" id="ke">
+                <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+                <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.6/d3.min.js"></script>
+                    <script>
+                        var graphs = {{plot | safe}};
+                        Plotly.plot('ke',graphs,{});
+                    </script>
+                </div>
+            </div>
+        </div>
+        <table>
+            <tr>
+                <td>Kinetic energy reduction = </td>
+                <td>{{RT}}</td>
+                <td>[dB]</td>
+            </tr>
+            <tr>
+                <td>Active control effort = </td>
+                <td>{{CE}}</td>
+                <td>[W]</td>
+            </tr>
+        </table>
+    </div>
+
+    {% if plot1==null or plot1=='' %}
+    <div class="div2">
+
+    </div>
+    {% else %}
+    <div class="div2">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="chart" id="nyquist">
+                <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+                <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.6/d3.min.js"></script>
+                    <script>
+                        var graphs = {{plot1 | safe}};
+                        Plotly.plot('nyquist',graphs,{});
+                    </script>
+                </div>
+            </div>
+        </div>
+        <table>
+            <tr>
+                <td>Closed-loop system stable?</td>
+                <td>{{stab}}</td>
+            </tr>
+            <tr>
+                <td>Gain margin = </td>
+                <td>{{gm}}</td>
+                <td>[dB]</td>
+            </tr>
+        </table>
+    </div>
+    {% endif %}
+</div>
+
+<br>
+
+
+<div class="div3">
+<br>
+</div>
+
+
+
+{% block javascript %}
+<script type="text/javascript" charset="utf-8">
+    
+function myFunction() {
+  var x = document.getElementById("hideshow");
+  if (x.style.display === "none") {
+    x.style.display = "block";
+  } else {
+    x.style.display = "none";
+  }
+}
+    
+</script>
+{% endblock %}
+
+{% endblock %}

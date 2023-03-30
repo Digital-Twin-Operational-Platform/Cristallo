@@ -1,0 +1,25 @@
+version: '3'
+services:
+  web:
+    build: .
+    restart: always
+    expose:
+      - "5000"
+    networks:
+      mynetwork:
+  nginx:
+    image: nginx:latest
+    restart: always
+    ports:
+      - "80:80"
+    networks:
+      mynetwork:
+    volumes:
+      - ./nginx/nginx.dev.conf:/etc/nginx/nginx.conf
+    depends_on:
+      - web
+networks:
+  mynetwork:
+    ipam:
+      config:
+        - subnet: 10.127.1.0/24
