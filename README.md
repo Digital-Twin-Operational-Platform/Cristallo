@@ -138,7 +138,7 @@ Finally, we can give Cristallo a go by starting the Flask server.
 (venv) cristallo% flask run
 
 # PowerShell (Windows)
-(venv) C:\cristallo> $env:FLASK_APP=run.py
+(venv) C:\cristallo> $env:FLASK_APP=".\run.py"
 (venv) C:\cristallo> $env:FLASK_DEBUG=1
 (venv) C:\cristallo> flask run
 
